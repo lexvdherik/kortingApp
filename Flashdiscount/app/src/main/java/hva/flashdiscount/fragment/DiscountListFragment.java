@@ -1,11 +1,9 @@
-package hva.flashdiscount;
+package hva.flashdiscount.fragment;
 
 
 import android.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -21,10 +19,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Time;
 import java.util.ArrayList;
 
-import static hva.flashdiscount.R.id.textView;
+import hva.flashdiscount.adapter.DiscountAdapter;
+import hva.flashdiscount.model.Company;
+import hva.flashdiscount.model.Discount;
+import hva.flashdiscount.model.Establishment;
 
 
 public class DiscountListFragment extends ListFragment {
@@ -70,14 +70,12 @@ public class DiscountListFragment extends ListFragment {
 
 
                                 discounts.add(d);
-
-
                             }
 
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Log.e("test","ERRRRRRRORRRR");
+                            Log.e("test","ERRRRRORRRR");
                         }
                     }
                 },

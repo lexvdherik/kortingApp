@@ -1,6 +1,8 @@
-package hva.flashdiscount;
+package hva.flashdiscount.model;
 
-import android.util.Log;
+import hva.flashdiscount.Establishment;
+import hva.flashdiscount.R;
+import hva.flashdiscount.model.DateTime;
 
 /**
  * Created by Maiko on 6-10-2016.

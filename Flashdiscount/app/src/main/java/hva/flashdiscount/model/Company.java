@@ -1,4 +1,4 @@
-package hva.flashdiscount;
+package hva.flashdiscount.model;
 
 public class Company {
     private int companyId;

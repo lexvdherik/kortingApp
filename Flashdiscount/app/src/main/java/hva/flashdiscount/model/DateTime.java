@@ -1,4 +1,4 @@
-package hva.flashdiscount;
+package hva.flashdiscount.model;
 
 import android.util.Log;
 

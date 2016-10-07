@@ -1,7 +1,6 @@
-package hva.flashdiscount;
+package hva.flashdiscount.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +8,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
+
+import hva.flashdiscount.R;
+import hva.flashdiscount.model.Discount;
 
 /**
  * Created by Maiko on 6-10-2016.
