@@ -1,6 +1,6 @@
 package hva.flashdiscount.model;
 
-import hva.flashdiscount.Establishment;
+import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.R;
 import hva.flashdiscount.model.DateTime;
 

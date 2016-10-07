@@ -12,7 +12,7 @@
 
     <fragment
         android:id="@+id/discountListFrag"
-        android:name="hva.flashdiscount.DiscountListFragment"
+        android:name="hva.flashdiscount.fragment.DiscountListFragment"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"/>
 
