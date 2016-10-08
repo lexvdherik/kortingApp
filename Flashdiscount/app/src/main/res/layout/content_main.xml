@@ -10,11 +10,19 @@
     tools:context="hva.flashdiscount.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <fragment
-        android:id="@+id/discountListFrag"
-        android:name="hva.flashdiscount.fragment.DiscountListFragment"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swiperefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/discountListFrag"
+            android:name="hva.flashdiscount.fragment.DiscountListFragment"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>
 
