@@ -1,8 +1,11 @@
 package hva.flashdiscount;
 
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -43,18 +47,18 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        final CoordinatorLayout appBarMain = (CoordinatorLayout) findViewById(R.id.app_bar_main);
-        final View contentMain = getLayoutInflater().inflate(R.layout.content_main, null);
-        appBarMain.addView(contentMain);
-
-        Log.e("layout", findViewById(R.id.discountListFrag).getParent().getParent().toString());
-
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                appBarMain.removeView(contentMain);
-                appBarMain.addView(contentMain);
+                Log.e("REFRESH", "START");
+                Fragment frg = getSupportFragmentManager().findFragmentById(R.id.discountListFrag);
+                final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.detach(frg);
+                ft.attach(frg);
+                ft.commit();
+                Log.e("REFRESH", "END");
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
