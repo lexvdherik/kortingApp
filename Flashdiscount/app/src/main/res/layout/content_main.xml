@@ -20,7 +20,7 @@
             android:id="@+id/discountListFrag"
             android:name="hva.flashdiscount.fragment.DiscountListFragment"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="fill_parent"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

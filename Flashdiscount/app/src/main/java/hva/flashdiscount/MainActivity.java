@@ -1,10 +1,7 @@
 package hva.flashdiscount;
 
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,21 +9,25 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import hva.flashdiscount.adapter.DiscountAdapter;
+import hva.flashdiscount.fragment.DiscountListFragment;
+
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-
+        implements NavigationView.OnNavigationItemSelectedListener, DiscountListFragment.OnListDataListener {
+    Button button;
+    TextView textView;
+    String server_url = "https://amazon.seanmolenaar.eu/api/discount/getall";
     RequestQueue requestQueue;
     private SwipeRefreshLayout swipeRefreshLayout;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +52,15 @@ public class MainActivity extends AppCompatActivity
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.e("REFRESH", "START");
-                Fragment frg = getSupportFragmentManager().findFragmentById(R.id.discountListFrag);
+                DiscountListFragment frg = (DiscountListFragment) getSupportFragmentManager().findFragmentById(R.id.discountListFrag);
                 final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.detach(frg);
                 ft.attach(frg);
                 ft.commit();
-                Log.e("REFRESH", "END");
-                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
-        }
+    }
 
 
 
@@ -117,5 +115,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onListDataChange(DiscountAdapter da) {
+        swipeRefreshLayout.setRefreshing(false);
     }
 }

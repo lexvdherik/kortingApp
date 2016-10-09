@@ -28,18 +28,18 @@ public class DiscountAdapter extends ArrayAdapter<Discount> {
 
         Discount discount = getItem(position);
 
-        if (convertView == null) {
+        if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_discount_row, parent, false);
 
         }
 
         TextView discountTitle = (TextView) convertView.findViewById(R.id.description);
-        TextView companyname = (TextView) convertView.findViewById(R.id.company_name);
+        TextView companyName = (TextView) convertView.findViewById(R.id.company_name);
         TextView timeRemaining = (TextView) convertView.findViewById(R.id.time_remaining);
         ImageView imageView = (ImageView) convertView.findViewById(R.id.list_icon);
 
         discountTitle.setText(discount.getDescription());
-        companyname.setText(discount.getCompanyName());
+        companyName.setText(discount.getCompanyName());
         imageView.setImageResource(discount.getCategoryImage());
 
         timeRemaining.setText(discount.getTimeRemaining());
@@ -47,6 +47,4 @@ public class DiscountAdapter extends ArrayAdapter<Discount> {
         return convertView;
 
     }
-
-
 }
