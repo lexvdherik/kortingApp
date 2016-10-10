@@ -38,9 +38,9 @@ public class DiscountAdapter extends ArrayAdapter<Discount> {
         TextView timeRemaining = (TextView) convertView.findViewById(R.id.time_remaining);
         ImageView imageView = (ImageView) convertView.findViewById(R.id.list_icon);
 
-        discountTitle.setText(discount.getDescription());
-        companyName.setText(discount.getCompanyName());
-        imageView.setImageResource(discount.getCategoryImage());
+//        discountTitle.setText(discount.getDescription());
+//        companyName.setText(discount.getCompanyName());
+//        imageView.setImageResource(discount.getCategoryImage());
 
         timeRemaining.setText(discount.getTimeRemaining());
 

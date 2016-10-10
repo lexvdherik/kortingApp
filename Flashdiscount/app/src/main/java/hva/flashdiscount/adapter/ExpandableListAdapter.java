@@ -1,13 +1,18 @@
 package hva.flashdiscount.adapter;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import hva.flashdiscount.R;
+import hva.flashdiscount.model.Discount;
+import hva.flashdiscount.model.Establishment;
 
 /**
  * Created by Anthony on 09-Oct-16.
@@ -18,10 +23,23 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private final LayoutInflater inf;
     private String[] groups;
     private String[][] children;
+    private ArrayList<Establishment> establishments;
 
-    public ExpandableListAdapter(String[] groups, String[][] children, Activity activity) {
-        this.groups = groups;
-        this.children = children;
+    public ExpandableListAdapter(ArrayList<Establishment> establishments, Activity activity) {
+        this.establishments = establishments;
+
+        groups = new String[establishments.size()];
+        children = new String[establishments.size()][];
+        for(int i = 0; i < establishments.size(); i++){
+            groups[i] = establishments.get(i).getCompany().getName();
+
+            ArrayList<Discount> discounts = establishments.get(i).getDiscounts();
+            for(int j = 0; j < discounts.size(); j++){
+                children[i] = new String[]{discounts.get(j).getTimeRemaining()};
+            }
+
+        }
+
         inf = LayoutInflater.from(activity);
     }
 
@@ -68,7 +86,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = inf.inflate(R.layout.list_item, parent, false);
             holder = new ViewHolder();
 
-            holder.text = (TextView) convertView.findViewById(R.id.lblListItem);
+            holder.text = (TextView) convertView.findViewById(R.id.company_name);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -87,7 +105,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
             convertView = inf.inflate(R.layout.list_group, parent, false);
 
             holder = new ViewHolder();
-            holder.text = (TextView) convertView.findViewById(R.id.lblListHeader);
+            holder.text = (TextView) convertView.findViewById(R.id.company_name);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();

@@ -1,5 +1,9 @@
 package hva.flashdiscount.model;
 
+import java.util.ArrayList;
+
+import hva.flashdiscount.R;
+import hva.flashdiscount.model.Company;
 
 /**
  * Created by Maiko on 6-10-2016.
@@ -15,6 +19,7 @@ public class Establishment {
     private String phoneNumber;
     private String website;
     private Company company;
+    private ArrayList<Discount> discounts;
 
     public Establishment(int establishmentId, String street, String postalCode, String streetNumber, String city, String picture, String phoneNumber, String website, Company company) {
         this.establishmentId = establishmentId;
@@ -28,7 +33,8 @@ public class Establishment {
         this.company = company;
     }
 
-    public Establishment(Company company) {
+    public Establishment(Company company, ArrayList<Discount> discounts) {
+        this.discounts = discounts;
         this.company = company;
     }
 
@@ -66,5 +72,23 @@ public class Establishment {
 
     public Company getCompany() {
         return company;
+    }
+
+    public ArrayList<Discount> getDiscounts() {
+        return discounts;
+    }
+
+    public int getCategoryImage()
+    {
+        int categoryId = getCompany().getCategoryId();
+
+        switch (categoryId)
+        {
+            case 1:
+                return R.drawable.beer;
+            case 2:
+                return R.drawable.restaurant;
+        }
+        return R.drawable.ic_account_settings;
     }
 }

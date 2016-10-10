@@ -18,7 +18,7 @@ public class Discount {
     private String picture;
     private Establishment establishment;
 
-    public Discount(int discountId, int active, String description, String startTime, String endTime, int amount, int userLimit, String picture, Establishment establishment) {
+    public Discount(int discountId, int active, String description, String startTime, String endTime, int amount, int userLimit, String picture) {
         this.discountId = discountId;
         this.active = active;
         this.description = description;
@@ -27,7 +27,6 @@ public class Discount {
         this.amount = amount;
         this.userLimit = userLimit;
         this.picture = picture;
-        this.establishment = establishment;
     }
 
     public Discount(String description, Establishment establishment, String endTime) {
@@ -90,7 +89,8 @@ public class Discount {
         }
     }
 
-    public String getTimeRemaining() {
+    public String getTimeRemaining()
+    {
 
         DateTime d = new DateTime(this.endTime);
 

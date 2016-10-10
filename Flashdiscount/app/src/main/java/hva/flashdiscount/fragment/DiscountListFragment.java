@@ -63,11 +63,11 @@ public class DiscountListFragment extends ListFragment {
                                 JSONObject e = discount.getJSONObject("establishment");
                                 JSONObject c = e.getJSONObject("company");
 
-                                Company company = new Company(Integer.valueOf(c.getString("categoryId")), c.getString("name"));
-                                Establishment establishment = new Establishment(company);
-                                Discount d = new Discount(discount.getString("description"), establishment, discount.getString("endTime"));
+//                                Company company = new Company(Integer.valueOf(c.getString("categoryId")), c.getString("name"));
+//                                Establishment establishment = new Establishment(company);
+//                                Discount d = new Discount(discount.getString("description"), establishment, discount.getString("endTime"));
 
-                                discounts.add(d);
+//                                discounts.add(d);
                             }
 
                             if(discountAdapter == null){

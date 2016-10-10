@@ -9,6 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -19,10 +20,11 @@ import com.android.volley.toolbox.Volley;
 
 import hva.flashdiscount.adapter.DiscountAdapter;
 import hva.flashdiscount.fragment.DiscountListFragment;
+import hva.flashdiscount.fragment.LineupFragment;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, DiscountListFragment.OnListDataListener {
+        implements NavigationView.OnNavigationItemSelectedListener, LineupFragment.OnListDataListener {
 
     RequestQueue requestQueue;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                DiscountListFragment frg = (DiscountListFragment) getSupportFragmentManager().findFragmentById(R.id.discountListFrag);
+                LineupFragment frg = (LineupFragment) getSupportFragmentManager().findFragmentById(R.id.discountListFrag);
                 final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.detach(frg);
                 ft.attach(frg);
@@ -115,8 +117,10 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
     @Override
     public void onListDataChange(DiscountAdapter da) {
+        Log.e("main", "test");
         swipeRefreshLayout.setRefreshing(false);
     }
 }
