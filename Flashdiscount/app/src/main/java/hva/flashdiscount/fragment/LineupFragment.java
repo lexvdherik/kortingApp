@@ -23,26 +23,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import hva.flashdiscount.R;
-import hva.flashdiscount.adapter.DiscountAdapter;
 import hva.flashdiscount.adapter.ExpandableListAdapter;
 import hva.flashdiscount.model.Company;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
 
-/**
- * Created by Anthony on 09-Oct-16.
- */
-
 public class LineupFragment extends Fragment {
 
     View rootView;
-    ExpandableListView lv;
-    private String[] groups;
-    private String[][] children;
+    ExpandableListView expandableListView;
 
     private ArrayList<Establishment> establishments;
-    private DiscountAdapter discountAdapter;
-    private final String server_url = "http://145.28.236.97/api/establishment/getall";
+    private final String server_url = "http://77.249.228.18/korting/api/establishment/getall";
     private RequestQueue requestQueue;
     private Context context;
     OnListDataListener listDataCallback;
@@ -53,7 +45,7 @@ public class LineupFragment extends Fragment {
     }
 
     public interface OnListDataListener {
-        public void onListDataChange(DiscountAdapter da);
+        void onListDataChange();
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -62,7 +54,6 @@ public class LineupFragment extends Fragment {
         context = getActivity();
         requestQueue = Volley.newRequestQueue(context);
 
-        establishments = new ArrayList<Establishment>();
     }
 
     @Override
@@ -75,6 +66,8 @@ public class LineupFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
+
+        establishments = new ArrayList<>();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, server_url,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -89,7 +82,7 @@ public class LineupFragment extends Fragment {
                                 JSONArray ds = e.getJSONArray("discounts");
 
                                 Company company = new Company(Integer.valueOf(c.getString("categoryId")), c.getString("name"));
-                                ArrayList<Discount> discounts = new ArrayList<Discount>();
+                                ArrayList<Discount> discounts = new ArrayList<>();
                                 for(int j = 0; j < ds.length(); j++){
 
                                     JSONObject dsObj = ds.getJSONObject(j);
@@ -102,17 +95,16 @@ public class LineupFragment extends Fragment {
 
                                 establishments.add(new Establishment(company, discounts));
 
-
                             }
 
-                            lv = (ExpandableListView) getActivity().findViewById(R.id.expListView);
-                            lv.setAdapter(new ExpandableListAdapter(establishments, getActivity()));
-                            lv.setGroupIndicator(null);
-                            lv.deferNotifyDataSetChanged();
+                            expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
+                            expandableListView.setAdapter(new ExpandableListAdapter(establishments, getActivity()));
+                            Log.e("establionee", String.valueOf(establishments.size()));
+                            expandableListView.setGroupIndicator(null);
 
                             try {
                                 listDataCallback = (LineupFragment.OnListDataListener) context;
-                                listDataCallback.onListDataChange(discountAdapter);
+                                listDataCallback.onListDataChange();
                             } catch (ClassCastException e) {
                                 throw new ClassCastException(context.toString()
                                         + " must implement OnListDataListener");

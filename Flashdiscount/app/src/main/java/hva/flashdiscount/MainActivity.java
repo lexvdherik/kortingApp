@@ -9,17 +9,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-import hva.flashdiscount.adapter.DiscountAdapter;
-import hva.flashdiscount.fragment.DiscountListFragment;
 import hva.flashdiscount.fragment.LineupFragment;
 
 
@@ -119,8 +114,7 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public void onListDataChange(DiscountAdapter da) {
-        Log.e("main", "test");
+    public void onListDataChange() {
         swipeRefreshLayout.setRefreshing(false);
     }
 }

@@ -3,11 +3,6 @@ package hva.flashdiscount.model;
 import java.util.ArrayList;
 
 import hva.flashdiscount.R;
-import hva.flashdiscount.model.Company;
-
-/**
- * Created by Maiko on 6-10-2016.
- */
 
 public class Establishment {
     private int establishmentId;

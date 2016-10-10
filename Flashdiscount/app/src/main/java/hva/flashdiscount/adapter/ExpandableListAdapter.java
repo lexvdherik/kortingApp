@@ -14,53 +14,51 @@ import hva.flashdiscount.R;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
 
-/**
- * Created by Anthony on 09-Oct-16.
- */
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private final LayoutInflater inf;
-    private String[] groups;
-    private String[][] children;
-    private ArrayList<Establishment> establishments;
+    private ArrayList<String> groups;
+    private ArrayList<ArrayList<String>> children;
 
     public ExpandableListAdapter(ArrayList<Establishment> establishments, Activity activity) {
-        this.establishments = establishments;
 
-        groups = new String[establishments.size()];
-        children = new String[establishments.size()][];
+        groups = new ArrayList<>();
+        children = new ArrayList<>();
         for(int i = 0; i < establishments.size(); i++){
-            groups[i] = establishments.get(i).getCompany().getName();
+            groups.add(establishments.get(i).getCompany().getName());
+            children.add(new ArrayList<String>());
 
             ArrayList<Discount> discounts = establishments.get(i).getDiscounts();
             for(int j = 0; j < discounts.size(); j++){
-                children[i] = new String[]{discounts.get(j).getTimeRemaining()};
+                children.get(i).add(discounts.get(j).getTimeRemaining());
             }
 
         }
 
+
         inf = LayoutInflater.from(activity);
+
     }
 
     @Override
     public int getGroupCount() {
-        return groups.length;
+        return groups.size();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return children[groupPosition].length;
+        return children.get(groupPosition).size();
     }
 
     @Override
     public Object getGroup(int groupPosition) {
-        return groups[groupPosition];
+        return groups.get(groupPosition);
     }
 
     @Override
     public Object getChild(int groupPosition, int childPosition) {
-        return children[groupPosition][childPosition];
+        return children.get(groupPosition).get(childPosition);
     }
 
     @Override
