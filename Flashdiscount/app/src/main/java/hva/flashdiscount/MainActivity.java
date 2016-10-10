@@ -23,9 +23,7 @@ import hva.flashdiscount.fragment.DiscountListFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, DiscountListFragment.OnListDataListener {
-    Button button;
-    TextView textView;
-    String server_url = "https://amazon.seanmolenaar.eu/api/discount/getall";
+
     RequestQueue requestQueue;
     private SwipeRefreshLayout swipeRefreshLayout;
 

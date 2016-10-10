@@ -41,10 +41,6 @@ public class DiscountListFragment extends ListFragment {
         public void onListDataChange(DiscountAdapter da);
     }
 
-    public Activity getAc(){
-        return getActivity();
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -70,7 +66,6 @@ public class DiscountListFragment extends ListFragment {
                                 Company company = new Company(Integer.valueOf(c.getString("categoryId")), c.getString("name"));
                                 Establishment establishment = new Establishment(company);
                                 Discount d = new Discount(discount.getString("description"), establishment, discount.getString("endTime"));
-
 
                                 discounts.add(d);
                             }

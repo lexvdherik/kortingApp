@@ -18,7 +18,7 @@
 
         <fragment
             android:id="@+id/discountListFrag"
-            android:name="hva.flashdiscount.fragment.DiscountListFragment"
+            android:name="hva.flashdiscount.fragment.LineupFragment"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>
 
