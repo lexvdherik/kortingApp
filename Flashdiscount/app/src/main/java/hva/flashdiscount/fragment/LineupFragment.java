@@ -1,14 +1,33 @@
 package hva.flashdiscount.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 import hva.flashdiscount.R;
+import hva.flashdiscount.adapter.DiscountAdapter;
 import hva.flashdiscount.adapter.ExpandableListAdapter;
+import hva.flashdiscount.model.Company;
+import hva.flashdiscount.model.Discount;
+import hva.flashdiscount.model.Establishment;
 
 /**
  * Created by Anthony on 09-Oct-16.
@@ -21,22 +40,92 @@ public class LineupFragment extends Fragment {
     private String[] groups;
     private String[][] children;
 
+    private ArrayList<Discount> discounts;
+    private DiscountAdapter discountAdapter;
+    private final String server_url = "https://amazon.seanmolenaar.eu/api/discount/getall";
+    private RequestQueue requestQueue;
+    private Context context;
+    DiscountListFragment.OnListDataListener listDataCallback;
+
 
     public LineupFragment() {
 
     }
 
+    public interface OnListDataListener {
+        public void onListDataChange(DiscountAdapter da);
+    }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        groups = new String[]{"Test Header 1", "Test Header 2", "Test Header 3", "Test Header 4"};
+        context = getActivity();
+        requestQueue = Volley.newRequestQueue(context);
 
-        children = new String[][]{
-                {"s simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."},
-                {"Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of comes from a line in section 1.10.32."},
-                {"It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."},
-                {"There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc."}
-        };
+        discounts = new ArrayList<Discount>();
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, server_url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("result");
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject discount = jsonArray.getJSONObject(i);
+
+                                JSONObject e = discount.getJSONObject("establishment");
+                                JSONObject c = e.getJSONObject("company");
+
+                                Company company = new Company(Integer.valueOf(c.getString("categoryId")), c.getString("name"));
+                                Establishment establishment = new Establishment(company);
+                                Discount d = new Discount(discount.getString("description"), establishment, discount.getString("endTime"));
+
+                                discounts.add(d);
+                            }
+
+//                            if(discountAdapter == null){
+//                                discountAdapter = new DiscountAdapter(getActivity(), discounts);
+//                                setListAdapter(discountAdapter);
+//                            } else{
+//                                discountAdapter.clear();
+//                                discountAdapter.addAll(discounts);
+//                                discountAdapter.notifyDataSetChanged();
+//                            }
+
+                            groups = new String[]{"Test Header 1", "Test Header 2", "Test Header 3", "Test Header 4"};
+
+                            children = new String[][]{
+                                    {"s simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."},
+                                    {"Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of comes from a line in section 1.10.32."},
+                                    {"It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."},
+                                    {"There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc."}
+                            };
+
+
+                            try {
+                                listDataCallback = (DiscountListFragment.OnListDataListener) context;
+                                listDataCallback.onListDataChange(discountAdapter);
+                            } catch (ClassCastException e) {
+                                throw new ClassCastException(context.toString()
+                                        + " must implement OnListDataListener");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("RESPERROR", error.toString());
+            }
+        }
+
+        );
+        requestQueue.add(jsonObjectRequest);
+
+
     }
 
     @Override
