@@ -1,7 +1,6 @@
 package hva.flashdiscount.adapter;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +17,24 @@ import hva.flashdiscount.model.Establishment;
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     private final LayoutInflater inf;
-    private ArrayList<String> groups;
-    private ArrayList<ArrayList<String>> children;
+    private ArrayList<Establishment> groups;
+    private ArrayList<ArrayList<Discount>> children;
 
     public ExpandableListAdapter(ArrayList<Establishment> establishments, Activity activity) {
 
         groups = new ArrayList<>();
         children = new ArrayList<>();
         for(int i = 0; i < establishments.size(); i++){
-            groups.add(establishments.get(i).getCompany().getName());
-            children.add(new ArrayList<String>());
+            groups.add(establishments.get(i));
+            children.add(new ArrayList<Discount>());
 
             ArrayList<Discount> discounts = establishments.get(i).getDiscounts();
-            for(int j = 0; j < discounts.size(); j++){
-                children.get(i).add(discounts.get(j).getTimeRemaining());
+
+            int discountCount = discounts.size();
+            if(discountCount != 1){
+                for(int j = 0; j < discounts.size(); j++){
+                    children.get(i).add(discounts.get(j));
+                }
             }
 
         }
@@ -52,12 +55,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public Object getGroup(int groupPosition) {
+    public Establishment getGroup(int groupPosition) {
         return groups.get(groupPosition);
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition) {
+    public Discount getChild(int groupPosition, int childPosition) {
         return children.get(groupPosition).get(childPosition);
     }
 
@@ -78,38 +81,34 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-
-        ViewHolder holder;
         if (convertView == null) {
             convertView = inf.inflate(R.layout.list_item, parent, false);
-            holder = new ViewHolder();
-
-            holder.text = (TextView) convertView.findViewById(R.id.company_name);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
         }
-
-        holder.text.setText(getChild(groupPosition, childPosition).toString());
+        Discount d = getChild(groupPosition, childPosition);
+        ((TextView) convertView.findViewById(R.id.description)).setText(d.getDescription());
+        ((TextView) convertView.findViewById(R.id.company_name)).setText(d.getCompany().getName());
+        ((TextView) convertView.findViewById(R.id.time_remaining)).setText(d.getTimeRemaining());
 
         return convertView;
     }
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
         if (convertView == null) {
             convertView = inf.inflate(R.layout.list_group, parent, false);
-
-            holder = new ViewHolder();
-            holder.text = (TextView) convertView.findViewById(R.id.company_name);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.text.setText(getGroup(groupPosition).toString());
+        Establishment e = getGroup(groupPosition);
+        int cCount = getChildrenCount(groupPosition);
+        if(cCount == 0){
+            ((TextView) convertView.findViewById(R.id.flextitel)).setText(e.getDiscounts().get(0).getDescription());
+            ((TextView) convertView.findViewById(R.id.company_name)).setText(e.getCompany().getName());
+            ((TextView) convertView.findViewById(R.id.time_remaining)).setText(e.getDiscounts().get(0).getTimeRemaining());
+        } else{
+            ((TextView) convertView.findViewById(R.id.flextitel)).setText(String.valueOf(cCount + " Aanbiedingen"));
+            ((TextView) convertView.findViewById(R.id.company_name)).setText(e.getCompany().getName());
+        }
+
 
         return convertView;
     }
@@ -119,7 +118,4 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    private class ViewHolder {
-        TextView text;
-    }
 }

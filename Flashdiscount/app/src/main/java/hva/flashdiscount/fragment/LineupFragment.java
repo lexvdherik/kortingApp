@@ -47,7 +47,7 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
     ExpandableListView expandableListView;
 
     private ArrayList<Establishment> establishments;
-    private final String server_url = "http://77.249.228.18/korting/api/establishment/getall";
+    private final String server_url = "http://145.28.198.17/api/establishment/getall";
     private RequestQueue requestQueue;
     private Context context;
     OnListDataListener listDataCallback;
@@ -99,62 +99,7 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         Log.e("latitude", String.valueOf(mLastLocation.getLatitude()));
         Log.e("longitude", String.valueOf(mLastLocation.getLongitude()));
-        establishments = new ArrayList<>();
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, server_url,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray jsonArray = response.getJSONArray("result");
-
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject e = jsonArray.getJSONObject(i);
-
-                                JSONObject c = e.getJSONObject("company");
-                                JSONArray ds = e.getJSONArray("discounts");
-
-                                Company company = new Company(Integer.valueOf(c.getString("categoryId")), c.getString("name"));
-                                ArrayList<Discount> discounts = new ArrayList<>();
-                                for(int j = 0; j < ds.length(); j++){
-
-                                    JSONObject dsObj = ds.getJSONObject(j);
-
-
-                                    Discount d = new Discount(dsObj.getString("description"), dsObj.getString("endTime"));
-
-                                    discounts.add(d);
-                                }
-
-                                establishments.add(new Establishment(company, discounts));
-
-                            }
-
-                            expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
-                            expandableListView.setAdapter(new ExpandableListAdapter(establishments, getActivity()));
-                            expandableListView.setGroupIndicator(null);
-
-                            try {
-                                listDataCallback = (LineupFragment.OnListDataListener) context;
-                                listDataCallback.onListDataChange();
-                            } catch (ClassCastException e) {
-                                throw new ClassCastException(context.toString()
-                                        + " must implement OnListDataListener");
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("RESPERRORR", error.toString());
-            }
-        }
-
-        );
-        requestQueue.add(jsonObjectRequest);
     }
 
     @Override
@@ -204,6 +149,63 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
         if ( Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
             askLocationPermission();
         }
+
+        establishments = new ArrayList<>();
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, server_url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("result");
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject e = jsonArray.getJSONObject(i);
+
+                                JSONObject c = e.getJSONObject("company");
+                                JSONArray ds = e.getJSONArray("discounts");
+
+                                Company company = new Company(Integer.valueOf(c.getString("categoryId")), c.getString("name"));
+                                ArrayList<Discount> discounts = new ArrayList<>();
+                                for(int j = 0; j < ds.length(); j++){
+
+                                    JSONObject dsObj = ds.getJSONObject(j);
+
+
+                                    Discount d = new Discount(dsObj.getString("description"), dsObj.getString("endTime"), company);
+
+                                    discounts.add(d);
+                                }
+
+                                establishments.add(new Establishment(company, discounts));
+
+                            }
+
+                            expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
+                            expandableListView.setAdapter(new ExpandableListAdapter(establishments, getActivity()));
+                            expandableListView.setGroupIndicator(null);
+
+                            try {
+                                listDataCallback = (LineupFragment.OnListDataListener) context;
+                                listDataCallback.onListDataChange();
+                            } catch (ClassCastException e) {
+                                throw new ClassCastException(context.toString()
+                                        + " must implement OnListDataListener");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("RESPERRORR", error.toString());
+            }
+        }
+
+        );
+        requestQueue.add(jsonObjectRequest);
 
     }
 }

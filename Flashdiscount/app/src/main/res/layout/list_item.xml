@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearance"
-        android:text="Title"
+        android:text="Description"
         android:id="@+id/description"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/list_icon"
@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearance"
-        android:text="Title"
+        android:text="Company Name"
         android:layout_toEndOf="@+id/list_icon"
         android:id="@+id/company_name"
         android:layout_alignParentEnd="true"
@@ -50,9 +50,5 @@
         android:layout_alignParentEnd="true"
         android:ellipsize="end"
         android:maxLines="1"/>
-
-
-
-
 
 </RelativeLayout>
