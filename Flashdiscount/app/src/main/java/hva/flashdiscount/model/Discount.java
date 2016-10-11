@@ -109,4 +109,17 @@ public class Discount {
 
         return d.minutesBetween();
     }
+    public int getCategoryImage()
+    {
+        int categoryId = this.getCompany().getCategoryId();
+
+        switch (categoryId)
+        {
+            case 1:
+                return R.drawable.ic_free_breakfast;
+            case 2:
+                return R.drawable.ic_restaurant;
+        }
+        return R.drawable.ic_account_settings;
+    }
 }

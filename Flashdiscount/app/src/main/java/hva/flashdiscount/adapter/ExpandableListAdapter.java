@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -88,6 +89,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         ((TextView) convertView.findViewById(R.id.description)).setText(d.getDescription());
         ((TextView) convertView.findViewById(R.id.company_name)).setText(d.getCompany().getName());
         ((TextView) convertView.findViewById(R.id.time_remaining)).setText(d.getTimeRemaining());
+        ((ImageView) convertView.findViewById(R.id.list_icon)).setImageResource(d.getCategoryImage());
 
         return convertView;
     }
