@@ -4,9 +4,13 @@ package hva.flashdiscount.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.view.LayoutInflaterCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -21,14 +25,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.DiscountAdapter;
 import hva.flashdiscount.model.Discount;
 
 
 public class DiscountListFragment extends ListFragment {
-
-    private final String serverUrl = "https://amazon.seanmolenaar.eu/api/discount/getall";
-    OnListDataListener listDataCallback;
+    public static final String ARG_PAGE = "LIST";
     private ArrayList<Discount> discounts;
     private DiscountAdapter discountAdapter;
     private RequestQueue requestQueue;
@@ -117,5 +120,18 @@ public class DiscountListFragment extends ListFragment {
     public interface OnListDataListener {
         void onListDataChange(DiscountAdapter da);
     }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        page = getArguments().getInt(ARG_PAGE);
+    }
+
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+//        onActivityCreated(savedInstanceState);
+//        View view = inflater.inflate(R.layout.list_discount_row, container, false);
+//        return view;
+//
+//    }
 
 }
