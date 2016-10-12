@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import hva.flashdiscount.fragment.DiscountListFragment;
+import hva.flashdiscount.fragment.LineupFragment;
 import hva.flashdiscount.fragment.MapViewFragment;
 
 /**
@@ -27,7 +27,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 MapViewFragment tab2 = new MapViewFragment();
                 return tab2;
             case 1:
-                DiscountListFragment tab1 = new DiscountListFragment();
+                LineupFragment tab1 = new LineupFragment();
                 return tab1;
             default:
                 return null;
