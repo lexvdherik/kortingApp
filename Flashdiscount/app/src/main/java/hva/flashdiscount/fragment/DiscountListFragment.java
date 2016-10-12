@@ -31,13 +31,9 @@ public class DiscountListFragment extends ListFragment {
 
     private ArrayList<Discount> discounts;
     private DiscountAdapter discountAdapter;
-    private String server_url = "https://amazon.seanmolenaar.eu/api/discount/getall";
+    private final String serverUrl = "https://amazon.seanmolenaar.eu/api/discount/getall";
     private RequestQueue requestQueue;
     private Context context;
-
-
-
-
 
 
     @Override
@@ -49,7 +45,7 @@ public class DiscountListFragment extends ListFragment {
         discounts = new ArrayList<Discount>();
 
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, server_url,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, serverUrl,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -66,7 +62,7 @@ public class DiscountListFragment extends ListFragment {
 
                                 Company company = new Company(Integer.valueOf(c.getString("categoryId")), c.getString("name"));
                                 Establishment establishment = new Establishment(company);
-                                Discount d = new Discount(discount.getString("description") ,establishment,discount.getString("endTime"));
+                                Discount d = new Discount(discount.getString("description"), establishment, discount.getString("endTime"));
 
 
                                 discounts.add(d);
@@ -75,7 +71,7 @@ public class DiscountListFragment extends ListFragment {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Log.e("test","ERRRRRORRRR");
+                            Log.e("test", "ERRRRRORRRR");
                         }
                     }
                 },

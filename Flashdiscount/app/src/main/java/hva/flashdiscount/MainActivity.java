@@ -9,8 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.TextView;
 
 
 import com.android.volley.RequestQueue;
@@ -19,9 +17,7 @@ import com.android.volley.toolbox.Volley;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    Button button;
-    TextView textView;
-    String server_url = "https://amazon.seanmolenaar.eu/api/discount/getall";
+
     RequestQueue requestQueue;
 
 
@@ -46,8 +42,7 @@ public class MainActivity extends AppCompatActivity
 //        button.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(V
-        }
-
+    }
 
 
     @Override
@@ -92,7 +87,7 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_myDiscounts) {
 
-        } else if (id == R.id.nav_favorites)  {
+        } else if (id == R.id.nav_favorites) {
 
         } else if (id == R.id.nav_account_settings) {
 

@@ -1,8 +1,6 @@
 package hva.flashdiscount.model;
 
-import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.R;
-import hva.flashdiscount.model.DateTime;
 
 /**
  * Created by Maiko on 6-10-2016.
@@ -32,7 +30,7 @@ public class Discount {
         this.establishment = establishment;
     }
 
-    public Discount(String description, Establishment establishment,String endTime) {
+    public Discount(String description, Establishment establishment, String endTime) {
         this.description = description;
         this.endTime = endTime;
         this.establishment = establishment;
@@ -70,30 +68,29 @@ public class Discount {
         return picture;
     }
 
-    public String getCompanyName(){
+    public String getCompanyName() {
         return this.establishment.getCompany().getName();
     }
 
-    public int getCategoryId(){
+    public int getCategoryId() {
         return this.establishment.getCompany().getCategoryId();
     }
 
-    public int getCategoryImage()
-    {
+    public int getCategoryImage() {
         int categoryId = this.establishment.getCompany().getCategoryId();
 
-        switch (categoryId)
-        {
+        switch (categoryId) {
+            default:
+                return R.drawable.ic_account_settings;
             case 1:
                 return R.drawable.beer;
             case 2:
                 return R.drawable.restaurant;
+
         }
-        return R.drawable.ic_account_settings;
     }
 
-    public String getTimeRemaining()
-    {
+    public String getTimeRemaining() {
 
         DateTime d = new DateTime(this.endTime);
 

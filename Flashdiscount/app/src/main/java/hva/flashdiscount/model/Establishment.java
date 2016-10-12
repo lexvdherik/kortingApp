@@ -1,6 +1,5 @@
 package hva.flashdiscount.model;
 
-import hva.flashdiscount.model.Company;
 
 /**
  * Created by Maiko on 6-10-2016.
