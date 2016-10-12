@@ -2,8 +2,12 @@ package hva.flashdiscount;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -23,6 +27,8 @@ public class MainActivity extends AppCompatActivity
 
     RequestQueue requestQueue;
     private SwipeRefreshLayout swipeRefreshLayout;
+    FragmentPagerAdapter adapterViewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +39,13 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         requestQueue = Volley.newRequestQueue(this);
 
+        ViewPager viewPager = (ViewPager) findViewById(R.id.vpPager);
+        adapterViewPager = new PagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapterViewPager);
+
+        viewPager.setCurrentItem(1);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.pager_header);
+        tabLayout.setupWithViewPager(viewPager);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -56,6 +69,8 @@ public class MainActivity extends AppCompatActivity
         });
 
     }
+
+
 
 
 
@@ -111,7 +126,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     @Override
     public void onListDataChange() {

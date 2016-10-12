@@ -33,6 +33,19 @@ public class DiscountListFragment extends ListFragment {
     private DiscountAdapter discountAdapter;
     private RequestQueue requestQueue;
     private Context context;
+    private String title;
+    private int page;
+
+
+    public static DiscountListFragment newInstance(int page, String title){
+        DiscountListFragment discountListFragment = new DiscountListFragment();
+        Bundle args = new Bundle();
+        args.putInt("1", page);
+        args.putString("List", title);
+        discountListFragment.setArguments(args);
+        return discountListFragment;
+    }
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
