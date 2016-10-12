@@ -19,17 +19,17 @@ import hva.flashdiscount.model.Discount;
 
 public class DiscountAdapter extends ArrayAdapter<Discount> {
 
-    public  DiscountAdapter(Context context, ArrayList<Discount> discounts){
-        super(context,0,discounts);
+    public DiscountAdapter(Context context, ArrayList<Discount> discounts) {
+        super(context, 0, discounts);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-        Discount discount= getItem(position);
+        Discount discount = getItem(position);
 
-        if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_discount_row,parent,false);
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_discount_row, parent, false);
 
         }
 
@@ -44,12 +44,9 @@ public class DiscountAdapter extends ArrayAdapter<Discount> {
 
         timeRemaining.setText(discount.getTimeRemaining());
 
-        return  convertView;
+        return convertView;
 
     }
-
-
-
 
 
 }

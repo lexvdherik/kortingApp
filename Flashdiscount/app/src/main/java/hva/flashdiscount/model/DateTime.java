@@ -1,7 +1,5 @@
 package hva.flashdiscount.model;
 
-import android.util.Log;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,12 +23,12 @@ public class DateTime {
 
         Date endDate;
 
-        try{
+        try {
             endDate = df.parse(endTimeString);
 
             this.endTime.setTime(endDate);
 
-        } catch(ParseException e){
+        } catch (ParseException e) {
 
         }
 
@@ -51,11 +49,11 @@ public class DateTime {
         Long hours;
         Long minutes;
         String mins = "";
-        if(minutesBetween >= 60){
+        if (minutesBetween >= 60) {
             hours = minutesBetween / 60;
             minutes = minutesBetween % 60;
             mins = hours.toString() + " uur " + minutes.toString() + " min";
-        } else{
+        } else {
             mins = minutesBetween.toString() + " min";
         }
         return mins;
