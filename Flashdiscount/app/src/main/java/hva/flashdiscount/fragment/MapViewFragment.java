@@ -18,6 +18,8 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
+import java.io.Console;
+
 import hva.flashdiscount.R;
 
 /**
@@ -45,15 +47,15 @@ public class MapViewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt("0", 0);
-        title = getArguments().getString("Map");
+//        page = getArguments().getInt("0", 0);
+//        title = getArguments().getString("Map");
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.location_fragment, container, false);
-
+        System.out.println("MapViewfragement: OnCreateView");
         //TextView tvLabel = (TextView) rootView.findViewById(R.id.tvLabel);
         //tvLabel.setText(page + " -- " + title);
 

@@ -4,13 +4,9 @@ package hva.flashdiscount.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.support.v4.view.LayoutInflaterCompat;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,7 +21,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.DiscountAdapter;
 import hva.flashdiscount.model.Discount;
 
@@ -124,7 +119,7 @@ public class DiscountListFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt(ARG_PAGE);
+//        page = getArguments().getInt(ARG_PAGE);
     }
 
 //    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){

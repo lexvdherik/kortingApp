@@ -1,17 +1,13 @@
 package hva.flashdiscount;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -20,76 +16,14 @@ import android.view.MenuItem;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-import hva.flashdiscount.fragment.DiscountListFragment;
+import hva.flashdiscount.adapter.PagerAdapter;
 import hva.flashdiscount.fragment.LineupFragment;
-import hva.flashdiscount.fragment.MapViewFragment;
-
-
-class PagerAdapter extends FragmentPagerAdapter {
-
-    private static int NUM_ITEMS = 2;
-    private String tabTitles[] = new String[]{"Maps", "List"};
-    private Context context;
-
-    public PagerAdapter(FragmentManager fragmentManager) {
-        super(fragmentManager);
-
-    }
-
-
-    @Override
-    public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
-                return MapViewFragment.newInstance(0, "Map");
-            case 1:
-                return DiscountListFragment.newInstance(1, "List");
-
-            default:
-                return MapViewFragment.newInstance(0, "Map");
-        }
-
-    }
-
-    @Override
-    public int getCount() {
-        return NUM_ITEMS;
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return tabTitles[position];
-    }
-}
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, LineupFragment.OnListDataListener {
 
     RequestQueue requestQueue;
-    FragmentPagerAdapter adapterViewPager;
     private SwipeRefreshLayout swipeRefreshLayout;
-
-    {
-        @Override
-        public void onPageScrolled ( int position, float positionOffset, int positionOffsetPixels){
-
-    }
-
-        @Override
-        public void onPageSelected ( int position){
-
-    }
-
-        @Override
-        public void onPageScrollStateChanged ( int state){
-
-    }
-    }
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(V
-
-    viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,24 +34,32 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         requestQueue = Volley.newRequestQueue(this);
 
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("Map"));
+        tabLayout.addTab(tabLayout.newTab().setText("List"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.vpPager);
-        //  TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        //     tabLayout.setupWithViewPager(viewPager);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final PagerAdapter adapter = new PagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
 
-        adapterViewPager = new PagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapterViewPager);
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
 
-//        PagerSlidingTabStrip tabsStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-//        tabsStrip.setViewPager(viewPager);
-        //   viewPager.setCurrentItem(0);
+            }
 
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+            }
+        });
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -135,9 +77,6 @@ public class MainActivity extends AppCompatActivity
         });
 
     }
-
-    );
-}
 
     @Override
     public void onBackPressed() {
@@ -171,7 +110,11 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public void onListDataChange() {
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -181,7 +124,7 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_myDiscounts) {
 
-        } else if (id == R.id.nav_favorites) {
+        } else if (id == R.id.nav_favorites)  {
 
         } else if (id == R.id.nav_account_settings) {
 
@@ -190,10 +133,5 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onListDataChange() {
-        swipeRefreshLayout.setRefreshing(false);
     }
 }
