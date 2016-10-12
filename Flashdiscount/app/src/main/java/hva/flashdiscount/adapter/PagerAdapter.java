@@ -14,9 +14,9 @@ import hva.flashdiscount.fragment.MapViewFragment;
 public class PagerAdapter extends FragmentStatePagerAdapter {
     int mNumOfTabs;
 
-    public PagerAdapter(FragmentManager fm, int NumOfTabs) {
+    public PagerAdapter(FragmentManager fm, int numOfTabs) {
         super(fm);
-        this.mNumOfTabs = NumOfTabs;
+        this.mNumOfTabs = numOfTabs;
     }
 
     @Override

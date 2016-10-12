@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -17,8 +16,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-
-import java.io.Console;
 
 import hva.flashdiscount.R;
 
@@ -35,17 +32,17 @@ public class MapViewFragment extends Fragment {
     private String title;
     private int page;
 
-    public static MapViewFragment newInstance(int page, String title){
+    public static MapViewFragment newInstance(int page, String title) {
         MapViewFragment mapViewFragment = new MapViewFragment();
         Bundle args = new Bundle();
-        args.putInt("0",page);
+        args.putInt("0", page);
         args.putString("Map", title);
         mapViewFragment.setArguments(args);
         return mapViewFragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        page = getArguments().getInt("0", 0);
 //        title = getArguments().getString("Map");

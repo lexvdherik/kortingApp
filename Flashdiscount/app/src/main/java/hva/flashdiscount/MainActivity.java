@@ -40,8 +40,7 @@ public class MainActivity extends AppCompatActivity
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter
-                (getSupportFragmentManager(), tabLayout.getTabCount());
+        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                LineupFragment frg = (LineupFragment) getSupportFragmentManager().findFragmentById(R.id.discountListFrag);
+                LineupFragment frg = (LineupFragment) getSupportFragmentManager().findFragmentById(R.id.pager);
                 final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.detach(frg);
                 ft.attach(frg);
@@ -124,7 +123,7 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_myDiscounts) {
 
-        } else if (id == R.id.nav_favorites)  {
+        } else if (id == R.id.nav_favorites) {
 
         } else if (id == R.id.nav_account_settings) {
 
