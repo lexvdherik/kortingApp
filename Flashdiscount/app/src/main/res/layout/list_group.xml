@@ -6,16 +6,29 @@
     android:paddingTop="10dp"
     android:paddingBottom="10dp">
 
-    <ImageView
+    <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/list_icon"-->
+        <!--android:src="@drawable/beer"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_marginStart="12dp"-->
+        <!--android:layout_marginEnd="15dp"-->
+        <!--/>-->
+
+    <hva.flashdiscount.MLRoundedImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/list_icon"
-        android:src="@drawable/beer"
+        android:src="@drawable/ic_breakfast"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="15dp"
         />
+
+
 
     <TextView
         android:layout_width="wrap_content"

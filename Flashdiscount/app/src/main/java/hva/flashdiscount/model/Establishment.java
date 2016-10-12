@@ -80,9 +80,9 @@ public class Establishment {
         switch (categoryId)
         {
             case 1:
-                return R.drawable.beer;
+                return R.drawable.ic_breakfast;
             case 2:
-                return R.drawable.restaurant;
+                return R.drawable.ic_restaurant;
         }
         return R.drawable.ic_account_settings;
     }

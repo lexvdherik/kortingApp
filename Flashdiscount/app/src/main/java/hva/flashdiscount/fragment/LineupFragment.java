@@ -38,6 +38,7 @@ import hva.flashdiscount.adapter.ExpandableListAdapter;
 import hva.flashdiscount.model.Company;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
+import hva.flashdiscount.service.EstablishmentService;
 
 public class LineupFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -47,14 +48,16 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
     ExpandableListView expandableListView;
 
     private ArrayList<Establishment> establishments;
-    private final String server_url = "http://145.28.198.17/api/establishment/getall";
+    private final String server_url = "http://145.28.191.18/api/establishment/getall";
     private RequestQueue requestQueue;
     private Context context;
     OnListDataListener listDataCallback;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
+    private EstablishmentService establishmentService;
 
-    public void askLocationPermission(){
+
+    public void askLocationPermission() {
         if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -67,6 +70,7 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
     }
 
     public LineupFragment() {
+
 
     }
 
@@ -92,7 +96,7 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
-        if ( Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
@@ -124,6 +128,7 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -131,7 +136,10 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
                 .build();
 
         context = getActivity();
-        requestQueue = Volley.newRequestQueue(context);
+
+        establishmentService = new EstablishmentService(listDataCallback,context);
+
+
 
     }
 
@@ -143,69 +151,30 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
-        if ( Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             askLocationPermission();
         }
 
         establishments = new ArrayList<>();
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, server_url,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray jsonArray = response.getJSONArray("result");
-
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject e = jsonArray.getJSONObject(i);
-
-                                JSONObject c = e.getJSONObject("company");
-                                JSONArray ds = e.getJSONArray("discounts");
-
-                                Company company = new Company(Integer.valueOf(c.getString("categoryId")), c.getString("name"));
-                                ArrayList<Discount> discounts = new ArrayList<>();
-                                for(int j = 0; j < ds.length(); j++){
-
-                                    JSONObject dsObj = ds.getJSONObject(j);
+        establishmentService.getAllEstablishments();
+        establishments = establishmentService.getEstablishments();
 
 
-                                    Discount d = new Discount(dsObj.getString("description"), dsObj.getString("endTime"), company);
+        expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
+        expandableListView.setAdapter(new ExpandableListAdapter(establishments, getActivity()));
+        expandableListView.setGroupIndicator(null);
 
-                                    discounts.add(d);
-                                }
-
-                                establishments.add(new Establishment(company, discounts));
-
-                            }
-
-                            expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
-                            expandableListView.setAdapter(new ExpandableListAdapter(establishments, getActivity()));
-                            expandableListView.setGroupIndicator(null);
-
-                            try {
-                                listDataCallback = (LineupFragment.OnListDataListener) context;
-                                listDataCallback.onListDataChange();
-                            } catch (ClassCastException e) {
-                                throw new ClassCastException(context.toString()
-                                        + " must implement OnListDataListener");
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("RESPERRORR", error.toString());
-            }
+        try {
+            listDataCallback = (LineupFragment.OnListDataListener) context;
+            listDataCallback.onListDataChange();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement OnListDataListener");
         }
-
-        );
-        requestQueue.add(jsonObjectRequest);
 
     }
 }
+

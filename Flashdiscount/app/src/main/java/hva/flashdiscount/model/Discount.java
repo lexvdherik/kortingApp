@@ -116,7 +116,7 @@ public class Discount {
         switch (categoryId)
         {
             case 1:
-                return R.drawable.ic_free_breakfast;
+                return R.drawable.ic_breakfast;
             case 2:
                 return R.drawable.ic_restaurant;
         }
