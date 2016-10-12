@@ -38,8 +38,8 @@ public class EstablishmentService {
 
     public EstablishmentService(LineupFragment.OnListDataListener listDataCallback,Context context) {
         this.requestQueue = Volley.newRequestQueue(context);
-        this.listDataCallback = listDataCallback;
         this.context = context;
+        getAllEstablishments();
     }
 
     public void getAllEstablishments() {
@@ -77,13 +77,6 @@ public class EstablishmentService {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        try {
-                            listDataCallback = (LineupFragment.OnListDataListener) context;
-                            listDataCallback.onListDataChange();
-                        } catch (ClassCastException e) {
-                            throw new ClassCastException(context.toString()
-                                    + " must implement OnListDataListener");
-                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -94,7 +87,6 @@ public class EstablishmentService {
 
         );
         requestQueue.add(jsonObjectRequest);
-
     }
 
     public ArrayList<Establishment> getEstablishments() {

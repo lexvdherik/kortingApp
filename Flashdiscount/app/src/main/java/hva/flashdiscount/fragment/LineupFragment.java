@@ -159,8 +159,8 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
         }
 
         establishments = new ArrayList<>();
-        establishmentService.getAllEstablishments();
-        establishments = establishmentService.getEstablishments();
+
+        establishments =  establishmentService.getEstablishments();
 
 
         expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
