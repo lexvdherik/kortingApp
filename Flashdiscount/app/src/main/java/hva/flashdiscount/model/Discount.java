@@ -87,39 +87,24 @@ public class Discount {
         return this.establishment.getCompany().getCategoryId();
     }
 
-    public int getCategoryImage() {
-        int categoryId = this.establishment.getCompany().getCategoryId();
-
-        switch (categoryId) {
-            default:
-                return R.drawable.ic_account_settings;
-            case 1:
-                return R.drawable.beer;
-            case 2:
-                return R.drawable.restaurant;
-
-        }
-    }
-
-    public String getTimeRemaining()
-    {
+    public String getTimeRemaining() {
 
         DateTime d = new DateTime(this.endTime);
 
 
         return d.minutesBetween();
     }
-    public int getCategoryImage()
-    {
-        int categoryId = this.getCompany().getCategoryId();
 
-        switch (categoryId)
-        {
+    public int getCategoryImage() {
+        int categoryId = this.company.getCategoryId();
+
+        switch (categoryId) {
             case 1:
                 return R.drawable.ic_breakfast;
             case 2:
                 return R.drawable.ic_restaurant;
+            default:
+                return R.drawable.ic_account_settings;
         }
-        return R.drawable.ic_account_settings;
     }
 }

@@ -28,7 +28,7 @@ public class DiscountAdapter extends ArrayAdapter<Discount> {
 
         Discount discount = getItem(position);
 
-        if(convertView == null){
+        if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_discount_row, parent, false);
 
         }

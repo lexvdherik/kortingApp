@@ -1,9 +1,7 @@
 package hva.flashdiscount.service;
 
 import android.content.Context;
-import android.location.Location;
 import android.util.Log;
-import android.widget.ExpandableListView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,16 +25,15 @@ import hva.flashdiscount.model.Establishment;
  * Created by Maiko on 12-10-2016.
  */
 
-public class EstablishmentService {
+public class EstablishmentService extends APIService {
 
     public ArrayList<Establishment> establishments;
-    private final String server_url = "http://145.28.191.18/api/establishment/getall";
     private RequestQueue requestQueue;
     private LineupFragment.OnListDataListener listDataCallback;
     private Context context;
 
 
-    public EstablishmentService(LineupFragment.OnListDataListener listDataCallback,Context context) {
+    public EstablishmentService(LineupFragment.OnListDataListener listDataCallback, Context context) {
         this.requestQueue = Volley.newRequestQueue(context);
         this.context = context;
         getAllEstablishments();
@@ -45,7 +42,8 @@ public class EstablishmentService {
     public void getAllEstablishments() {
 
         establishments = new ArrayList<>();
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, server_url,
+        String url = baseUrl + "establishment" + listUri;
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -69,11 +67,13 @@ public class EstablishmentService {
 
                                     discounts.add(d);
                                 }
-
                                 establishments.add(new Establishment(company, discounts));
-
                             }
-
+                            try {
+                                listDataCallback.onListDataChange();
+                            } catch (Exception e) {
+                                Log.e("FlashDiscount", "Forgot to notify");
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

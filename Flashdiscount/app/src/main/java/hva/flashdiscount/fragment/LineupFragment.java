@@ -16,27 +16,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.ExpandableListAdapter;
-import hva.flashdiscount.model.Company;
-import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.service.EstablishmentService;
 
@@ -46,16 +35,19 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
 
     View rootView;
     ExpandableListView expandableListView;
-
+    OnListDataListener listDataCallback;
     private ArrayList<Establishment> establishments;
-    private final String server_url = "http://145.28.191.18/api/establishment/getall";
     private RequestQueue requestQueue;
     private Context context;
-    OnListDataListener listDataCallback;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private EstablishmentService establishmentService;
 
+
+    public LineupFragment() {
+
+
+    }
 
     public void askLocationPermission() {
         if (ContextCompat.checkSelfPermission(getActivity(),
@@ -69,15 +61,11 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
         }
     }
 
-    public LineupFragment() {
-
-
-    }
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
-            case 1: {
+            default:
+            case 1:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
@@ -89,7 +77,7 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
                     Log.e("permission", "DENIED");
                 }
                 return;
-            }
+
         }
     }
 
@@ -121,10 +109,6 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
 
     }
 
-    public interface OnListDataListener {
-        void onListDataChange();
-    }
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -137,9 +121,8 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
 
         context = getActivity();
 
-        establishmentService = new EstablishmentService(listDataCallback,context);
-
-
+        establishmentService = new EstablishmentService(listDataCallback, context);
+        listDataCallback = (LineupFragment.OnListDataListener) context;
 
     }
 
@@ -160,7 +143,7 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
 
         establishments = new ArrayList<>();
 
-        establishments =  establishmentService.getEstablishments();
+        establishments = establishmentService.getEstablishments();
 
 
         expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
@@ -168,13 +151,16 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
         expandableListView.setGroupIndicator(null);
 
         try {
-            listDataCallback = (LineupFragment.OnListDataListener) context;
             listDataCallback.onListDataChange();
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + " must implement OnListDataListener");
         }
 
+    }
+
+    public interface OnListDataListener {
+        void onListDataChange();
     }
 }
 

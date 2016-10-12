@@ -1,10 +1,9 @@
 package hva.flashdiscount.fragment;
 
 
-import android.app.Activity;
-import android.support.v4.app.ListFragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -23,23 +22,17 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import hva.flashdiscount.adapter.DiscountAdapter;
-import hva.flashdiscount.model.Company;
 import hva.flashdiscount.model.Discount;
-import hva.flashdiscount.model.Establishment;
 
 
 public class DiscountListFragment extends ListFragment {
 
+    private final String serverUrl = "https://amazon.seanmolenaar.eu/api/discount/getall";
+    OnListDataListener listDataCallback;
     private ArrayList<Discount> discounts;
     private DiscountAdapter discountAdapter;
-    private final String serverUrl = "https://amazon.seanmolenaar.eu/api/discount/getall";
     private RequestQueue requestQueue;
     private Context context;
-    OnListDataListener listDataCallback;
-
-    public interface OnListDataListener {
-        public void onListDataChange(DiscountAdapter da);
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -70,10 +63,10 @@ public class DiscountListFragment extends ListFragment {
 //                                discounts.add(d);
                             }
 
-                            if(discountAdapter == null){
+                            if (discountAdapter == null) {
                                 discountAdapter = new DiscountAdapter(getActivity(), discounts);
                                 setListAdapter(discountAdapter);
-                            } else{
+                            } else {
                                 discountAdapter.clear();
                                 discountAdapter.addAll(discounts);
                                 discountAdapter.notifyDataSetChanged();
@@ -91,12 +84,12 @@ public class DiscountListFragment extends ListFragment {
                             e.printStackTrace();
                         }
                     }
-                },new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("RESPERROR", error.toString());
-                    }
-                }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("RESPERROR", error.toString());
+            }
+        }
 
         );
         requestQueue.add(jsonObjectRequest);
@@ -106,6 +99,10 @@ public class DiscountListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+    }
+
+    public interface OnListDataListener {
+        void onListDataChange(DiscountAdapter da);
     }
 
 }

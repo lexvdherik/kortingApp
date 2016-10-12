@@ -25,15 +25,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         groups = new ArrayList<>();
         children = new ArrayList<>();
-        for(int i = 0; i < establishments.size(); i++){
+        for (int i = 0; i < establishments.size(); i++) {
             groups.add(establishments.get(i));
             children.add(new ArrayList<Discount>());
 
             ArrayList<Discount> discounts = establishments.get(i).getDiscounts();
 
             int discountCount = discounts.size();
-            if(discountCount != 1){
-                for(int j = 0; j < discounts.size(); j++){
+            if (discountCount != 1) {
+                for (int j = 0; j < discounts.size(); j++) {
                     children.get(i).add(discounts.get(j));
                 }
             }
@@ -102,11 +102,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         Establishment e = getGroup(groupPosition);
         int cCount = getChildrenCount(groupPosition);
-        if(cCount == 0){
+        if (cCount == 0) {
             ((TextView) convertView.findViewById(R.id.flextitel)).setText(e.getDiscounts().get(0).getDescription());
             ((TextView) convertView.findViewById(R.id.company_name)).setText(e.getCompany().getName());
             ((TextView) convertView.findViewById(R.id.time_remaining)).setText(e.getDiscounts().get(0).getTimeRemaining());
-        } else{
+        } else {
             ((TextView) convertView.findViewById(R.id.flextitel)).setText(String.valueOf(cCount + " Aanbiedingen"));
             ((TextView) convertView.findViewById(R.id.company_name)).setText(e.getCompany().getName());
         }

@@ -2,8 +2,6 @@ package hva.flashdiscount.model;
 
 import java.util.ArrayList;
 
-import hva.flashdiscount.R;
-
 public class Establishment {
     private int establishmentId;
     private String street;
@@ -73,17 +71,4 @@ public class Establishment {
         return discounts;
     }
 
-    public int getCategoryImage()
-    {
-        int categoryId = getCompany().getCategoryId();
-
-        switch (categoryId)
-        {
-            case 1:
-                return R.drawable.ic_breakfast;
-            case 2:
-                return R.drawable.ic_restaurant;
-        }
-        return R.drawable.ic_account_settings;
-    }
 }
