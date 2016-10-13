@@ -3,6 +3,7 @@ package hva.flashdiscount;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -11,17 +12,20 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.vision.text.Line;
 
 import hva.flashdiscount.adapter.PagerAdapter;
 import hva.flashdiscount.fragment.LineupFragment;
+import hva.flashdiscount.service.EstablishmentService;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, LineupFragment.OnListDataListener {
+        implements NavigationView.OnNavigationItemSelectedListener, EstablishmentService.OnListDataListener  {
 
     RequestQueue requestQueue;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -69,17 +73,17 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                LineupFragment frg = (LineupFragment) getSupportFragmentManager().findFragmentById(R.id.pager);
-                final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.detach(frg);
-                ft.attach(frg);
-                ft.commit();
-            }
-        });
+//        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                LineupFragment frg = (LineupFragment) getSupportFragmentManager().findFragmentById(R.id.expListView);
+//                final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//                ft.detach(frg);
+//                ft.attach(frg);
+//                ft.commit();
+//            }
+//        });
 
     }
 
@@ -116,11 +120,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListDataChange() {
-        swipeRefreshLayout.setRefreshing(false);
-    }
-
-    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -138,5 +137,12 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onListDataChange(LineupFragment frg) {
+        Log.e("callback", "gelukt");
+        frg.fillList();
+//        swipeRefreshLayout.setRefreshing(false);
     }
 }

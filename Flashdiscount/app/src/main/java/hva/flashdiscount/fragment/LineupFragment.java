@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
-import com.android.volley.RequestQueue;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -31,13 +30,12 @@ import hva.flashdiscount.service.EstablishmentService;
 
 public class LineupFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        LocationListener{
 
     View rootView;
     ExpandableListView expandableListView;
-    OnListDataListener listDataCallback;
+
     private ArrayList<Establishment> establishments;
-    private RequestQueue requestQueue;
     private Context context;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
@@ -121,8 +119,8 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
 
         context = getActivity();
 
-        establishmentService = new EstablishmentService(listDataCallback, context);
-        listDataCallback = (LineupFragment.OnListDataListener) context;
+        establishmentService = new EstablishmentService(context, this);
+
 
     }
 
@@ -145,22 +143,15 @@ public class LineupFragment extends Fragment implements GoogleApiClient.Connecti
 
         establishments = establishmentService.getEstablishments();
 
+    }
 
+    public void fillList() {
+        Log.e("asdfsafafsd", "testerere");
+//        swipeRefreshLayout.setRefreshing(false);
         expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
         expandableListView.setAdapter(new ExpandableListAdapter(establishments, getActivity()));
-        expandableListView.setGroupIndicator(null);
-
-        try {
-            listDataCallback.onListDataChange();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
-                    + " must implement OnListDataListener");
-        }
-
     }
 
-    public interface OnListDataListener {
-        void onListDataChange();
-    }
+
 }
 

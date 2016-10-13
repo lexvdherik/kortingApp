@@ -29,14 +29,16 @@ public class EstablishmentService extends APIService {
 
     public ArrayList<Establishment> establishments;
     private RequestQueue requestQueue;
-    private LineupFragment.OnListDataListener listDataCallback;
     private Context context;
+    OnListDataListener listDataCallback;
+    LineupFragment frg;
 
-
-    public EstablishmentService(LineupFragment.OnListDataListener listDataCallback, Context context) {
+    public EstablishmentService(Context context, LineupFragment frg) {
         this.requestQueue = Volley.newRequestQueue(context);
         this.context = context;
+        this.frg = frg;
         getAllEstablishments();
+        Log.e("context", context.toString());
     }
 
     public void getAllEstablishments() {
@@ -70,13 +72,15 @@ public class EstablishmentService extends APIService {
                                 establishments.add(new Establishment(company, discounts));
                             }
                             try {
-                                listDataCallback.onListDataChange();
-                            } catch (Exception e) {
-                                Log.e("FlashDiscount", "Forgot to notify");
+                                listDataCallback = (OnListDataListener) context;
+                                listDataCallback.onListDataChange(frg);
+                            } catch (ClassCastException e) {
+                                throw new ClassCastException(context.toString()
+                                        + " must implement OnListDataListener");
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -91,6 +95,10 @@ public class EstablishmentService extends APIService {
 
     public ArrayList<Establishment> getEstablishments() {
         return establishments;
+    }
+
+    public interface OnListDataListener {
+        void onListDataChange(LineupFragment frg);
     }
 }
 

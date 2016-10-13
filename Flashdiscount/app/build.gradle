@@ -36,6 +36,6 @@ dependencies {
     compile 'com.google.android.gms:play-services:9.6.1'
 }
 
-android.applicationVariants.all { variant ->
-    variant.preBuild.dependsOn "checkstyle"
-}
+//android.applicationVariants.all { variant ->
+//    variant.preBuild.dependsOn "checkstyle"
+//}
