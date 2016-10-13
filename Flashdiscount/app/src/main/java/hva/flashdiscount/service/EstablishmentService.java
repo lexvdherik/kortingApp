@@ -69,7 +69,9 @@ public class EstablishmentService extends APIService {
 
                                     discounts.add(d);
                                 }
-                                establishments.add(new Establishment(company, discounts));
+                                Establishment establishment = new Establishment(company, discounts);
+                                establishment.setLocation(e.getDouble("latitude"), e.getDouble("longitude"));
+                                establishments.add(establishment);
                             }
                             try {
                                 listDataCallback = (OnListDataListener) context;

@@ -1,5 +1,6 @@
 package hva.flashdiscount.model;
 
+import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 
 public class Establishment {
@@ -12,6 +13,7 @@ public class Establishment {
     private String phoneNumber;
     private String website;
     private Company company;
+    private LatLng location;
     private ArrayList<Discount> discounts;
 
     public Establishment(int establishmentId, String street, String postalCode, String streetNumber, String city, String picture, String phoneNumber, String website, Company company) {
@@ -71,4 +73,7 @@ public class Establishment {
         return discounts;
     }
 
+    public void setLocation(double lat, double lon) {
+        location = new LatLng(lat, lon);
+    }
 }
