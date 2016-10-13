@@ -3,6 +3,7 @@ package hva.flashdiscount.fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -42,7 +43,6 @@ public class TabFragment extends Fragment {
         // Inflate the layout for this fragment
         View tabView = inflater.inflate(R.layout.fragment_tab, container, false);
 
-
         TabLayout tabLayout = (TabLayout) tabView.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Map"));
         tabLayout.addTab(tabLayout.newTab().setText("List"));
@@ -70,17 +70,6 @@ public class TabFragment extends Fragment {
         });
 
 
-//        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                DiscountListFragment frg = (DiscountListFragment) getSupportFragmentManager().findFragmentById(R.id.expListView);
-//                final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//                ft.detach(frg);
-//                ft.attach(frg);
-//                ft.commit();
-//            }
-//        });
 
         return tabView;
     }

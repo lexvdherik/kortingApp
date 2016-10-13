@@ -22,7 +22,7 @@
 
     <fragment android:id="@+id/content_fragment"
               android:layout_below="@id/toolbar"
-              android:name="hva.flashdiscount.fragment.TabFragment"
+              class="hva.flashdiscount.fragment.TabFragment"
               android:layout_weight="1"
               android:layout_width="match_parent"
               android:layout_height="match_parent" />

@@ -18,7 +18,7 @@ public class DetailFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static DetailFragment newInstance(String param1, String param2) {
+    public static DetailFragment newInstance() {
         DetailFragment fragment = new DetailFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
