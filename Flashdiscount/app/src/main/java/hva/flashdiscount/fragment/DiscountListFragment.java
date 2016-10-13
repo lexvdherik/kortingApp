@@ -158,7 +158,7 @@ public class DiscountListFragment extends Fragment implements GoogleApiClient.Co
 
                 DetailFragment detailFragment = new DetailFragment();
                 getFragmentManager().beginTransaction()
-                        .replace(R.id.content_fragment, detailFragment)
+                        .replace(R.id.fragment_container, detailFragment)
                         .addToBackStack(null)
                         .commit();
 
