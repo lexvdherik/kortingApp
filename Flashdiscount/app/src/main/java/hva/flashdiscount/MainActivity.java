@@ -18,7 +18,7 @@ import com.android.volley.toolbox.Volley;
 import hva.flashdiscount.fragment.DiscountListFragment;
 import hva.flashdiscount.service.EstablishmentService;
 
-public class MainActivity extends AppCompatActivity;
+public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, EstablishmentService.OnListDataListener  {
 
     RequestQueue requestQueue;
