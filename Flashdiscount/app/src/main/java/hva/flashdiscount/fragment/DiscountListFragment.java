@@ -1,124 +1,157 @@
 package hva.flashdiscount.fragment;
 
-
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ListView;
+import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.ArrayList;
 
-import hva.flashdiscount.adapter.DiscountAdapter;
-import hva.flashdiscount.model.Discount;
+import hva.flashdiscount.R;
+import hva.flashdiscount.adapter.DiscountListAdapter;
+import hva.flashdiscount.model.Establishment;
+import hva.flashdiscount.service.EstablishmentService;
 
+public class DiscountListFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
-public class DiscountListFragment extends ListFragment {
-    public static final String ARG_PAGE = "LIST";
-    OnListDataListener listDataCallback;
-    private ArrayList<Discount> discounts;
-    private DiscountAdapter discountAdapter;
-    private RequestQueue requestQueue;
+    View rootView;
+    ExpandableListView expandableListView;
+
+    private ArrayList<Establishment> establishments;
     private Context context;
-    private String title;
-    private int page;
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private EstablishmentService establishmentService;
 
 
-    public static DiscountListFragment newInstance(int page, String title) {
-        DiscountListFragment discountListFragment = new DiscountListFragment();
-        Bundle args = new Bundle();
-        args.putInt("1", page);
-        args.putString("List", title);
-        discountListFragment.setArguments(args);
-        return discountListFragment;
+    public DiscountListFragment() {
+
+
     }
 
+    public void askLocationPermission() {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            } else {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            }
+        }
+    }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            default:
+            case 1:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-        context = getActivity();
-        requestQueue = Volley.newRequestQueue(context);
+                    Log.e("permission", "GRANTED");
+                    mGoogleApiClient.connect();
 
-        discounts = new ArrayList<Discount>();
+                } else {
 
-//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, serverUrl,
-//                new Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        try {
-//                            JSONArray jsonArray = response.getJSONArray("result");
-//
-//                            for (int i = 0; i < jsonArray.length(); i++) {
-//                                JSONObject discount = jsonArray.getJSONObject(i);
-//
-//                                JSONObject e = discount.getJSONObject("establishment");
-//                                JSONObject c = e.getJSONObject("company");
-//
-////                                Company company = new Company(Integer.valueOf(c.getString("categoryId")), c.getString("name"));
-////                                Establishment establishment = new Establishment(company);
-////                                Discount d = new Discount(discount.getString("description"), establishment, discount.getString("endTime"));
-//
-////                                discounts.add(d);
-//                            }
-//
-//                            if (discountAdapter == null) {
-//                                discountAdapter = new DiscountAdapter(getActivity(), discounts);
-//                                setListAdapter(discountAdapter);
-//                            } else {
-//                                discountAdapter.clear();
-//                                discountAdapter.addAll(discounts);
-//                                discountAdapter.notifyDataSetChanged();
-//                            }
-//
-//                            try {
-//                                listDataCallback = (OnListDataListener) context;
-//                                listDataCallback.onListDataChange(discountAdapter);
-//                            } catch (ClassCastException e) {
-//                                throw new ClassCastException(context.toString()
-//                                        + " must implement OnListDataListener");
-//                            }
-//
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.e("RESPERROR", error.toString());
-//            }
-//        }
-//
-//        );
-//        requestQueue.add(jsonObjectRequest);
+                    Log.e("permission", "DENIED");
+                }
+                return;
+
+        }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+        if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        Log.e("latitude", String.valueOf(mLastLocation.getLatitude()));
+        Log.e("longitude", String.valueOf(mLastLocation.getLongitude()));
 
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+    public void onConnectionSuspended(int i) {
+
     }
 
     @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        page = getArguments().getInt(ARG_PAGE);
+
+
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
+        context = getActivity();
+
+        establishmentService = new EstablishmentService(context, this);
+
+
     }
 
-    public interface OnListDataListener {
-        void onListDataChange(DiscountAdapter da);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_discount_list, container, false);
+
+        return rootView;
     }
 
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-//        onActivityCreated(savedInstanceState);
-//        View view = inflater.inflate(R.layout.list_discount_row, container, false);
-//        return view;
-//
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            askLocationPermission();
+        }
+
+        establishments = new ArrayList<>();
+
+        establishments = establishmentService.getEstablishments();
+
+    }
+
+    public void fillList() {
+        Log.e("asdfsafafsd", "testerere");
+//        swipeRefreshLayout.setRefreshing(false);
+        expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
+        expandableListView.setAdapter(new DiscountListAdapter(establishments, getActivity()));
+    }
+
 
 }
+

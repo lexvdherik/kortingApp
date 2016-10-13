@@ -4,17 +4,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import hva.flashdiscount.fragment.LineupFragment;
+import hva.flashdiscount.fragment.DiscountListFragment;
 import hva.flashdiscount.fragment.MapViewFragment;
 
 /**
  * Created by Laptop_Ezra on 12-10-2016.
  */
 
-public class PagerAdapter extends FragmentStatePagerAdapter {
+public class TabPagerAdapter extends FragmentStatePagerAdapter {
     int mNumOfTabs;
 
-    public PagerAdapter(FragmentManager fm, int numOfTabs) {
+    public TabPagerAdapter(FragmentManager fm, int numOfTabs) {
         super(fm);
         this.mNumOfTabs = numOfTabs;
     }
@@ -27,7 +27,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 MapViewFragment tab2 = new MapViewFragment();
                 return tab2;
             case 1:
-                LineupFragment tab1 = new LineupFragment();
+                DiscountListFragment tab1 = new DiscountListFragment();
                 return tab1;
             default:
                 return null;

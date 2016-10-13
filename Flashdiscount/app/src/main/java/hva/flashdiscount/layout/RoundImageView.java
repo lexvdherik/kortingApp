@@ -1,4 +1,4 @@
-package hva.flashdiscount;
+package hva.flashdiscount.layout;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,13 +14,13 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-public class MLRoundedImageView extends ImageView {
+public class RoundImageView extends ImageView {
 
     Drawable drawable;
     Bitmap bitmap;
     Canvas c;
 
-    public MLRoundedImageView(Context context) {
+    public RoundImageView(Context context) {
         super(context);
         drawable = getDrawable();
         if (drawable instanceof BitmapDrawable) {
@@ -32,7 +32,7 @@ public class MLRoundedImageView extends ImageView {
         }
     }
 
-    public MLRoundedImageView(Context context, AttributeSet attrs) {
+    public RoundImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         drawable = getDrawable();
         if (drawable instanceof BitmapDrawable) {
@@ -44,7 +44,7 @@ public class MLRoundedImageView extends ImageView {
         }
     }
 
-    public MLRoundedImageView(Context context, AttributeSet attrs, int defStyle) {
+    public RoundImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         drawable = getDrawable();
         if (drawable instanceof BitmapDrawable) {

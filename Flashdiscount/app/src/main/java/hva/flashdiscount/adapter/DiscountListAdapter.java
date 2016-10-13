@@ -15,13 +15,13 @@ import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
 
 
-public class ExpandableListAdapter extends BaseExpandableListAdapter {
+public class DiscountListAdapter extends BaseExpandableListAdapter {
 
     private final LayoutInflater inf;
     private ArrayList<Establishment> groups;
     private ArrayList<ArrayList<Discount>> children;
 
-    public ExpandableListAdapter(ArrayList<Establishment> establishments, Activity activity) {
+    public DiscountListAdapter(ArrayList<Establishment> establishments, Activity activity) {
 
         groups = new ArrayList<>();
         children = new ArrayList<>();

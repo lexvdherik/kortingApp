@@ -16,7 +16,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import hva.flashdiscount.fragment.LineupFragment;
+import hva.flashdiscount.fragment.DiscountListFragment;
 import hva.flashdiscount.model.Company;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
@@ -31,9 +31,9 @@ public class EstablishmentService extends APIService {
     private RequestQueue requestQueue;
     private Context context;
     OnListDataListener listDataCallback;
-    LineupFragment frg;
+    DiscountListFragment frg;
 
-    public EstablishmentService(Context context, LineupFragment frg) {
+    public EstablishmentService(Context context, DiscountListFragment frg) {
         this.requestQueue = Volley.newRequestQueue(context);
         this.context = context;
         this.frg = frg;
@@ -98,7 +98,7 @@ public class EstablishmentService extends APIService {
     }
 
     public interface OnListDataListener {
-        void onListDataChange(LineupFragment frg);
+        void onListDataChange(DiscountListFragment frg);
     }
 }
 
