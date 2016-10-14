@@ -69,8 +69,6 @@ public class TabFragment extends Fragment {
             }
         });
 
-
-
         return tabView;
     }
 
