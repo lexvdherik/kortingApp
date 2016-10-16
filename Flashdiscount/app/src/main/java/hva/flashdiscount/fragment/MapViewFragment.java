@@ -26,8 +26,14 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 
 import hva.flashdiscount.R;
+import hva.flashdiscount.model.Company;
+import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.service.GpsTracker;
 
 /**
@@ -38,6 +44,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     MapView mMapView;
     private GoogleMap googleMap;
+    private Context context;
     private LocationRequest mLocationRequest;
     private LocationServices locationServices;
     private LocationManager locationManager;
@@ -149,6 +156,10 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 // For zooming automatically to the location of the marker
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                addEstablishmentMarkers();
+
+
             }
         });
 
@@ -202,4 +213,38 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+    public void addEstablishmentMarkers() {
+
+        ArrayList<Establishment> establishments = new ArrayList<>();
+
+        Company company = new Company(0, "mcDonalds");
+        Company company1 = new Company(1, "BurgerKing");
+        Company company2 = new Company(2, "KFC");
+        Company company3 = new Company(3, "KutSchool:D");
+
+
+        Establishment es = new Establishment(company, 52.354845, 4.890203);
+        Establishment es1 = new Establishment(company1, 52.363467, 4.883208);
+        Establishment es2 = new Establishment(company2, 52.376595, 4.893765);
+        Establishment es3 = new Establishment(company3, 52.359615, 4.908314);
+
+        establishments.add(es);
+        establishments.add(es1);
+        establishments.add(es2);
+        establishments.add(es3);
+
+        for (int i = 0; i < establishments.size(); i++) {
+            createMarker(
+                    establishments.get(i).getCompany().getName() ,
+                    establishments.get(i).getLatitude() ,
+                    establishments.get(i).getLongitude());
+        }
+    }
+
+    protected Marker createMarker(String title, double latitude, double longitude) {
+
+        return googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).anchor(0.5f, 0.5f).title(title));
+    }
+
 }

@@ -33,6 +33,11 @@ public class Establishment {
         this.company = company;
     }
 
+    public Establishment(Company company, double latitude, double longitude) {
+        this.company = company;
+        location = new LatLng(latitude, longitude);
+    }
+
     public int getEstablishmentId() {
         return establishmentId;
     }
@@ -75,5 +80,13 @@ public class Establishment {
 
     public void setLocation(double lat, double lon) {
         location = new LatLng(lat, lon);
+    }
+
+    public Double getLatitude() {
+        return location.latitude;
+    }
+
+    public Double getLongitude() {
+        return location.longitude;
     }
 }
