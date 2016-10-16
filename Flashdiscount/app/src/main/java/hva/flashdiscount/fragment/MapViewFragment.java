@@ -1,8 +1,13 @@
 package hva.flashdiscount.fragment;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -10,25 +15,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
 
 import hva.flashdiscount.R;
+import hva.flashdiscount.service.GpsTracker;
 
 /**
  * Created by chrisvanderheijden on 10/10/2016.
  */
 
-public class MapViewFragment extends Fragment {
+public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     MapView mMapView;
     private GoogleMap googleMap;
     private LocationRequest mLocationRequest;
+    private LocationServices locationServices;
+    private LocationManager locationManager;
     private GoogleApiClient mGoogleApiClient;
+    private Location location;
+    private GpsTracker gpsTracker;
     private String title;
     private int page;
 
@@ -44,6 +59,32 @@ public class MapViewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        buildGoogleApiClient();
+        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        gpsTracker = new GpsTracker(getActivity());
+
+     //   gpsTracker.startReceivingLocationUpdates();
+        //location = gpsTracker.getLocation();
+
+
+        // check if GPS enabled
+        if (gpsTracker.canGetLocation()) {
+            location = new Location(gpsTracker.getLocation());
+
+            location.setLatitude(gpsTracker.getLatitude());
+            location.setLongitude(gpsTracker.getLongitude());
+
+            // \n is for new line
+            //Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
+        } else {
+            // can't get location
+            // GPS or Network is not enabled
+            // Ask user to enable GPS/network in settings
+            gpsTracker.showSettingsAlert();
+        }
+
+
+    //    location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 //        page = getArguments().getInt("0", 0);
 //        title = getArguments().getString("Map");
 
@@ -55,6 +96,7 @@ public class MapViewFragment extends Fragment {
         System.out.println("MapViewfragement: OnCreateView");
         //TextView tvLabel = (TextView) rootView.findViewById(R.id.tvLabel);
         //tvLabel.setText(page + " -- " + title);
+        buildGoogleApiClient();
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         //mMapView = (MapView) getChildFragmentManager().findFragmentById(R.id.mapView).getView();
@@ -92,16 +134,21 @@ public class MapViewFragment extends Fragment {
                 }
                 googleMap.setMyLocationEnabled(true);
 
-                //Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                //LatLng current = new LatLng(location.getLatitude(),location.getLongitude());
+
+          //      location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                //location = new Location(gpsTracker.getLocation());
+
+                LatLng current = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
+
+
 
                 // For dropping a marker at a point on the Map
-                //  LatLng sydney = new LatLng(52.379189, 4.899431);
+            //     LatLng sydney = new LatLng(52.379189, 4.899431);
                 //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
 
                 // For zooming automatically to the location of the marker
-                //CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
-                //googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
 
@@ -113,6 +160,7 @@ public class MapViewFragment extends Fragment {
         super.onResume();
         mMapView.onResume();
     }
+
 
     @Override
     public void onPause() {
@@ -132,5 +180,26 @@ public class MapViewFragment extends Fragment {
         mMapView.onLowMemory();
     }
 
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this.getContext())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 }

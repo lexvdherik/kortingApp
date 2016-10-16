@@ -1,7 +1,9 @@
 package hva.flashdiscount;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,12 +19,18 @@ import com.android.volley.toolbox.Volley;
 
 import hva.flashdiscount.fragment.DiscountListFragment;
 import hva.flashdiscount.service.EstablishmentService;
+import hva.flashdiscount.service.GpsTracker;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, EstablishmentService.OnListDataListener  {
+        implements NavigationView.OnNavigationItemSelectedListener, EstablishmentService.OnListDataListener {
 
     RequestQueue requestQueue;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private GpsTracker gpsTracker;
+    private static final int REQUEST_CODE_PERMISSION = 2;
+    private String mPermissionFine = android.Manifest.permission.ACCESS_FINE_LOCATION;
+    private String mPermissionCourse = android.Manifest.permission.ACCESS_COARSE_LOCATION;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +41,25 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         requestQueue = Volley.newRequestQueue(this);
 
+        try {
+            if (ActivityCompat.checkSelfPermission(MainActivity.this, mPermissionFine)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[]{mPermissionFine}, REQUEST_CODE_PERMISSION);
+
+                // If any permission above not allowed by user, this condition will execute every time, else your else part will work
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        gpsTracker = new GpsTracker(MainActivity.this);
+        // gpsTracker.showSettingsAlert();
+        // gpsTracker.startReceivingLocationUpdates();
+        // gpsTracker.getLocation();
+        //Log.i("LOCATION", gpsTracker.getLocation().toString());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -101,5 +128,21 @@ public class MainActivity extends AppCompatActivity
         Log.e("callback", "gelukt");
         frg.fillList();
 //        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_CODE_PERMISSION) {
+            if (grantResults.length == 1
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                gpsTracker.getLocation();
+
+            } else {
+                // Failure Stuff
+            }
+        }
     }
 }
