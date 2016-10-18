@@ -20,9 +20,8 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <fragment android:id="@+id/content_fragment"
+    <FrameLayout android:id="@+id/fragment_container"
               android:layout_below="@id/toolbar"
-              android:name="hva.flashdiscount.fragment.TabFragment"
               android:layout_weight="1"
               android:layout_width="match_parent"
               android:layout_height="match_parent" />

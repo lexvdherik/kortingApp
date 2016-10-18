@@ -150,6 +150,22 @@ public class DiscountListFragment extends Fragment implements GoogleApiClient.Co
 //        swipeRefreshLayout.setRefreshing(false);
         expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
         expandableListView.setAdapter(new DiscountListAdapter(establishments, getActivity()));
+
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+
+                DetailFragment detailFragment = new DetailFragment();
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, detailFragment)
+                        .addToBackStack(null)
+                        .commit();
+
+                return false;
+            }
+        });
+
     }
 
 
