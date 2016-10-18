@@ -36,6 +36,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-android.applicationVariants.all { variant ->
-    variant.preBuild.dependsOn "checkstyle"
-}
+//android.applicationVariants.all { variant ->
+//    variant.preBuild.dependsOn "checkstyle"
+//}

@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import hva.flashdiscount.R;
 import hva.flashdiscount.model.Company;
 import hva.flashdiscount.model.Establishment;
+import hva.flashdiscount.service.EstablishmentService;
 import hva.flashdiscount.service.GpsTracker;
 
 /**
@@ -53,6 +55,8 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private GpsTracker gpsTracker;
     private String title;
     private int page;
+    private ArrayList<Establishment> establishments;
+    private EstablishmentService establishmentService;
 
     public static MapViewFragment newInstance(int page, String title) {
         MapViewFragment mapViewFragment = new MapViewFragment();
@@ -69,6 +73,8 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         buildGoogleApiClient();
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         gpsTracker = new GpsTracker(getActivity());
+        context = getActivity();
+        establishmentService = new EstablishmentService(context, 1, this.getParentFragment());
 
      //   gpsTracker.startReceivingLocationUpdates();
         //location = gpsTracker.getLocation();
@@ -170,6 +176,9 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+        establishments = new ArrayList<>();
+
+        establishments = establishmentService.getEstablishments();
     }
 
 
@@ -216,30 +225,25 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     public void addEstablishmentMarkers() {
 
-        ArrayList<Establishment> establishments = new ArrayList<>();
-
-        Company company = new Company(0, "mcDonalds");
-        Company company1 = new Company(1, "BurgerKing");
-        Company company2 = new Company(2, "KFC");
-        Company company3 = new Company(3, "KutSchool:D");
 
 
-        Establishment es = new Establishment(company, 52.354845, 4.890203);
-        Establishment es1 = new Establishment(company1, 52.363467, 4.883208);
-        Establishment es2 = new Establishment(company2, 52.376595, 4.893765);
-        Establishment es3 = new Establishment(company3, 52.359615, 4.908314);
-
-        establishments.add(es);
-        establishments.add(es1);
-        establishments.add(es2);
-        establishments.add(es3);
-
-        for (int i = 0; i < establishments.size(); i++) {
-            createMarker(
-                    establishments.get(i).getCompany().getName() ,
-                    establishments.get(i).getLatitude() ,
-                    establishments.get(i).getLongitude());
-        }
+//        for (int i = 0; i < establishments.size(); i++) {
+//
+//            Log.e("Companyname",establishments.get(i).getCompany().getName());
+//            Log.e("Lat",establishments.get(i).getLatitude().toString());
+//            Log.e("Long",establishments.get(i).getLongitude().toString());
+//
+//            createMarker(
+//                    establishments.get(i).getCompany().getName(),
+//                    establishments.get(i).getLatitude(),
+//                    establishments.get(i).getLongitude()
+//            );
+//        }
+//        createMarker(
+//                    "sdiues",
+//                    52.354845,
+//                    4.890203
+//        );
     }
 
     protected Marker createMarker(String title, double latitude, double longitude) {

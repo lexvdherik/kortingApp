@@ -19,13 +19,16 @@ import android.view.MenuItem;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import java.util.List;
+
 import hva.flashdiscount.fragment.DiscountListFragment;
+import hva.flashdiscount.fragment.MapViewFragment;
 import hva.flashdiscount.fragment.TabFragment;
 import hva.flashdiscount.service.EstablishmentService;
 import hva.flashdiscount.service.GpsTracker;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, EstablishmentService.OnListDataListener {
+        implements NavigationView.OnNavigationItemSelectedListener, EstablishmentService.OnDataListener {
 
     RequestQueue requestQueue;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     private static final int REQUEST_CODE_PERMISSION = 2;
     private String mPermissionFine = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private String mPermissionCourse = android.Manifest.permission.ACCESS_COARSE_LOCATION;
+    private FragmentManager fm;
 
 
     @Override
@@ -134,9 +138,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListDataChange(DiscountListFragment frg) {
+    public void onListDataChange(int place) {
         Log.e("callback", "gelukt");
-        frg.fillList();
+        List fragments = getSupportFragmentManager().getFragments();
+        switch (place){
+            case 0:
+                break;
+            case 1:
+                MapViewFragment mvf = (MapViewFragment) fragments.get(place);
+//    mvf.addEstablishmentMarkers();
+                break;
+            case 2:
+                DiscountListFragment dlf = (DiscountListFragment) fragments.get(place);
+                dlf.fillList();
+                break;
+        }
+
 //        swipeRefreshLayout.setRefreshing(false);
     }
 

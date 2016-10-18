@@ -119,7 +119,7 @@ public class DiscountListFragment extends Fragment implements GoogleApiClient.Co
 
         context = getActivity();
 
-        establishmentService = new EstablishmentService(context, this);
+        establishmentService = new EstablishmentService(context, 2, this.getParentFragment());
 
 
     }
@@ -146,7 +146,6 @@ public class DiscountListFragment extends Fragment implements GoogleApiClient.Co
     }
 
     public void fillList() {
-        Log.e("asdfsafafsd", "testerere");
 //        swipeRefreshLayout.setRefreshing(false);
         expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
         expandableListView.setAdapter(new DiscountListAdapter(establishments, getActivity()));

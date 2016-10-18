@@ -1,6 +1,8 @@
 package hva.flashdiscount.service;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -16,7 +18,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import hva.flashdiscount.fragment.DiscountListFragment;
 import hva.flashdiscount.model.Company;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
@@ -30,15 +31,15 @@ public class EstablishmentService extends APIService {
     public ArrayList<Establishment> establishments;
     private RequestQueue requestQueue;
     private Context context;
-    OnListDataListener listDataCallback;
-    DiscountListFragment frg;
+    OnDataListener listDataCallback;
+    FragmentManager fm;
+    int place;
 
-    public EstablishmentService(Context context, DiscountListFragment frg) {
+    public EstablishmentService(Context context, int place, Fragment frg) {
         this.requestQueue = Volley.newRequestQueue(context);
         this.context = context;
-        this.frg = frg;
+        this.place = place;
         getAllEstablishments();
-        Log.e("context", context.toString());
     }
 
     public void getAllEstablishments() {
@@ -74,11 +75,11 @@ public class EstablishmentService extends APIService {
                                 establishments.add(establishment);
                             }
                             try {
-                                listDataCallback = (OnListDataListener) context;
-                                listDataCallback.onListDataChange(frg);
+                                listDataCallback = (OnDataListener) context;
+                                listDataCallback.onListDataChange(place);
                             } catch (ClassCastException e) {
                                 throw new ClassCastException(context.toString()
-                                        + " must implement OnListDataListener");
+                                        + " must implement OnDataListener");
                             }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -99,8 +100,8 @@ public class EstablishmentService extends APIService {
         return establishments;
     }
 
-    public interface OnListDataListener {
-        void onListDataChange(DiscountListFragment frg);
+    public interface OnDataListener {
+        void onListDataChange(int place);
     }
 }
 
