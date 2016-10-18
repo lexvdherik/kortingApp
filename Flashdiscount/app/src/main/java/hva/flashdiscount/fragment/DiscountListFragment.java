@@ -16,11 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationServices;
-
 import java.util.ArrayList;
 
 import hva.flashdiscount.R;
@@ -28,16 +23,13 @@ import hva.flashdiscount.adapter.DiscountListAdapter;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.service.EstablishmentService;
 
-public class DiscountListFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+public class DiscountListFragment extends Fragment {
 
     View rootView;
     ExpandableListView expandableListView;
 
     private ArrayList<Establishment> establishments;
     private Context context;
-    private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private EstablishmentService establishmentService;
 
@@ -68,7 +60,7 @@ public class DiscountListFragment extends Fragment implements GoogleApiClient.Co
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     Log.e("permission", "GRANTED");
-                    mGoogleApiClient.connect();
+//                    mGoogleApiClient.connect();
 
                 } else {
 
@@ -79,48 +71,17 @@ public class DiscountListFragment extends Fragment implements GoogleApiClient.Co
         }
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-        if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        Log.e("latitude", String.valueOf(mLastLocation.getLatitude()));
-        Log.e("longitude", String.valueOf(mLastLocation.getLongitude()));
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+//        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+//                .addApi(LocationServices.API)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .build();
 
         context = getActivity();
-
-        establishmentService = new EstablishmentService(context, 2, this.getParentFragment());
-
 
     }
 
@@ -139,14 +100,13 @@ public class DiscountListFragment extends Fragment implements GoogleApiClient.Co
             askLocationPermission();
         }
 
+        establishmentService = new EstablishmentService(context, 2, this.getParentFragment());
         establishments = new ArrayList<>();
-
         establishments = establishmentService.getEstablishments();
 
     }
 
     public void fillList() {
-//        swipeRefreshLayout.setRefreshing(false);
         expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
         expandableListView.setAdapter(new DiscountListAdapter(establishments, getActivity()));
 

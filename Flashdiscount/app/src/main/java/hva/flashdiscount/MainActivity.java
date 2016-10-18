@@ -139,22 +139,35 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListDataChange(int place) {
-        Log.e("callback", "gelukt");
         List fragments = getSupportFragmentManager().getFragments();
         switch (place){
             case 0:
                 break;
             case 1:
                 MapViewFragment mvf = (MapViewFragment) fragments.get(place);
-//    mvf.addEstablishmentMarkers();
+                if(mvf.isLoaded() == true){
+                    mvf.addEstablishmentMarkers();
+                } else{
+                    mvf.setLoaded(true);
+                }
                 break;
             case 2:
-                DiscountListFragment dlf = (DiscountListFragment) fragments.get(place);
+                final DiscountListFragment dlf = (DiscountListFragment) fragments.get(place);
                 dlf.fillList();
+
+                swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+                swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        ft.detach(dlf);
+                        ft.attach(dlf);
+                        ft.commit();
+                    }
+                });
+                swipeRefreshLayout.setRefreshing(false);
                 break;
         }
-
-//        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

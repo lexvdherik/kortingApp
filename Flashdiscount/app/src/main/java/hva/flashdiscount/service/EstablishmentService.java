@@ -32,7 +32,6 @@ public class EstablishmentService extends APIService {
     private RequestQueue requestQueue;
     private Context context;
     OnDataListener listDataCallback;
-    FragmentManager fm;
     int place;
 
     public EstablishmentService(Context context, int place, Fragment frg) {
@@ -43,7 +42,6 @@ public class EstablishmentService extends APIService {
     }
 
     public void getAllEstablishments() {
-
         establishments = new ArrayList<>();
         String url = baseUrl + "establishment" + listUri;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,

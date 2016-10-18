@@ -33,7 +33,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 
 import hva.flashdiscount.R;
-import hva.flashdiscount.model.Company;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.service.EstablishmentService;
 import hva.flashdiscount.service.GpsTracker;
@@ -57,6 +56,15 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private int page;
     private ArrayList<Establishment> establishments;
     private EstablishmentService establishmentService;
+    private boolean loaded = false;
+
+    public void setLoaded(boolean b){
+        this.loaded = b;
+    }
+
+    public boolean isLoaded(){
+        return this.loaded;
+    }
 
     public static MapViewFragment newInstance(int page, String title) {
         MapViewFragment mapViewFragment = new MapViewFragment();
@@ -70,6 +78,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         buildGoogleApiClient();
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         gpsTracker = new GpsTracker(getActivity());
@@ -82,6 +91,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
         // check if GPS enabled
         if (gpsTracker.canGetLocation()) {
+            Log.e("turst", gpsTracker.getLocation().toString());
             location = new Location(gpsTracker.getLocation());
 
             location.setLatitude(gpsTracker.getLatitude());
@@ -163,9 +173,11 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                addEstablishmentMarkers();
-
-
+                if(isLoaded() == true){
+                    addEstablishmentMarkers();
+                } else{
+                    setLoaded(true);
+                }
             }
         });
 
@@ -224,26 +236,13 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     }
 
     public void addEstablishmentMarkers() {
-
-
-
-//        for (int i = 0; i < establishments.size(); i++) {
-//
-//            Log.e("Companyname",establishments.get(i).getCompany().getName());
-//            Log.e("Lat",establishments.get(i).getLatitude().toString());
-//            Log.e("Long",establishments.get(i).getLongitude().toString());
-//
-//            createMarker(
-//                    establishments.get(i).getCompany().getName(),
-//                    establishments.get(i).getLatitude(),
-//                    establishments.get(i).getLongitude()
-//            );
-//        }
-//        createMarker(
-//                    "sdiues",
-//                    52.354845,
-//                    4.890203
-//        );
+        for (int i = 0; i < establishments.size(); i++) {
+            createMarker(
+                    establishments.get(i).getCompany().getName(),
+                    establishments.get(i).getLatitude(),
+                    establishments.get(i).getLongitude()
+            );
+        }
     }
 
     protected Marker createMarker(String title, double latitude, double longitude) {
