@@ -3,7 +3,6 @@ package hva.flashdiscount.fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -46,14 +45,8 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     MapView mMapView;
     private GoogleMap googleMap;
     private Context context;
-    private LocationRequest mLocationRequest;
-    private LocationServices locationServices;
-    private LocationManager locationManager;
-    private GoogleApiClient mGoogleApiClient;
     private Location location;
     private GpsTracker gpsTracker;
-    private String title;
-    private int page;
     private ArrayList<Establishment> establishments;
     private EstablishmentService establishmentService;
     private boolean loaded = false;
@@ -79,8 +72,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        buildGoogleApiClient();
-        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         gpsTracker = new GpsTracker(getActivity());
         context = getActivity();
         establishmentService = new EstablishmentService(context, 1, this.getParentFragment());
@@ -116,10 +107,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.location_fragment, container, false);
-        System.out.println("MapViewfragement: OnCreateView");
-        //TextView tvLabel = (TextView) rootView.findViewById(R.id.tvLabel);
-        //tvLabel.setText(page + " -- " + title);
-        buildGoogleApiClient();
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         //mMapView = (MapView) getChildFragmentManager().findFragmentById(R.id.mapView).getView();
@@ -146,30 +133,13 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                         != PackageManager.PERMISSION_GRANTED
                         && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
+
                     return;
                 }
                 googleMap.setMyLocationEnabled(true);
 
-
-          //      location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                //location = new Location(gpsTracker.getLocation());
-
                 LatLng current = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
 
-
-
-                // For dropping a marker at a point on the Map
-            //     LatLng sydney = new LatLng(52.379189, 4.899431);
-                //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
-
-                // For zooming automatically to the location of the marker
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
@@ -210,14 +180,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this.getContext())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
     }
 
     @Override
