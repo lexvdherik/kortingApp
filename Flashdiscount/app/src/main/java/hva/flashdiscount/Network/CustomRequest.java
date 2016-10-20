@@ -1,13 +1,10 @@
 package hva.flashdiscount.Network;
 
-
-import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
@@ -19,24 +16,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
-import org.json.JSONArray;
-
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-/**
- * Created by Maiko on 12-10-2016.
- */
-
-public class CustomRequest<T> extends Request<T> {
+class CustomRequest<T> extends Request<T> {
 
     private static final String TAG = "bullkanker";
-    private RequestQueue requestQueue;
-    private Context context;
-    private JSONArray jsonArray;
     private Map<String, String> params;
-    protected Gson mGson = new GsonBuilder().serializeNulls()
+    private Gson mGson = new GsonBuilder().serializeNulls()
             .setDateFormat("yyyy-MM-dd HH:mm:ss")
             .create();
 
@@ -45,7 +33,7 @@ public class CustomRequest<T> extends Request<T> {
     private Response.Listener<T> listener;
 
 
-    public CustomRequest(int method, String url, Map<String, String> params, Response.Listener<T> reponseListener, Response.ErrorListener errorListener, Class<?> clazz) {
+    CustomRequest(int method, String url, Map<String, String> params, Response.Listener<T> reponseListener, Response.ErrorListener errorListener, Class<?> clazz) {
         super(method, url, errorListener);
         this.listener = reponseListener;
         this.params = params;
@@ -61,7 +49,6 @@ public class CustomRequest<T> extends Request<T> {
     public Response<T> parseNetworkResponse(NetworkResponse response) {
 
         String responseData = null;
-
 
         try {
             responseData = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
@@ -95,8 +82,7 @@ public class CustomRequest<T> extends Request<T> {
         } else if (resp.get("message").toString().replace("\"", "").equals("OK") && result.toString().contains("house_id") && mClass.getSimpleName().equals("Boolean")) {
             return Response.success((T) mGson.fromJson("true", mClass), HttpHeaderParser.parseCacheHeaders(response));
         }
-        /** If connection was successful */
-//        Log.d(TAG, "Api response = " + result);
+
         Log.e("da", mGson.fromJson(result.toString(), mClass).toString());
         return Response.success((T) mGson.fromJson(result.toString(), mClass), HttpHeaderParser.parseCacheHeaders(response));
     }

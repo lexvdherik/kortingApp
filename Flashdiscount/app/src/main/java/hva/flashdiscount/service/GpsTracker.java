@@ -17,11 +17,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
-
-/**
- * Created by chrisvanderheijden on 14/10/2016.
- */
-
 public class GpsTracker extends Service implements LocationListener {
 
     private final Context mContext;

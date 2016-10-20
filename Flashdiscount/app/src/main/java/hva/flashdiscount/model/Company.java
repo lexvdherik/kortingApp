@@ -17,11 +17,6 @@ public class Company {
         this.categoryId = categoryId;
     }
 
-    public Company(int categoryId, String name) {
-        this.categoryId = categoryId;
-        this.name = name;
-    }
-
     public int getCompanyId() {
         return companyId;
     }

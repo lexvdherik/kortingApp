@@ -10,18 +10,10 @@ import com.android.volley.toolbox.Volley;
 
 import hva.flashdiscount.model.Establishment;
 
-
-/**
- * Created by Maiko on 20-10-2016.
- */
-
 public class APIRequest {
-
-    public static final String TAG = APIRequest.class.getSimpleName();
-
-    public static final String HOST = "https://amazon.seanmolenaar.eu/api/";
-
-    public static final String METHOD_GET_ESTABLISHMENT = "establishment/";
+    private static final String TAG = APIRequest.class.getSimpleName();
+    private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
+    private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
 
 
     private Context mContext;
@@ -48,7 +40,8 @@ public class APIRequest {
     public boolean getEstablishment(Response.Listener<Establishment[]> responseListener, Response.ErrorListener errorListener) {
 
 
-        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_ESTABLISHMENT, null, responseListener, errorListener, Establishment[].class).setTag(METHOD_GET_ESTABLISHMENT).setShouldCache(true));
+        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_ESTABLISHMENT, null,
+                responseListener, errorListener, Establishment[].class).setTag(METHOD_GET_ESTABLISHMENT).setShouldCache(true));
 
         return true;
     }

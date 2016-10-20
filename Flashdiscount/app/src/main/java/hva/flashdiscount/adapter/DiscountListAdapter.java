@@ -1,7 +1,6 @@
 package hva.flashdiscount.adapter;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,13 +84,14 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inf.inflate(R.layout.list_item, parent, false);
+            convertView = inf.inflate(R.layout.list_child, parent, false);
         }
+
         Discount d = getChild(groupPosition, childPosition);
         ((TextView) convertView.findViewById(R.id.description)).setText(d.getDescription());
-        ((TextView) convertView.findViewById(R.id.company_name)).setText(d.getCompanyName());
+        ((TextView) convertView.findViewById(R.id.company_name)).setText(getGroup(groupPosition).getCompany().getName());
         ((TextView) convertView.findViewById(R.id.time_remaining)).setText(d.getTimeRemaining());
-        ((ImageView) convertView.findViewById(R.id.list_icon)).setImageResource(d.getCategoryImage());
+        ((ImageView) convertView.findViewById(R.id.list_icon)).setImageResource(d.getCategoryImage(getGroup(groupPosition).getCompany().getCategoryId()));
 
         return convertView;
     }
@@ -99,7 +99,7 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inf.inflate(R.layout.list_group, parent, false);
+            convertView = inf.inflate(R.layout.list_parent, parent, false);
         }
 
         Establishment e = getGroup(groupPosition);

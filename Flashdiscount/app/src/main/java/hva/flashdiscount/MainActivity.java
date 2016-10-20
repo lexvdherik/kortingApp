@@ -8,35 +8,25 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-import java.util.List;
-
-import hva.flashdiscount.fragment.DiscountListFragment;
-import hva.flashdiscount.fragment.MapViewFragment;
 import hva.flashdiscount.fragment.TabFragment;
-import hva.flashdiscount.service.EstablishmentService;
 import hva.flashdiscount.service.GpsTracker;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     RequestQueue requestQueue;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private GpsTracker gpsTracker;
     private static final int REQUEST_CODE_PERMISSION = 2;
     private String mPermissionFine = android.Manifest.permission.ACCESS_FINE_LOCATION;
-    private String mPermissionCourse = android.Manifest.permission.ACCESS_COARSE_LOCATION;
-    private FragmentManager fm;
 
 
     @Override

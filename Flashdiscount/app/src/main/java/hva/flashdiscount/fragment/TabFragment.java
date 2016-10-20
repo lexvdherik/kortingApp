@@ -1,6 +1,5 @@
 package hva.flashdiscount.fragment;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 
@@ -16,18 +15,7 @@ import hva.flashdiscount.adapter.TabPagerAdapter;
 
 public class TabFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
-
     public TabFragment() {
-        // Required empty public constructor
-    }
-
-
-    public static TabFragment newInstance() {
-        TabFragment fragment = new TabFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -40,7 +28,6 @@ public class TabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View tabView = inflater.inflate(R.layout.fragment_tab, container, false);
 
         TabLayout tabLayout = (TabLayout) tabView.findViewById(R.id.tab_layout);
@@ -72,9 +59,4 @@ public class TabFragment extends Fragment {
         return tabView;
     }
 
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

@@ -3,7 +3,6 @@ package hva.flashdiscount.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -100,36 +99,15 @@ public class DiscountListFragment extends Fragment {
 
     }
 
-//    public void fillList() {
-//        expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
-//        expandableListView.setAdapter(new DiscountListAdapter(establishments, getActivity()));
-//
-//        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-//
-//            @Override
-//            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-//
-//                DetailFragment detailFragment = new DetailFragment();
-//                getFragmentManager().beginTransaction()
-//                        .replace(R.id.fragment_container, detailFragment)
-//                        .addToBackStack(null)
-//                        .commit();
-//
-//                return false;
-//            }
-//        });
-//
-//    }
-
     private void getEstablishmentsFromAPI() {
         System.gc();
-        GetEstablishmentResponsListener listener = new GetEstablishmentResponsListener();
+        GetEstablishmentResponseListener listener = new GetEstablishmentResponseListener();
         APIRequest.getInstance(getActivity()).getEstablishment(listener, listener);
 
 
     }
 
-    public class GetEstablishmentResponsListener implements Response.Listener<Establishment[]>, Response.ErrorListener {
+    public class GetEstablishmentResponseListener implements Response.Listener<Establishment[]>, Response.ErrorListener {
 
 
         @Override
