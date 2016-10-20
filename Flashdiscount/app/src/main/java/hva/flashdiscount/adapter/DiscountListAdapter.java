@@ -1,6 +1,7 @@
 package hva.flashdiscount.adapter;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import hva.flashdiscount.R;
 import hva.flashdiscount.model.Discount;
@@ -21,8 +23,8 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
     private ArrayList<Establishment> groups;
     private ArrayList<ArrayList<Discount>> children;
 
-    public DiscountListAdapter(ArrayList<Establishment> establishments, Activity activity) {
-
+    public DiscountListAdapter(Establishment[] establishmentsArray, Activity activity) {
+        ArrayList<Establishment> establishments = new ArrayList<>(Arrays.asList(establishmentsArray));
         groups = new ArrayList<>();
         children = new ArrayList<>();
         for (int i = 0; i < establishments.size(); i++) {
@@ -87,7 +89,7 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
         }
         Discount d = getChild(groupPosition, childPosition);
         ((TextView) convertView.findViewById(R.id.description)).setText(d.getDescription());
-        ((TextView) convertView.findViewById(R.id.company_name)).setText(d.getCompany().getName());
+        ((TextView) convertView.findViewById(R.id.company_name)).setText(d.getCompanyName());
         ((TextView) convertView.findViewById(R.id.time_remaining)).setText(d.getTimeRemaining());
         ((ImageView) convertView.findViewById(R.id.list_icon)).setImageResource(d.getCategoryImage());
 

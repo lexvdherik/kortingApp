@@ -12,8 +12,9 @@ public class Establishment {
     private String picture;
     private String phoneNumber;
     private String website;
+    private double latitude;
+    private double longitude;
     private Company company;
-    private LatLng location;
     private ArrayList<Discount> discounts;
 
     public Establishment(int establishmentId, String street, String postalCode, String streetNumber, String city, String picture, String phoneNumber, String website, Company company) {
@@ -35,7 +36,8 @@ public class Establishment {
 
     public Establishment(Company company, double latitude, double longitude) {
         this.company = company;
-        location = new LatLng(latitude, longitude);
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public int getEstablishmentId() {
@@ -78,15 +80,11 @@ public class Establishment {
         return discounts;
     }
 
-    public void setLocation(double lat, double lon) {
-        location = new LatLng(lat, lon);
-    }
-
     public Double getLatitude() {
-        return location.latitude;
+        return latitude;
     }
 
     public Double getLongitude() {
-        return location.longitude;
+        return longitude;
     }
 }

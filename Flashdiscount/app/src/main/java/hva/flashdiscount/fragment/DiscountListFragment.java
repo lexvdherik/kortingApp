@@ -6,8 +6,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -16,22 +14,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
-import java.util.ArrayList;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
+import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.DiscountListAdapter;
 import hva.flashdiscount.model.Establishment;
-import hva.flashdiscount.service.EstablishmentService;
 
 public class DiscountListFragment extends Fragment {
 
     View rootView;
     ExpandableListView expandableListView;
-
-    private ArrayList<Establishment> establishments;
     private Context context;
-    private Location mLastLocation;
-    private EstablishmentService establishmentService;
 
 
     public DiscountListFragment() {
@@ -95,38 +91,76 @@ public class DiscountListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        getEstablishmentsFromAPI();
 
         if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             askLocationPermission();
         }
 
-        establishmentService = new EstablishmentService(context, 2, this.getParentFragment());
-        establishments = new ArrayList<>();
-        establishments = establishmentService.getEstablishments();
 
     }
 
-    public void fillList() {
-        expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
-        expandableListView.setAdapter(new DiscountListAdapter(establishments, getActivity()));
+//    public void fillList() {
+//        expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
+//        expandableListView.setAdapter(new DiscountListAdapter(establishments, getActivity()));
+//
+//        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+//
+//            @Override
+//            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+//
+//                DetailFragment detailFragment = new DetailFragment();
+//                getFragmentManager().beginTransaction()
+//                        .replace(R.id.fragment_container, detailFragment)
+//                        .addToBackStack(null)
+//                        .commit();
+//
+//                return false;
+//            }
+//        });
+//
+//    }
 
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+    private void getEstablishmentsFromAPI() {
+        System.gc();
+        GetEstablishmentResponsListener listener = new GetEstablishmentResponsListener();
+        APIRequest.getInstance(getActivity()).getEstablishment(listener, listener);
 
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
-                DetailFragment detailFragment = new DetailFragment();
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, detailFragment)
-                        .addToBackStack(null)
-                        .commit();
+    }
 
-                return false;
+    public class GetEstablishmentResponsListener implements Response.Listener<Establishment[]>, Response.ErrorListener {
+
+
+        @Override
+        public void onResponse(Establishment[] establishments) {
+
+            expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
+            expandableListView.setAdapter(new DiscountListAdapter(establishments, getActivity()));
+            expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+                @Override
+                public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+
+                    DetailFragment detailFragment = new DetailFragment();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, detailFragment)
+                            .addToBackStack(null)
+                            .commit();
+
+                    return false;
+                }
+            });
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+            if (error instanceof NoConnectionError) {
             }
-        });
+        }
+
 
     }
-
 
 }
-

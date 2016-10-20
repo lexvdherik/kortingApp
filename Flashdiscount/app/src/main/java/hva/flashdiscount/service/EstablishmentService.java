@@ -64,21 +64,21 @@ public class EstablishmentService extends APIService {
                                     JSONObject dsObj = ds.getJSONObject(j);
 
 
-                                    Discount d = new Discount(dsObj.getString("description"), dsObj.getString("endTime"), company);
+//                                    Discount d = new Discount(dsObj.getString("description"), dsObj.getString("endTime"), company);
 
-                                    discounts.add(d);
+//                                    discounts.add(d);
                                 }
                                 Establishment establishment = new Establishment(company, discounts);
-                                establishment.setLocation(e.getDouble("latitude"), e.getDouble("longitude"));
+//                                establishment.setLocation(e.getDouble("latitude"), e.getDouble("longitude"));
                                 establishments.add(establishment);
                             }
-                            try {
-                                listDataCallback = (OnDataListener) context;
-                                listDataCallback.onListDataChange(place);
-                            } catch (ClassCastException e) {
-                                throw new ClassCastException(context.toString()
-                                        + " must implement OnDataListener");
-                            }
+//                            try {
+//                                listDataCallback = (OnDataListener) context;
+//                                listDataCallback.onListDataChange(place);
+//                            } catch (ClassCastException e) {
+//                                throw new ClassCastException(context.toString()
+//                                        + " must implement OnDataListener");
+//                            }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

@@ -17,7 +17,6 @@ public class Discount {
     private int userLimit;
     private String picture;
     private Establishment establishment;
-    private Company company;
 
     public Discount(int discountId, int active, String description, String startTime, String endTime, int amount, int userLimit, String picture, Company company) {
         this.discountId = discountId;
@@ -28,7 +27,6 @@ public class Discount {
         this.amount = amount;
         this.userLimit = userLimit;
         this.picture = picture;
-        this.company = company;
     }
 
     public Discount(String description, Establishment establishment, String endTime) {
@@ -37,14 +35,9 @@ public class Discount {
         this.establishment = establishment;
     }
 
-    public Discount(String description, String endTime, Company company) {
+    public Discount(String description, String endTime) {
         this.description = description;
         this.endTime = endTime;
-        this.company = company;
-    }
-
-    public Company getCompany() {
-        return company;
     }
 
     public int getDiscountId() {
@@ -80,7 +73,7 @@ public class Discount {
     }
 
     public String getCompanyName() {
-        return this.establishment.getCompany().getName();
+        return establishment.getCompany().getName();
     }
 
     public int getCategoryId() {
@@ -96,7 +89,7 @@ public class Discount {
     }
 
     public int getCategoryImage() {
-        int categoryId = this.company.getCategoryId();
+        int categoryId = establishment.getCompany().getCategoryId();
 
         switch (categoryId) {
             case 1:

@@ -28,7 +28,7 @@ import hva.flashdiscount.service.EstablishmentService;
 import hva.flashdiscount.service.GpsTracker;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, EstablishmentService.OnDataListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     RequestQueue requestQueue;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -137,38 +137,38 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public void onListDataChange(int place) {
-        List fragments = getSupportFragmentManager().getFragments();
-        switch (place){
-            case 0:
-                break;
-            case 1:
-                MapViewFragment mvf = (MapViewFragment) fragments.get(place);
-                if(mvf.isLoaded() == true){
-                    mvf.addEstablishmentMarkers();
-                } else{
-                    mvf.setLoaded(true);
-                }
-                break;
-            case 2:
-                final DiscountListFragment dlf = (DiscountListFragment) fragments.get(place);
-                dlf.fillList();
-
-                swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
-                swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        ft.detach(dlf);
-                        ft.attach(dlf);
-                        ft.commit();
-                    }
-                });
-                swipeRefreshLayout.setRefreshing(false);
-                break;
-        }
-    }
+//    @Override
+//    public void onListDataChange(int place) {
+//        List fragments = getSupportFragmentManager().getFragments();
+//        switch (place){
+//            case 0:
+//                break;
+//            case 1:
+//                MapViewFragment mvf = (MapViewFragment) fragments.get(place);
+//                if(mvf.isLoaded() == true){
+//                    mvf.addEstablishmentMarkers();
+//                } else{
+//                    mvf.setLoaded(true);
+//                }
+//                break;
+//            case 2:
+//                final DiscountListFragment dlf = (DiscountListFragment) fragments.get(place);
+//                dlf.fillList();
+//
+//                swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
+//                swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//                    @Override
+//                    public void onRefresh() {
+//                        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//                        ft.detach(dlf);
+//                        ft.attach(dlf);
+//                        ft.commit();
+//                    }
+//                });
+//                swipeRefreshLayout.setRefreshing(false);
+//                break;
+//        }
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
