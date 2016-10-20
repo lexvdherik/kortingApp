@@ -42,6 +42,8 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private Location location;
     private GpsTracker gpsTracker;
 
+    private static final String TAG = MapViewFragment.class.getSimpleName();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -22,7 +22,7 @@ import java.util.Map;
 
 class CustomRequest<T> extends Request<T> {
 
-    private static final String TAG = "bullkanker";
+    private static final String TAG = CustomRequest.class.getSimpleName();
     private Map<String, String> params;
     private Gson mGson = new GsonBuilder().serializeNulls()
             .setDateFormat("yyyy-MM-dd HH:mm:ss")

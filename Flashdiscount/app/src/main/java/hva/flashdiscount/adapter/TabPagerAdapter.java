@@ -8,6 +8,9 @@ import hva.flashdiscount.fragment.DiscountListFragment;
 import hva.flashdiscount.fragment.MapViewFragment;
 
 public class TabPagerAdapter extends FragmentStatePagerAdapter {
+
+    private static final String TAG = TabPagerAdapter.class.getSimpleName();
+
     private int mNumOfTabs;
 
     public TabPagerAdapter(FragmentManager fm, int numOfTabs) {

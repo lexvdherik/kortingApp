@@ -15,6 +15,8 @@ import hva.flashdiscount.adapter.TabPagerAdapter;
 
 public class TabFragment extends Fragment {
 
+    private static final String TAG = TabFragment.class.getSimpleName();
+
     public TabFragment() {
     }
 

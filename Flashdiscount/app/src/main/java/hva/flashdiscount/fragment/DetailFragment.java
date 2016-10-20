@@ -14,8 +14,9 @@ public class DetailFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    private static final String TAG = DetailFragment.class.getSimpleName();
+
     public DetailFragment() {
-        // Required empty public constructor
     }
 
     public static DetailFragment newInstance() {
