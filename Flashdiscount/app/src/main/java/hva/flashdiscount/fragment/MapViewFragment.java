@@ -1,15 +1,14 @@
 package hva.flashdiscount.fragment;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,12 +55,14 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
             location.setLatitude(gpsTracker.getLatitude());
             location.setLongitude(gpsTracker.getLongitude());
-
         } else {
-            gpsTracker.showSettingsAlert();
+            location = new Location("");
+            location.setLatitude(52.375368);
+            location.setLongitude(4.894486);
         }
-
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,16 +85,14 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
-                if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-
-                    return;
+                if (gpsTracker.checkWriteExternalPermission()) {
+                    googleMap.setMyLocationEnabled(true);
+                } else {
+                    Log.e("nono", "no");
                 }
-                googleMap.setMyLocationEnabled(true);
 
-                LatLng current = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
+
+                LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
 
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -109,10 +108,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     public void onResume() {
         super.onResume();
         mMapView.onResume();
-
-
     }
-
 
     @Override
     public void onPause() {
@@ -159,7 +155,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     }
 
     public class GetEstablishmentResponseListener implements Response.Listener<Establishment[]>, Response.ErrorListener {
-
 
         @Override
         public void onResponse(Establishment[] establishments) {
