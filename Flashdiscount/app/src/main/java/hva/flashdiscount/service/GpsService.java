@@ -17,7 +17,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 
-public class GpsTracker extends Service implements LocationListener {
+public class GpsService extends Service implements LocationListener {
 
     private final Context mContext;
     boolean isGPSEnabled = false;
@@ -34,7 +34,7 @@ public class GpsTracker extends Service implements LocationListener {
 
     protected LocationManager locationManager;
 
-    public GpsTracker(Context context) {
+    public GpsService(Context context) {
         this.mContext = context;
         getLocation();
     }

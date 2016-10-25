@@ -31,7 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.model.Establishment;
-import hva.flashdiscount.service.GpsTracker;
+import hva.flashdiscount.service.GpsService;
 
 public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
@@ -39,7 +39,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private GoogleMap googleMap;
     private Context context;
     private Location location;
-    private GpsTracker gpsTracker;
+    private GpsService gpsService;
 
     private static final String TAG = MapViewFragment.class.getSimpleName();
 
@@ -47,14 +47,14 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        gpsTracker = new GpsTracker(getActivity());
+        gpsService = new GpsService(getActivity());
         context = getActivity();
 
-        if (gpsTracker.canGetLocation()) {
-            location = new Location(gpsTracker.getLocation());
+        if (gpsService.canGetLocation()) {
+            location = new Location(gpsService.getLocation());
 
-            location.setLatitude(gpsTracker.getLatitude());
-            location.setLongitude(gpsTracker.getLongitude());
+            location.setLatitude(gpsService.getLatitude());
+            location.setLongitude(gpsService.getLongitude());
         } else {
             location = new Location("");
             location.setLatitude(52.375368);
@@ -85,7 +85,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
-                if (gpsTracker.checkWriteExternalPermission()) {
+                if (gpsService.checkWriteExternalPermission()) {
                     googleMap.setMyLocationEnabled(true);
                 } else {
                     Log.e("nono", "no");
