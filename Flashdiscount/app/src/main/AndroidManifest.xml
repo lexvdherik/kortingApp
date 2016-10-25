@@ -13,8 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyC8ZdEFPmHHKrZE3itZNfSKGNtX5LTvDks"/>
-
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC8ZdEFPmHHKrZE3itZNfSKGNtX5LTvDks"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="0bcaf9574d5a13eb357270997d860c1fabf4d2a9" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -25,6 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

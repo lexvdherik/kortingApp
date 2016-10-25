@@ -1,4 +1,22 @@
+buildscript {
+    repositories {
+        repositories {
+            maven { url 'https://maven.fabric.io/public' }
+        }
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 apply from: '../config/quality.gradle'
 
 android {
@@ -34,6 +52,9 @@ dependencies {
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.4'
     testCompile 'junit:junit:4.12'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+        transitive = true;
+    }
 }
 
 android.applicationVariants.all { variant ->
