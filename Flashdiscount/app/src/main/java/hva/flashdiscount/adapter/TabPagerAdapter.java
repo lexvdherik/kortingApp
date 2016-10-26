@@ -7,12 +7,11 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import hva.flashdiscount.fragment.DiscountListFragment;
 import hva.flashdiscount.fragment.MapViewFragment;
 
-/**
- * Created by Laptop_Ezra on 12-10-2016.
- */
-
 public class TabPagerAdapter extends FragmentStatePagerAdapter {
-    int mNumOfTabs;
+
+    private static final String TAG = TabPagerAdapter.class.getSimpleName();
+
+    private int mNumOfTabs;
 
     public TabPagerAdapter(FragmentManager fm, int numOfTabs) {
         super(fm);
@@ -24,11 +23,9 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                MapViewFragment tab2 = new MapViewFragment();
-                return tab2;
+                return new MapViewFragment();
             case 1:
-                DiscountListFragment tab1 = new DiscountListFragment();
-                return tab1;
+                return new DiscountListFragment();
             default:
                 return null;
         }

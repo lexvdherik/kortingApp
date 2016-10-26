@@ -1,22 +1,18 @@
 package hva.flashdiscount.model;
 
+import android.util.Log;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by Maiko on 6-10-2016.
- */
-
-public class DateTime {
+class DateTime {
     private Calendar endTime;
     private Calendar currentTime;
 
-    public DateTime(String endTimeString) {
-
-
+    DateTime(String endTimeString) {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         this.currentTime = Calendar.getInstance();
         this.endTime = Calendar.getInstance();
@@ -29,9 +25,8 @@ public class DateTime {
             this.endTime.setTime(endDate);
 
         } catch (ParseException e) {
-
+            Log.e("DateTime ParseError", e.toString());
         }
-
     }
 
     public int getEndTime() {
@@ -42,7 +37,7 @@ public class DateTime {
         return currentTime.get(Calendar.DATE);
     }
 
-    public String minutesBetween() {
+    String minutesBetween() {
         Long end = this.currentTime.getTimeInMillis();
         Long start = this.endTime.getTimeInMillis();
         Long minutesBetween = (start - end) / 60000;

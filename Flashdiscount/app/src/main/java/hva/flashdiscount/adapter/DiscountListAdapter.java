@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import hva.flashdiscount.R;
 import hva.flashdiscount.model.Discount;
@@ -21,7 +22,11 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
     private ArrayList<Establishment> groups;
     private ArrayList<ArrayList<Discount>> children;
 
-    public DiscountListAdapter(ArrayList<Establishment> establishments, Activity activity) {
+    private static final String TAG = DiscountListAdapter.class.getSimpleName();
+
+    public DiscountListAdapter(Establishment[] establishmentsArray, Activity activity) {
+
+        ArrayList<Establishment> establishments = new ArrayList<>(Arrays.asList(establishmentsArray));
 
         groups = new ArrayList<>();
         children = new ArrayList<>();
@@ -39,7 +44,6 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
             }
 
         }
-
 
         inf = LayoutInflater.from(activity);
 
@@ -83,13 +87,14 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inf.inflate(R.layout.list_item, parent, false);
+            convertView = inf.inflate(R.layout.list_child, parent, false);
         }
-        Discount d = getChild(groupPosition, childPosition);
-        ((TextView) convertView.findViewById(R.id.description)).setText(d.getDescription());
-        ((TextView) convertView.findViewById(R.id.company_name)).setText(d.getCompany().getName());
-        ((TextView) convertView.findViewById(R.id.time_remaining)).setText(d.getTimeRemaining());
-        ((ImageView) convertView.findViewById(R.id.list_icon)).setImageResource(d.getCategoryImage());
+
+        Discount discount = getChild(groupPosition, childPosition);
+        ((TextView) convertView.findViewById(R.id.description)).setText(discount.getDescription());
+        ((TextView) convertView.findViewById(R.id.company_name)).setText(getGroup(groupPosition).getCompany().getName());
+        ((TextView) convertView.findViewById(R.id.time_remaining)).setText(discount.getTimeRemaining());
+        ((ImageView) convertView.findViewById(R.id.list_icon)).setImageResource(discount.getCategoryImage(getGroup(groupPosition).getCompany().getCategoryId()));
 
         return convertView;
     }
@@ -97,20 +102,19 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inf.inflate(R.layout.list_group, parent, false);
+            convertView = inf.inflate(R.layout.list_parent, parent, false);
         }
 
-        Establishment e = getGroup(groupPosition);
+        Establishment establishment = getGroup(groupPosition);
         int cCount = getChildrenCount(groupPosition);
         if (cCount == 0) {
-            ((TextView) convertView.findViewById(R.id.flextitel)).setText(e.getDiscounts().get(0).getDescription());
-            ((TextView) convertView.findViewById(R.id.company_name)).setText(e.getCompany().getName());
-            ((TextView) convertView.findViewById(R.id.time_remaining)).setText(e.getDiscounts().get(0).getTimeRemaining());
+            ((TextView) convertView.findViewById(R.id.flextitel)).setText(establishment.getDiscounts().get(0).getDescription());
+            ((TextView) convertView.findViewById(R.id.company_name)).setText(establishment.getCompany().getName());
+            ((TextView) convertView.findViewById(R.id.time_remaining)).setText(establishment.getDiscounts().get(0).getTimeRemaining());
         } else {
             ((TextView) convertView.findViewById(R.id.flextitel)).setText(String.valueOf(cCount + " Aanbiedingen"));
-            ((TextView) convertView.findViewById(R.id.company_name)).setText(e.getCompany().getName());
+            ((TextView) convertView.findViewById(R.id.company_name)).setText(establishment.getCompany().getName());
         }
-
 
         return convertView;
     }

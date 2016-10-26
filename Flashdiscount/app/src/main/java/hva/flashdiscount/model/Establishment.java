@@ -11,6 +11,8 @@ public class Establishment {
     private String picture;
     private String phoneNumber;
     private String website;
+    private double latitude;
+    private double longitude;
     private Company company;
     private ArrayList<Discount> discounts;
 
@@ -23,11 +25,6 @@ public class Establishment {
         this.picture = picture;
         this.phoneNumber = phoneNumber;
         this.website = website;
-        this.company = company;
-    }
-
-    public Establishment(Company company, ArrayList<Discount> discounts) {
-        this.discounts = discounts;
         this.company = company;
     }
 
@@ -71,4 +68,11 @@ public class Establishment {
         return discounts;
     }
 
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
 }

@@ -1,66 +1,77 @@
 package hva.flashdiscount.fragment;
 
-import android.content.pm.PackageManager;
+import android.content.Context;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.NoConnectionError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
+import hva.flashdiscount.model.Establishment;
+import hva.flashdiscount.service.GpsService;
 
-/**
- * Created by chrisvanderheijden on 10/10/2016.
- */
-
-public class MapViewFragment extends Fragment {
+public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     MapView mMapView;
     private GoogleMap googleMap;
-    private LocationRequest mLocationRequest;
-    private GoogleApiClient mGoogleApiClient;
-    private String title;
-    private int page;
+    private Context context;
+    private Location location;
+    private GpsService gpsService;
 
-    public static MapViewFragment newInstance(int page, String title) {
-        MapViewFragment mapViewFragment = new MapViewFragment();
-        Bundle args = new Bundle();
-        args.putInt("0", page);
-        args.putString("Map", title);
-        mapViewFragment.setArguments(args);
-        return mapViewFragment;
-    }
+    private static final String TAG = MapViewFragment.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        page = getArguments().getInt("0", 0);
-//        title = getArguments().getString("Map");
 
+        gpsService = new GpsService(getActivity());
+        context = getActivity();
+
+        if (gpsService.canGetLocation()) {
+            location = new Location(gpsService.getLocation());
+
+            location.setLatitude(gpsService.getLatitude());
+            location.setLongitude(gpsService.getLongitude());
+        } else {
+            location = new Location("");
+            location.setLatitude(52.375368);
+            location.setLongitude(4.894486);
+        }
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.location_fragment, container, false);
-        System.out.println("MapViewfragement: OnCreateView");
-        //TextView tvLabel = (TextView) rootView.findViewById(R.id.tvLabel);
-        //tvLabel.setText(page + " -- " + title);
+        View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
-        //mMapView = (MapView) getChildFragmentManager().findFragmentById(R.id.mapView).getView();
         mMapView.onCreate(savedInstanceState);
 
-        mMapView.onResume(); // needed to get the map to display immediately
+        mMapView.onResume();
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -74,34 +85,19 @@ public class MapViewFragment extends Fragment {
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
-                //For showing a move to my location button
-
-
-                if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED
-                        && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
+                if (gpsService.checkWriteExternalPermission()) {
+                    googleMap.setMyLocationEnabled(true);
+                } else {
+                    Log.e("nono", "no");
                 }
-                googleMap.setMyLocationEnabled(true);
 
-                //Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                //LatLng current = new LatLng(location.getLatitude(),location.getLongitude());
 
-                // For dropping a marker at a point on the Map
-                //  LatLng sydney = new LatLng(52.379189, 4.899431);
-                //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
+                LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
 
-                // For zooming automatically to the location of the marker
-                //CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
-                //googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                getEstablishmentsFromAPI();
             }
         });
 
@@ -132,5 +128,51 @@ public class MapViewFragment extends Fragment {
         mMapView.onLowMemory();
     }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
 
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    protected Marker createMarker(String title, double latitude, double longitude) {
+
+        return googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).anchor(0.5f, 0.5f).title(title));
+    }
+
+    private void getEstablishmentsFromAPI() {
+        System.gc();
+        MapViewFragment.GetEstablishmentResponseListener listener = new MapViewFragment.GetEstablishmentResponseListener();
+        APIRequest.getInstance(getActivity()).getEstablishment(listener, listener);
+    }
+
+    public class GetEstablishmentResponseListener implements Response.Listener<Establishment[]>, Response.ErrorListener {
+
+        @Override
+        public void onResponse(Establishment[] establishments) {
+            for (int i = 0; i < establishments.length; i++) {
+                createMarker(
+                        establishments[i].getCompany().getName(),
+                        establishments[i].getLatitude(),
+                        establishments[i].getLongitude()
+                );
+            }
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+            if (error instanceof NoConnectionError) {
+            }
+        }
+
+    }
 }
