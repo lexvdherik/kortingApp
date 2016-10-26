@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 
 import hva.flashdiscount.R;
+import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
 
 
@@ -39,8 +40,10 @@ public class DetailFragment extends Fragment {
 
             String gson = getArguments().getString("establishment");
             Establishment establishment = new Gson().fromJson(gson, Establishment.class);
+            Discount discount = establishment.getDiscounts().get(getArguments().getInt("discountPosition"));
 
             Log.e(TAG, establishment.getCompany().getName());
+            Log.e(TAG, discount.getDescription());
 
         }
     }

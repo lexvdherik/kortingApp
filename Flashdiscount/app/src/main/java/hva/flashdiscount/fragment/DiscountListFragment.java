@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.DiscountListAdapter;
+import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
 
 public class DiscountListFragment extends Fragment {
@@ -63,9 +64,11 @@ public class DiscountListFragment extends Fragment {
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
-//                        goToDetailView();
 
-                        return true;
+                    Establishment establishment = (Establishment) parent.getExpandableListAdapter().getGroup(groupPosition);
+                    goToDetailView(establishment, childPosition);
+
+                    return true;
                     }
                 });
 
@@ -78,7 +81,7 @@ public class DiscountListFragment extends Fragment {
 
                                Establishment establishment = (Establishment) parent.getExpandableListAdapter().getGroup(groupPosition);
 
-                               goToDetailView(establishment);
+                               goToDetailView(establishment,0);
                            }
                            return true;
                        }
@@ -100,10 +103,11 @@ public class DiscountListFragment extends Fragment {
 
     }
 
-    private void goToDetailView(Establishment establishment){
+    private void goToDetailView(Establishment establishment, int discountPostion){
 
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));
+        arguments.putInt("discountPostion", discountPostion);
 
         DetailFragment detailFragment = new DetailFragment();
 
