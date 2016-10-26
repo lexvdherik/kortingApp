@@ -8,7 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+
 import hva.flashdiscount.R;
+import hva.flashdiscount.model.Establishment;
 
 
 public class DetailFragment extends Fragment {
@@ -32,6 +35,13 @@ public class DetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             Log.e(TAG, "getArguments() != null");
+
+
+            String gson = getArguments().getString("establishment");
+            Establishment establishment = new Gson().fromJson(gson, Establishment.class);
+
+            Log.e(TAG, establishment.getCompany().getName());
+
         }
     }
 
