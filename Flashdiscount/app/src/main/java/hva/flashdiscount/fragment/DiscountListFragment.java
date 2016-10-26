@@ -57,6 +57,7 @@ public class DiscountListFragment extends Fragment {
 
             expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
             expandableListView.setAdapter(new DiscountListAdapter(establishments, getActivity()));
+
             expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
                 @Override
@@ -71,20 +72,27 @@ public class DiscountListFragment extends Fragment {
                     return false;
                 }
             });
-            expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-                @Override
-                public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 
-                    DetailFragment detailFragment = new DetailFragment();
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, detailFragment)
-                            .addToBackStack(null)
-                            .commit();
+                   expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+                       @Override
+                       public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                           int count = parent.getExpandableListAdapter().getChildrenCount(groupPosition);
+                           parent.getExpandableListAdapter().get
+                           if (count == 0) {
+                               DetailFragment detailFragment = new DetailFragment();
+                               getFragmentManager().beginTransaction()
+                                       .replace(R.id.fragment_container, detailFragment)
+                                       .addToBackStack(null)
+                                       .commit();
+                           }
+                           return false;
+                       }
+                   });
 
-                    return false;
-                }
-            });
-        }
+               }
+
+
+
 
         @Override
         public void onErrorResponse(VolleyError error) {
