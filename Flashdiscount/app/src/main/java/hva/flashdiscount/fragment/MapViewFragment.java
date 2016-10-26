@@ -143,9 +143,9 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     }
 
-    protected Marker createMarker(String title, double latitude, double longitude) {
+    protected Marker createMarker(String title, LatLng location) {
 
-        return googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).anchor(0.5f, 0.5f).title(title));
+        return googleMap.addMarker(new MarkerOptions().position(location).anchor(0.5f, 0.5f).title(title));
     }
 
     private void getEstablishmentsFromAPI() {
@@ -158,11 +158,10 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
         @Override
         public void onResponse(Establishment[] establishments) {
-            for (int i = 0; i < establishments.length; i++) {
+            for (Establishment establishment : establishments) {
                 createMarker(
-                        establishments[i].getCompany().getName(),
-                        establishments[i].getLatitude(),
-                        establishments[i].getLongitude()
+                        establishment.getCompany().getName(),
+                        establishment.getLocation()
                 );
             }
         }
@@ -171,6 +170,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         public void onErrorResponse(VolleyError error) {
 
             if (error instanceof NoConnectionError) {
+                Log.e(TAG, "No connection!");
             }
         }
 
