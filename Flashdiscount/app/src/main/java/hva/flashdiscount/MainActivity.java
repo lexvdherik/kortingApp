@@ -1,6 +1,7 @@
 package hva.flashdiscount;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -9,17 +10,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import hva.flashdiscount.fragment.TabFragment;
 import com.crashlytics.android.Crashlytics;
+
+import hva.flashdiscount.fragment.TabFragment;
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,17 +76,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         if (id == R.id.nav_discounts) {
-
+            Log.i(TAG, "nav_discounts");
         } else if (id == R.id.nav_myDiscounts) {
-
+            Log.i(TAG, "nav_myDiscounts");
         } else if (id == R.id.nav_favorites) {
-
+            Log.i(TAG, "nav_favorites");
         } else if (id == R.id.nav_account_settings) {
-
+            Log.i(TAG, "nav_account_settings");
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

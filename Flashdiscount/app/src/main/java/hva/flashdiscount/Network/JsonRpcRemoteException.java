@@ -44,8 +44,7 @@ public final class JsonRpcRemoteException extends JsonRpcException {
             str.append(message);
         }
         if (data != null) {
-            str.append("\n");
-            str.append("Caused by " + data);
+            str.append("\n").append("Caused by ").append(data);
         }
         return str.toString();
     }

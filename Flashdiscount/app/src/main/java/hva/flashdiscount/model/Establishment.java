@@ -1,5 +1,7 @@
 package hva.flashdiscount.model;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 
 public class Establishment {
@@ -74,5 +76,9 @@ public class Establishment {
 
     public Double getLongitude() {
         return longitude;
+    }
+
+    public LatLng getLocation() {
+        return new LatLng(latitude, longitude);
     }
 }

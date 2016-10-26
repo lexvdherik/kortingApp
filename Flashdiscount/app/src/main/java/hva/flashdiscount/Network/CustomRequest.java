@@ -60,6 +60,7 @@ class CustomRequest<T> extends Request<T> {
         JsonObject resp;
 
         try {
+            assert responseData != null;
             resp = (JsonObject) parser.parse(new StringReader(responseData));
         } catch (JsonIOException | JsonSyntaxException e) {
             e.printStackTrace();
