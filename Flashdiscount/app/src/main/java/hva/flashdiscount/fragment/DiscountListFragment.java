@@ -68,7 +68,7 @@ public class DiscountListFragment extends Fragment {
                     Establishment establishment = (Establishment) parent.getExpandableListAdapter().getGroup(groupPosition);
                     goToDetailView(establishment, childPosition);
 
-                    return true;
+                    return false;
                     }
                 });
 
@@ -78,12 +78,10 @@ public class DiscountListFragment extends Fragment {
                            int count = parent.getExpandableListAdapter().getChildrenCount(groupPosition);
 
                            if (count == 0) {
-
                                Establishment establishment = (Establishment) parent.getExpandableListAdapter().getGroup(groupPosition);
-
-                               goToDetailView(establishment,0);
+                               goToDetailView(establishment, 0);
                            }
-                           return true;
+                           return false;
                        }
                    });
 
