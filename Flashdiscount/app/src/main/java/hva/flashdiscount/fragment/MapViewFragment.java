@@ -27,13 +27,15 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.service.GpsService;
 
-public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        GoogleMap.OnMarkerClickListener{
 
     MapView mMapView;
     private GoogleMap googleMap;
@@ -61,7 +63,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             location.setLongitude(4.894486);
         }
     }
-
 
 
     @Override
@@ -93,15 +94,36 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
 
                 LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
-
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                    @Override
+                    public void onInfoWindowClick(Marker marker) {
+                        Establishment establishment = (Establishment) marker.getTag();
+                        goToDetailView(establishment);
 
+                    }
+                });
                 getEstablishmentsFromAPI();
             }
         });
 
         return rootView;
+    }
+
+    private void goToDetailView(Establishment establishment){
+
+        Bundle arguments = new Bundle();
+        arguments.putString("establishment", new Gson().toJson(establishment));
+
+        DetailFragment detailFragment = new DetailFragment();
+
+        detailFragment.setArguments(arguments);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, detailFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -143,9 +165,18 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     }
 
-    protected Marker createMarker(String title, LatLng location) {
-
-        return googleMap.addMarker(new MarkerOptions().position(location).anchor(0.5f, 0.5f).title(title));
+    protected Marker createMarker(Establishment establishment) {
+        if (establishment.getDiscounts().size() > 1) {
+            Marker marker = googleMap.addMarker(new MarkerOptions().position(establishment.getLocation()).anchor(0.5f, 0.5f)
+                    .title(establishment.getCompany().getName()).snippet(establishment.getDiscounts().size() + " kortingen"));
+            marker.setTag(establishment);
+            return marker;
+        } else {
+            Marker marker = googleMap.addMarker(new MarkerOptions().position(establishment.getLocation()).anchor(0.5f, 0.5f)
+                    .title(establishment.getCompany().getName()).snippet(establishment.getDiscounts().get(0).getDescription()));
+            marker.setTag(establishment);
+            return marker;
+        }
     }
 
     private void getEstablishmentsFromAPI() {
@@ -154,14 +185,19 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         APIRequest.getInstance(getActivity()).getEstablishment(listener, listener);
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return false;
+    }
+
+
     public class GetEstablishmentResponseListener implements Response.Listener<Establishment[]>, Response.ErrorListener {
 
         @Override
         public void onResponse(Establishment[] establishments) {
             for (Establishment establishment : establishments) {
                 createMarker(
-                        establishment.getCompany().getName(),
-                        establishment.getLocation()
+                        establishment
                 );
             }
         }
