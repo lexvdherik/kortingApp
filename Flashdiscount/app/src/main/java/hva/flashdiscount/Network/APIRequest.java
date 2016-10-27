@@ -8,12 +8,17 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import hva.flashdiscount.model.Establishment;
+import hva.flashdiscount.model.User;
 
 public class APIRequest {
     private static final String TAG = APIRequest.class.getSimpleName();
     private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
+    private static final String METHOD_POST_USER = "user/create";
 
 
     private Context mContext;
@@ -39,9 +44,20 @@ public class APIRequest {
 
     public boolean getEstablishment(Response.Listener<Establishment[]> responseListener, Response.ErrorListener errorListener) {
 
-
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_ESTABLISHMENT, null,
                 responseListener, errorListener, Establishment[].class).setTag(METHOD_GET_ESTABLISHMENT).setShouldCache(true));
+
+        return true;
+    }
+    public boolean postUser(Response.Listener<User> responseListener, Response.ErrorListener errorListener, String googleId, String email, String name) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("googleId",googleId );
+        params.put("email", email);
+        params.put("name", name);
+
+        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_ESTABLISHMENT, params,
+                responseListener, errorListener, User.class).setTag(METHOD_POST_USER).setShouldCache(true));
 
         return true;
     }

@@ -148,7 +148,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     }
 
-    protected Marker createMarker(String title, LatLng location) {
+    protected Marker createMarker(String title, LatLng location, Establishment e) {
 
         return googleMap.addMarker(new MarkerOptions().position(location).anchor(0.5f, 0.5f).title(title));
     }
@@ -166,7 +166,8 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             for (Establishment establishment : establishments) {
                 createMarker(
                         establishment.getCompany().getName(),
-                        establishment.getLocation()
+                        establishment.getLocation(),
+                        establishment
                 );
             }
         }

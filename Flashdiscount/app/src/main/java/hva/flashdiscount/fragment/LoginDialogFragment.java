@@ -8,14 +8,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.NoConnectionError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.plus.Plus;
 
+import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
+import hva.flashdiscount.model.Establishment;
+import hva.flashdiscount.model.User;
 
 public class LoginDialogFragment extends DialogFragment {
 
@@ -37,8 +45,10 @@ public class LoginDialogFragment extends DialogFragment {
                 .build();
 
          mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
-                //.enableAutoManage(this/* FragmentActivity */, (GoogleApiClient.OnConnectionFailedListener) this /* OnConnectionFailedListener */)
+//                .enableAutoManage(this/* FragmentActivity */, (GoogleApiClient.OnConnectionFailedListener) this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                 .addScope(Plus.SCOPE_PLUS_PROFILE)
+                 .addScope(new Scope("https://www.googleapis.com/auth/userinfo.email"))
                 .build();
 
 
@@ -58,11 +68,8 @@ public class LoginDialogFragment extends DialogFragment {
             }
         });
 
-
-
         return rootView;
     }
-
 
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -81,11 +88,12 @@ public class LoginDialogFragment extends DialogFragment {
     }
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
+            PostUser(acct.getId(),acct.getDisplayName(),acct.getEmail());
 
-            Log.e(TAG,acct.getEmail());
            // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
            // updateUI(true);
         } else {
@@ -93,6 +101,29 @@ public class LoginDialogFragment extends DialogFragment {
             // Signed out, show unauthenticated UI.
            // updateUI(false);
         }
+    }
+    private void PostUser(String googleId, String name , String email) {
+        System.gc();
+        LoginDialogFragment.PostUserResponseListener listener = new LoginDialogFragment.PostUserResponseListener();
+        APIRequest.getInstance(getActivity()).postUser(listener, listener, googleId , name, email);
+    }
+
+    public class PostUserResponseListener implements Response.Listener<User>, Response.ErrorListener {
+
+        @Override
+        public void onResponse(User user) {
+
+
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+            if (error instanceof NoConnectionError) {
+                Log.e(TAG, "No connection!");
+            }
+        }
+
     }
 
 }
