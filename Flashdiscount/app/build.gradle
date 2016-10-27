@@ -57,9 +57,8 @@ dependencies {
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     testCompile 'junit:junit:4.12'
 }
-
 apply plugin: 'com.google.gms.google-services'
-//
+
 //android.applicationVariants.all { variant ->
 //    variant.preBuild.dependsOn "checkstyle"
 //}
