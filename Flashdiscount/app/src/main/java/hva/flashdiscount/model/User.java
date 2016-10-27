@@ -1,36 +1,46 @@
 package hva.flashdiscount.model;
 
-/**
- * Created by Maiko on 27-10-2016.
- */
-
 public class User {
-        private int id;
-        private int googleId;
-        private String name;
-        private String email;
+    private int userId;
+    private String role;
+    private String name;
+    private String password;
+    private String emailAddress;
+    private String age;
+    private String picture;
+    private String googleId;
 
-    public User(int googleId, String email, String name, int id) {
-        this.googleId = googleId;
-        this.email = email;
+    public User(int userId, String role, String name, String password, String emailAddress, String age, String picture, String googleId) {
+        this.userId = userId;
+        this.role = role;
         this.name = name;
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getGoogleId() {
-        return googleId;
-    }
-
-    public void setGoogleId(int googleId) {
+        this.password = password;
+        this.emailAddress = emailAddress;
+        this.age = age;
+        this.picture = picture;
         this.googleId = googleId;
+    }
+
+    public User(String googleId, String name, String emailAddress) {
+        this.googleId = googleId;
+        this.name = name;
+        this.emailAddress = emailAddress;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getName() {
@@ -41,11 +51,43 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getPassword() {
+        return password;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public String getGoogleId() {
+        return googleId;
+    }
+
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
     }
 }

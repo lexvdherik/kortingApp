@@ -8,6 +8,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,10 +17,10 @@ import hva.flashdiscount.model.User;
 
 public class APIRequest {
     private static final String TAG = APIRequest.class.getSimpleName();
-    private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
+//    private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
+    private static final String HOST = "http://145.28.185.246/api/";
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
     private static final String METHOD_POST_USER = "user/create";
-
 
     private Context mContext;
     private static APIRequest sInstance;
@@ -56,8 +57,10 @@ public class APIRequest {
         params.put("email", email);
         params.put("name", name);
 
-        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_ESTABLISHMENT, params,
-                responseListener, errorListener, User.class).setTag(METHOD_POST_USER).setShouldCache(true));
+        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_USER, params,
+                responseListener, errorListener, User.class).setTag(METHOD_POST_USER));
+
+//        Log.e(TAG, );
 
         return true;
     }

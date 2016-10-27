@@ -45,9 +45,14 @@ class CustomRequest<T> extends Request<T> {
 
     }
 
+    protected Map<String, String> getParams()  throws com.android.volley.AuthFailureError {
+        return params;
+    }
+
+
+
     @Override
     public Response<T> parseNetworkResponse(NetworkResponse response) {
-
         String responseData = null;
 
         try {
@@ -87,8 +92,6 @@ class CustomRequest<T> extends Request<T> {
         Log.e("da", mGson.fromJson(result.toString(), mClass).toString());
         return Response.success((T) mGson.fromJson(result.toString(), mClass), HttpHeaderParser.parseCacheHeaders(response));
     }
-
-
 
     @Override
     protected void deliverResponse(T response) {
