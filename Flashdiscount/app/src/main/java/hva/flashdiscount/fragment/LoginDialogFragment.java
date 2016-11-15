@@ -44,6 +44,7 @@ public class LoginDialogFragment extends DialogFragment {
 
          mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                 .addScope(Plus.SCOPE_PLUS_LOGIN)
                 .build();
 
         SignInButton signInButton = (SignInButton) rootView.findViewById(R.id.sign_in_button);
@@ -87,7 +88,7 @@ public class LoginDialogFragment extends DialogFragment {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             Log.e(TAG, acct.getDisplayName());
-            PostUser(acct.getId(),acct.getDisplayName(),acct.getEmail());
+            PostUser(acct.getId(),acct.getDisplayName(),acct.getEmail(), acct.getPhotoUrl().getPath());
 
            // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
            // updateUI(true);
@@ -98,10 +99,10 @@ public class LoginDialogFragment extends DialogFragment {
         }
     }
 
-    private void PostUser(String googleId, String name , String email) {
+    private void PostUser(String googleId, String name , String email, String picture) {
         System.gc();
         LoginDialogFragment.PostUserResponseListener listener = new LoginDialogFragment.PostUserResponseListener();
-        APIRequest.getInstance(getActivity()).postUser(listener, listener, googleId , email, name);
+        APIRequest.getInstance(getActivity()).postUser(listener, listener, googleId , email, name,picture);
     }
 
     public class PostUserResponseListener implements Response.Listener<User>, Response.ErrorListener {
