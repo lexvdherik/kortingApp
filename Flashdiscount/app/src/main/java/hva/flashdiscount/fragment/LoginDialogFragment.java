@@ -29,7 +29,7 @@ public class LoginDialogFragment extends DialogFragment {
 
     private final int RC_SIGN_IN = 1;
     private static final String TAG = LoginDialogFragment.class.getSimpleName();
-
+    private String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
     GoogleApiClient mGoogleApiClient;
 
     @Override
@@ -39,6 +39,7 @@ public class LoginDialogFragment extends DialogFragment {
         getDialog().setTitle("Login Dialog");
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(token)
                 .requestEmail()
                 .build();
 
@@ -87,8 +88,9 @@ public class LoginDialogFragment extends DialogFragment {
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            Log.e(TAG, acct.getDisplayName());
+
             PostUser(acct.getId(),acct.getDisplayName(),acct.getEmail(), acct.getPhotoUrl().toString());
+
 
             this.dismiss();
 
