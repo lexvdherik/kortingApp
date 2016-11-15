@@ -44,7 +44,7 @@ public class LoginDialogFragment extends DialogFragment {
 
          mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                 .addScope(Plus.SCOPE_PLUS_LOGIN)
+//                 .addScope(Plus.SCOPE_PLUS_LOGIN)
                 .build();
 
         SignInButton signInButton = (SignInButton) rootView.findViewById(R.id.sign_in_button);
@@ -88,7 +88,9 @@ public class LoginDialogFragment extends DialogFragment {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             Log.e(TAG, acct.getDisplayName());
-            PostUser(acct.getId(),acct.getDisplayName(),acct.getEmail(), acct.getPhotoUrl().getPath());
+            PostUser(acct.getId(),acct.getDisplayName(),acct.getEmail(), acct.getPhotoUrl().toString());
+
+            this.dismiss();
 
            // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
            // updateUI(true);

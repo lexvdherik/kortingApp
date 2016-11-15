@@ -18,9 +18,9 @@ import hva.flashdiscount.model.User;
 public class APIRequest {
     private static final String TAG = APIRequest.class.getSimpleName();
    // private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
-    private static final String HOST = "http://145.28.225.45/api/";
+    private static final String HOST = "http://145.28.234.156/api/";
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
-    private static final String METHOD_POST_USER = "user/create";
+    private static final String METHOD_POST_USER = "auth/login";
 
     private Context mContext;
     private static APIRequest sInstance;
