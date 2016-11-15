@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
@@ -22,6 +24,7 @@ import com.google.android.gms.plus.Plus;
 
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
+import hva.flashdiscount.adapter.MenuDrawerAdapter;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.model.User;
 
@@ -30,6 +33,8 @@ public class LoginDialogFragment extends DialogFragment {
     private final int RC_SIGN_IN = 1;
     private static final String TAG = LoginDialogFragment.class.getSimpleName();
     private String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
+    private LinearLayout layout;
+
     GoogleApiClient mGoogleApiClient;
 
     @Override
@@ -114,6 +119,9 @@ public class LoginDialogFragment extends DialogFragment {
         @Override
         public void onResponse(User user) {
             Log.e(TAG, user.getGoogleId());
+            layout = (LinearLayout) getView().findViewById(R.id.nav_header);
+            ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
+            ((TextView) layout.findViewById(R.id.email)).setText(user.getEmailAddress());
         }
 
         @Override

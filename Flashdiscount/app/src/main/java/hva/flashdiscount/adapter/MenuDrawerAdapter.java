@@ -18,13 +18,13 @@ import hva.flashdiscount.model.User;
 
 public class MenuDrawerAdapter  implements Adapter {
 
-//    private final MenuInflater inf;
-//    private User user;
-//
-//    public MenuDrawerAdapter(User user, Activity activity){
-//        this.user = user;
-////        inf = MenuInflater.from(activity);
-//    }
+    private final LayoutInflater inf;
+    private User user;
+
+    public MenuDrawerAdapter(User user, Activity activity){
+        this.user = user;
+        inf = LayoutInflater.from(activity);
+    }
 
     @Override
     public void registerDataSetObserver(DataSetObserver dataSetObserver) {
@@ -60,9 +60,10 @@ public class MenuDrawerAdapter  implements Adapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
 
         if (view == null) {
-//            view = inf.inflate(R.menu.activity_main_drawer, viewGroup, false);
+            view = inf.inflate(R.layout.nav_header, viewGroup, false);
         }
-//        ((TextView)view.findViewById(R.id.)).
+        ((TextView)view.findViewById(R.id.naam)).setText(user.getName());
+        ((TextView)view.findViewById(R.id.email)).setText(user.getEmailAddress());
 
         return null;
     }
