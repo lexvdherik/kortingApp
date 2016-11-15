@@ -5,26 +5,26 @@ public class User {
     private String role;
     private String name;
     private String password;
-    private String emailAddress;
+    private String email;
     private String age;
     private String picture;
     private String googleId;
 
-    public User(int userId, String role, String name, String password, String emailAddress, String age, String picture, String googleId) {
+    public User(int userId, String role, String name, String password, String email, String age, String picture, String googleId) {
         this.userId = userId;
         this.role = role;
         this.name = name;
         this.password = password;
-        this.emailAddress = emailAddress;
+        this.email = email;
         this.age = age;
         this.picture = picture;
         this.googleId = googleId;
     }
 
-    public User(String googleId, String name, String emailAddress) {
+    public User(String googleId, String name, String email) {
         this.googleId = googleId;
         this.name = name;
-        this.emailAddress = emailAddress;
+        this.email = email;
     }
 
     public int getUserId() {
@@ -59,12 +59,12 @@ public class User {
         this.password = password;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+    public void setEmail(String email) {
+        this.email= email;
     }
 
     public String getAge() {

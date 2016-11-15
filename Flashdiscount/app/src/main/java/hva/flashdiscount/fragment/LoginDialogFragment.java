@@ -19,13 +19,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.plus.Plus;
 
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
-import hva.flashdiscount.adapter.MenuDrawerAdapter;
-import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.model.User;
 
 public class LoginDialogFragment extends DialogFragment {
@@ -40,6 +36,7 @@ public class LoginDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login_dialog, container, false);
+        layout = (LinearLayout) getActivity().findViewById(R.id.nav_header);
 
         getDialog().setTitle("Login Dialog");
 
@@ -118,10 +115,10 @@ public class LoginDialogFragment extends DialogFragment {
 
         @Override
         public void onResponse(User user) {
-            Log.e(TAG, user.getGoogleId());
-            layout = (LinearLayout) getView().findViewById(R.id.nav_header);
+
             ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
-            ((TextView) layout.findViewById(R.id.email)).setText(user.getEmailAddress());
+
+            ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
         }
 
         @Override
