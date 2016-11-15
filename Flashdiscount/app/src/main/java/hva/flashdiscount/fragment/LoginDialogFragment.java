@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -39,7 +40,7 @@ public class LoginDialogFragment extends DialogFragment {
         layout = (LinearLayout) getActivity().findViewById(R.id.nav_header);
 
         getDialog().setTitle("Login Dialog");
-
+        getDialog().setCanceledOnTouchOutside(false);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(token)
                 .requestEmail()
@@ -93,6 +94,8 @@ public class LoginDialogFragment extends DialogFragment {
 
             PostUser(acct.getId(),acct.getDisplayName(),acct.getEmail(), acct.getPhotoUrl().toString());
 
+            ((ImageView) layout.findViewById(R.id.profile_picture)).setImageURI(acct.getPhotoUrl());
+
 
             this.dismiss();
 
@@ -117,6 +120,7 @@ public class LoginDialogFragment extends DialogFragment {
         public void onResponse(User user) {
 
             ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
+
 
             ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
         }
