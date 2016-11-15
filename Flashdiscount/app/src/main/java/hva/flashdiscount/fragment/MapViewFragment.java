@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
@@ -31,6 +32,7 @@ import com.google.gson.Gson;
 
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
+//import hva.flashdiscount.adapter.CustomInfoWindowAdapter;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.service.GpsService;
 
@@ -102,6 +104,26 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                         Establishment establishment = (Establishment) marker.getTag();
                         goToDetailView(establishment);
 
+                    }
+                });
+                googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                    @Override
+                    public View getInfoWindow(Marker marker) {
+                        return null;
+                    }
+
+                    @Override
+                    public View getInfoContents(Marker marker) {
+                        Establishment establishment = (Establishment) marker.getTag();
+                        View infoWindowView = getActivity().getLayoutInflater().inflate(R.layout.info_window, null);
+
+                        TextView title = (TextView) infoWindowView.findViewById(R.id.info_window_title);
+                        title.setText(establishment.getCompany().getName());
+
+                        TextView snippet = (TextView) infoWindowView.findViewById(R.id.info_window_snippet);
+                        snippet.setText(establishment.getDiscounts().get(0).getDescription());
+
+                        return infoWindowView;
                     }
                 });
                 getEstablishmentsFromAPI();
