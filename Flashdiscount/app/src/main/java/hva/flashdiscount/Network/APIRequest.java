@@ -14,7 +14,7 @@ public class APIRequest {
     private static final String TAG = APIRequest.class.getSimpleName();
     private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
-
+    private static final String METHOD_GET_FAVOURITES = "favouriteEstablishment/";
 
     private Context mContext;
     private static APIRequest sInstance;
@@ -45,6 +45,16 @@ public class APIRequest {
 
         return true;
     }
+
+    public boolean getFavourites(Response.Listener<Establishment[]> responseListener, Response.ErrorListener errorListener) {
+
+
+        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_FAVOURITES, null,
+                responseListener, errorListener, Establishment[].class).setTag(METHOD_GET_FAVOURITES).setShouldCache(true));
+
+        return true;
+    }
+
 
 
 
