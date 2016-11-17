@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_discounts) {
             Log.i(TAG, "nav_discounts");
+            getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TabFragment()).commit();
         } else if (id == R.id.nav_myDiscounts) {
             Log.i(TAG, "nav_myDiscounts");
         } else if (id == R.id.nav_favorites) {
