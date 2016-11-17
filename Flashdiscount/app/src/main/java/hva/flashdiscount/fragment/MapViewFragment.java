@@ -36,13 +36,12 @@ import hva.flashdiscount.service.GpsService;
 
 public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    private static final String TAG = MapViewFragment.class.getSimpleName();
     MapView mMapView;
     private GoogleMap googleMap;
     private Context context;
     private Location location;
     private GpsService gpsService;
-
-    private static final String TAG = MapViewFragment.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,13 +63,12 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
         FragmentManager fm = getFragmentManager();
-        LoginDialogFragment dialogFragment = new LoginDialogFragment ();
+        LoginDialogFragment dialogFragment = new LoginDialogFragment();
         dialogFragment.show(fm, "Login Fragment");
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
