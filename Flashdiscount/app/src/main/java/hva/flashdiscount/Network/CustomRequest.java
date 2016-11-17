@@ -1,21 +1,16 @@
 package hva.flashdiscount.Network;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,10 +22,6 @@ import com.google.gson.JsonSyntaxException;
 
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 import java.util.Map;
 
 import hva.flashdiscount.MainActivity;
@@ -38,20 +29,18 @@ import hva.flashdiscount.MainActivity;
 class CustomRequest<T> extends Request<T> {
 
     private static final String TAG = CustomRequest.class.getSimpleName();
+    private static final int RC_SIGN_IN = 1;
+    GoogleApiClient mGoogleApiClient;
     private Map<String, String> params;
     private Gson mGson = new GsonBuilder().serializeNulls()
             .setDateFormat("yyyy-MM-dd HH:mm:ss")
             .create();
     private GoogleSignInAccount acct;
-
     private Class<?> mClass;
-
     private Response.Listener<T> listener;
     private Context applicationContext;
     private String idToken;
     private String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
-    GoogleApiClient mGoogleApiClient;
-    private final int RC_SIGN_IN = 1;
 
 
     CustomRequest(int method, String url, Map<String, String> params, Response.Listener<T> reponseListener, Response.ErrorListener errorListener, Class<?> clazz) {
@@ -102,10 +91,9 @@ class CustomRequest<T> extends Request<T> {
 //        return true;
 //    }
 
-    protected Map<String, String> getParams()  throws com.android.volley.AuthFailureError {
+    protected Map<String, String> getParams() throws AuthFailureError {
         return params;
     }
-
 
 
     @Override

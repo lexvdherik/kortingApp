@@ -1,6 +1,5 @@
 package hva.flashdiscount.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,13 +30,12 @@ import hva.flashdiscount.R;
 
 public class LoginDialogFragment extends DialogFragment {
 
-    private final int RC_SIGN_IN = 1;
     private static final String TAG = LoginDialogFragment.class.getSimpleName();
+    private static final int RC_SIGN_IN = 1;
+    GoogleApiClient mGoogleApiClient;
     private String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
     private LinearLayout layout;
     private GoogleSignInAccount acct;
-
-    GoogleApiClient mGoogleApiClient;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +49,7 @@ public class LoginDialogFragment extends DialogFragment {
                 .requestEmail()
                 .build();
 
-         mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
+        mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
@@ -65,6 +63,8 @@ public class LoginDialogFragment extends DialogFragment {
                     case R.id.sign_in_button:
                         signIn();
                         break;
+                    default:
+                        Log.e(TAG, "WTF");
                 }
             }
         });
@@ -85,7 +85,6 @@ public class LoginDialogFragment extends DialogFragment {
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
-            Log.e(TAG,"Ik chill hem in hier");
         }
     }
 
@@ -96,7 +95,7 @@ public class LoginDialogFragment extends DialogFragment {
             // Signed in successfully, show authenticated UI.
             acct = result.getSignInAccount();
 
-            PostUser(acct.getIdToken());
+            postUser(acct.getIdToken());
 
             SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
@@ -111,16 +110,16 @@ public class LoginDialogFragment extends DialogFragment {
 
             this.dismiss();
 
-           // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
-           // updateUI(true);
+            // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
+            // updateUI(true);
         } else {
 
             // Signed out, show unauthenticated UI.
-           // updateUI(false);
+            // updateUI(false);
         }
     }
 
-    private void PostUser(String idToken) {
+    private void postUser(String idToken) {
         System.gc();
         LoginDialogFragment.PostUserResponseListener listener = new LoginDialogFragment.PostUserResponseListener();
         APIRequest.getInstance(getActivity()).postUser(listener, listener, idToken);
@@ -130,19 +129,19 @@ public class LoginDialogFragment extends DialogFragment {
 
         @Override
         public void onResponse(Object response) {
-            Log.e(TAG," " + acct.getDisplayName());
+            Log.e(TAG, " " + acct.getDisplayName());
             ((ImageView) layout.findViewById(R.id.profile_picture)).setImageURI(acct.getPhotoUrl());
             String firstName = acct.getGivenName().substring(0, 1).toUpperCase() + acct.getGivenName().substring(1);
-            String LastName = acct.getFamilyName().substring(0, 1).toUpperCase() + acct.getFamilyName().substring(1);
+            String lastName = acct.getFamilyName().substring(0, 1).toUpperCase() + acct.getFamilyName().substring(1);
 
-            ((TextView) layout.findViewById(R.id.naam)).setText(firstName + " " + LastName );
+            ((TextView) layout.findViewById(R.id.naam)).setText(firstName + " " + lastName);
 
             ((TextView) layout.findViewById(R.id.email)).setText(acct.getEmail());
         }
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e(TAG + " content", " joil"+error.getMessage());
+            Log.e(TAG + " content", " joil" + error.getMessage());
             if (error instanceof NoConnectionError) {
                 Log.e(TAG, "No connection!");
             }

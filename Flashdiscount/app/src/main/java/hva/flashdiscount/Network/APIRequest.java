@@ -8,12 +8,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import hva.flashdiscount.model.Establishment;
-import hva.flashdiscount.model.User;
 
 public class APIRequest {
     private static final String TAG = APIRequest.class.getSimpleName();
@@ -22,11 +20,16 @@ public class APIRequest {
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
     private static final String METHOD_POST_USER = "auth/login";
     private static final String METHOD_GET_FAVOURITES = "favouriteEstablishment/";
-
     private Context mContext;
-    private static APIRequest sInstance;
 
+    private static APIRequest sInstance;
     private final RequestQueue mQueue;
+    private Context mContext;
+
+    private APIRequest(Context context) {
+        this.mContext = context;
+        this.mQueue = Volley.newRequestQueue(context);
+    }
 
     public static APIRequest getInstance(Context context) {
         Log.d(TAG, "APIRequest getInstance called");
@@ -34,10 +37,6 @@ public class APIRequest {
             sInstance = new APIRequest(context);
         }
         return sInstance;
-    }
-    private APIRequest(Context context) {
-        this.mContext = context;
-        this.mQueue = Volley.newRequestQueue(context);
     }
 
     public void cancelRequest(String tag) {
@@ -51,13 +50,14 @@ public class APIRequest {
 
         return true;
     }
+
     public boolean postUser(Response.Listener responseListener, Response.ErrorListener errorListener, String idToken) {
 
         Map<String, Object> params = new HashMap<>();
-        params.put("idToken",idToken);
+        params.put("idToken", idToken);
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_USER, params,
-                responseListener, errorListener,null).setTag(METHOD_POST_USER));
+                responseListener, errorListener, null).setTag(METHOD_POST_USER));
 
 //        Log.e(TAG, );
 
@@ -72,8 +72,6 @@ public class APIRequest {
 
         return true;
     }
-
-
 
 
 
