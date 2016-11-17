@@ -5,7 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
+import android.widget.Switch;
+
 
 import java.util.ArrayList;
 
@@ -51,7 +52,7 @@ public class SettingsAdapter extends BaseAdapter {
     }
 
     public class Holder {
-        TextView tv;
+        Switch tv;
     }
 
     @Override
@@ -60,7 +61,7 @@ public class SettingsAdapter extends BaseAdapter {
         Holder holder = new Holder();
         View rowView;
         rowView = inflater.inflate(R.layout.settings_row, null);
-        holder.tv = (TextView) rowView.findViewById(R.id.setting_company_name);
+        holder.tv = (Switch) rowView.findViewById(R.id.setting_company_name);
         holder.tv.setText(companySettings.get(position));
 
         return rowView;
