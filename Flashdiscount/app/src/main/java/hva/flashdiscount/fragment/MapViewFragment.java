@@ -96,7 +96,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                     Log.e("nono", "no");
                 }
 
-
                 LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
 
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();

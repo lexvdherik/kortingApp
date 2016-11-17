@@ -1,5 +1,6 @@
 package hva.flashdiscount;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -23,10 +24,13 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static Context contextOfApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        contextOfApplication = getApplicationContext();
+
         Fabric.with(this, new Crashlytics());
 
         setContentView(R.layout.activity_main);
@@ -47,6 +51,10 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction ft = fm.beginTransaction();
         ft.add(R.id.fragment_container, tabFragment);
         ft.commit();
+    }
+
+    public static Context getContextOfApplication() {
+        return contextOfApplication;
     }
 
     @Override

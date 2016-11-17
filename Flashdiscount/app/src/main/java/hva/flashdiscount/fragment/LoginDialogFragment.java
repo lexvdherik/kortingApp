@@ -1,6 +1,9 @@
 package hva.flashdiscount.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -20,6 +23,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.util.Calendar;
 
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
@@ -48,7 +53,6 @@ public class LoginDialogFragment extends DialogFragment {
 
          mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-//                 .addScope(Plus.SCOPE_PLUS_LOGIN)
                 .build();
 
         SignInButton signInButton = (SignInButton) rootView.findViewById(R.id.sign_in_button);
@@ -94,6 +98,16 @@ public class LoginDialogFragment extends DialogFragment {
 
             PostUser(acct.getIdToken());
 
+            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("idToken", acct.getIdToken());
+
+            Calendar c = Calendar.getInstance();
+            c.setTime(Calendar.getInstance().getTime());
+            c.add(Calendar.MINUTE, +59);
+
+            editor.putString("expireDate", c.getTime().toString());
+            editor.apply();
 
             this.dismiss();
 
