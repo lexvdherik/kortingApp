@@ -16,6 +16,7 @@ import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
 
+import hva.flashdiscount.fragment.NotificationFragment;
 import hva.flashdiscount.fragment.TabFragment;
 import io.fabric.sdk.android.Fabric;
 
@@ -87,6 +88,11 @@ public class MainActivity extends AppCompatActivity
             Log.i(TAG, "nav_favorites");
         } else if (id == R.id.nav_account_settings) {
             Log.i(TAG, "nav_account_settings");
+
+            getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NotificationFragment()).commit();
+
+            return false;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
