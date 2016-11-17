@@ -7,11 +7,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.NoConnectionError;
@@ -37,7 +41,7 @@ import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.service.GpsService;
 
 public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        GoogleMap.OnMarkerClickListener{
+        GoogleMap.OnMarkerClickListener {
 
     MapView mMapView;
     private GoogleMap googleMap;
@@ -98,34 +102,42 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                    @Override
-                    public void onInfoWindowClick(Marker marker) {
-                        Establishment establishment = (Establishment) marker.getTag();
-                        goToDetailView(establishment);
 
-                    }
-                });
-                googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
-                    public View getInfoWindow(Marker marker) {
-                        return null;
-                    }
+                    public boolean onMarkerClick(Marker marker) {
+                        final Establishment establishment = (Establishment) marker.getTag();
+                        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
+                        View bottomSheetView = getActivity().getLayoutInflater().inflate(R.layout.bottom_sheet, null);
+                        bottomSheetDialog.setContentView(bottomSheetView);
 
-                    @Override
-                    public View getInfoContents(Marker marker) {
-                        Establishment establishment = (Establishment) marker.getTag();
-                        View infoWindowView = getActivity().getLayoutInflater().inflate(R.layout.info_window, null);
-
-                        TextView title = (TextView) infoWindowView.findViewById(R.id.info_window_title);
+                        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from((View) bottomSheetView.getParent());
+                        bottomSheetBehavior.setPeekHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics()));
+                        TextView title = (TextView) bottomSheetView.findViewById(R.id.title);
                         title.setText(establishment.getCompany().getName());
+                        Button detailButton = (Button) bottomSheetView.findViewById(R.id.detail_view_button);
+                        detailButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Bundle arguments = new Bundle();
+                                arguments.putString("establishment", new Gson().toJson(establishment));
 
-                        TextView snippet = (TextView) infoWindowView.findViewById(R.id.info_window_snippet);
-                        snippet.setText(establishment.getDiscounts().get(0).getDescription());
+                                DetailFragment detailFragment = new DetailFragment();
 
-                        return infoWindowView;
+                                detailFragment.setArguments(arguments);
+
+                                getFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_container, detailFragment)
+                                        .addToBackStack(null)
+                                        .commit();
+                            }
+                        });
+                        bottomSheetDialog.show();
+
+                        return true;
                     }
                 });
+
                 getEstablishmentsFromAPI();
             }
         });
@@ -133,20 +145,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         return rootView;
     }
 
-    private void goToDetailView(Establishment establishment){
-
-        Bundle arguments = new Bundle();
-        arguments.putString("establishment", new Gson().toJson(establishment));
-
-        DetailFragment detailFragment = new DetailFragment();
-
-        detailFragment.setArguments(arguments);
-
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, detailFragment)
-                .addToBackStack(null)
-                .commit();
-    }
 
     @Override
     public void onResume() {
@@ -188,17 +186,9 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     }
 
     protected Marker createMarker(Establishment establishment) {
-        if (establishment.getDiscounts().size() > 1) {
-            Marker marker = googleMap.addMarker(new MarkerOptions().position(establishment.getLocation()).anchor(0.5f, 0.5f)
-                    .title(establishment.getCompany().getName()).snippet(establishment.getDiscounts().size() + " kortingen"));
+            Marker marker = googleMap.addMarker(new MarkerOptions().position(establishment.getLocation()).anchor(0.5f, 0.5f));
             marker.setTag(establishment);
             return marker;
-        } else {
-            Marker marker = googleMap.addMarker(new MarkerOptions().position(establishment.getLocation()).anchor(0.5f, 0.5f)
-                    .title(establishment.getCompany().getName()).snippet(establishment.getDiscounts().get(0).getDescription()));
-            marker.setTag(establishment);
-            return marker;
-        }
     }
 
     private void getEstablishmentsFromAPI() {
