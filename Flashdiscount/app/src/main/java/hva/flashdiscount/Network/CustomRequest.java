@@ -80,6 +80,8 @@ class CustomRequest<T> extends Request<T> {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(applicationContext);
 
+        Log.e(TAG + " lll", sharedPref.getString("expireDate", ""));
+
         Calendar expireDate = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
 
