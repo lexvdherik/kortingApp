@@ -16,7 +16,7 @@ import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
 
-import hva.flashdiscount.fragment.NotificationFragment;
+import hva.flashdiscount.fragment.SettingsFragment;
 import hva.flashdiscount.fragment.TabFragment;
 import io.fabric.sdk.android.Fabric;
 
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity
             Log.i(TAG, "nav_account_settings");
 
             getSupportFragmentManager().popBackStack();
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NotificationFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
 
             return false;
         }
