@@ -74,4 +74,18 @@ public class Discount {
                 return R.drawable.ic_account_settings;
         }
     }
+
+    @Override
+    public String toString() {
+        return "Discount{" +
+                "discountId=" + discountId +
+                ", active=" + active +
+                ", description='" + description + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
+                ", amount=" + amount +
+                ", userLimit=" + userLimit +
+                ", picture='" + picture + '\'' +
+                '}';
+    }
 }

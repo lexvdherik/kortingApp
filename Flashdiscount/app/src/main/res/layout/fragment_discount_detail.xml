@@ -1,23 +1,24 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
              android:layout_below="@+id/toolbar"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context="hva.flashdiscount.fragment.DetailFragment">
 
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
         android:layout_width="match_parent"
         android:layout_height="200dp"
         app:srcCompat="@drawable/cast_album_art_placeholder"
-        android:id="@+id/detail_image"
+        android:id="@+id/company_detail_image"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"/>
 
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_below="@+id/detail_image"
+        android:layout_below="@+id/company_detail_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/description_layout"
@@ -64,8 +65,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearance"
-            android:text="long descirption here"
-            android:id="@+id/company_name_txt"
+            android:text="long description here"
+            android:id="@+id/company_description"
             android:ellipsize="end"
             android:maxLines="1"
             android:layout_below="@+id/time_remaining"
@@ -96,6 +97,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/claims_left"
                 android:text="200"/>
         </LinearLayout>
 
@@ -114,6 +116,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/time_left"
             android:text="53 min"/>
         </LinearLayout>
     </LinearLayout>
@@ -122,14 +125,15 @@
         android:id="@+id/discount_long_description"
         android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_below="@id/discount_info">
         <TextView
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=" Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes. Cum sociis natoque penatibus et magnis dis parturient montes."/>
+            android:id="@+id/discount_description"
+            android:text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes. Cum sociis natoque penatibus et magnis dis parturient montes."/>
     </RelativeLayout>
 
     <LinearLayout

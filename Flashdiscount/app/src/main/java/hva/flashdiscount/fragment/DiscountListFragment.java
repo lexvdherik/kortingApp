@@ -11,6 +11,7 @@ import android.widget.ExpandableListView;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
 
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
@@ -31,7 +32,6 @@ public class DiscountListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_discount_list, container, false);
-
         return rootView;
     }
 
@@ -57,34 +57,37 @@ public class DiscountListFragment extends Fragment {
 
             expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
             expandableListView.setAdapter(new DiscountListAdapter(establishments, getActivity()));
+
             expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
-                    DetailFragment detailFragment = new DetailFragment();
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, detailFragment)
-                            .addToBackStack(null)
-                            .commit();
+
+                    Establishment establishment = (Establishment) parent.getExpandableListAdapter().getGroup(groupPosition);
+                    goToDetailView(establishment, childPosition);
 
                     return false;
-                }
-            });
-            expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-                @Override
-                public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                    }
+                });
 
-                    DetailFragment detailFragment = new DetailFragment();
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, detailFragment)
-                            .addToBackStack(null)
-                            .commit();
+                   expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+                       @Override
+                       public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                           int count = parent.getExpandableListAdapter().getChildrenCount(groupPosition);
 
-                    return false;
-                }
-            });
-        }
+                           if (count == 0) {
+                               Establishment establishment = (Establishment) parent.getExpandableListAdapter().getGroup(groupPosition);
+                               goToDetailView(establishment, 0);
+                           }
+                           return false;
+                       }
+                   });
+
+               }
+
+
+
 
         @Override
         public void onErrorResponse(VolleyError error) {
@@ -95,6 +98,22 @@ public class DiscountListFragment extends Fragment {
         }
 
 
+    }
+
+    private void goToDetailView(Establishment establishment, int discountPostion){
+
+        Bundle arguments = new Bundle();
+        arguments.putString("establishment", new Gson().toJson(establishment));
+        arguments.putInt("discountPostion", discountPostion);
+
+        DetailFragment detailFragment = new DetailFragment();
+
+        detailFragment.setArguments(arguments);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, detailFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
 }

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "444953407805",
+    "project_id": "black-agility-145609"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444953407805:android:12fa38b68e2e1d6b",
+        "android_client_info": {
+          "package_name": "hva.flashdiscount"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "444953407805-7ds1247dl287fin06ffnlv45pkqc5qlo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hva.flashdiscount",
+            "certificate_hash": "95B02A5120F2748F07F30A1B8194383046F615AF"
+          }
+        },
+        {
+          "client_id": "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDquWW7bN7fohjzm33md44rccpfkLkVbZM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +69,10 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
+        FragmentManager fm = getFragmentManager();
+        LoginDialogFragment dialogFragment = new LoginDialogFragment ();
+        dialogFragment.show(fm, "Login Fragment");
+
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
@@ -90,7 +95,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 } else {
                     Log.e("nono", "no");
                 }
-
 
                 LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
 
@@ -143,7 +147,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     }
 
-    protected Marker createMarker(String title, LatLng location) {
+    protected Marker createMarker(String title, LatLng location, Establishment e) {
 
         return googleMap.addMarker(new MarkerOptions().position(location).anchor(0.5f, 0.5f).title(title));
     }
@@ -161,7 +165,8 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             for (Establishment establishment : establishments) {
                 createMarker(
                         establishment.getCompany().getName(),
-                        establishment.getLocation()
+                        establishment.getLocation(),
+                        establishment
                 );
             }
         }
