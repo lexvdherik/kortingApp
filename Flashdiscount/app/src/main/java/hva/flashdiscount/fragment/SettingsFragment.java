@@ -4,6 +4,7 @@ package hva.flashdiscount.fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,16 +12,23 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 
+import com.android.volley.NoConnectionError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
 import java.util.ArrayList;
 
+import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.SettingsAdapter;
+import hva.flashdiscount.model.Establishment;
 
 public class SettingsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private ArrayAdapter<String> arrayAdapter;
     private ArrayList<String> listItems;
+    ListView listView;
 
     private static final String TAG = SettingsFragment.class.getSimpleName();
 
@@ -65,6 +73,45 @@ public class SettingsFragment extends Fragment {
 
         return rootView;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        getFavouritesFromAPI();
+    }
+
+    private void getFavouritesFromAPI() {
+        System.gc();
+        GetFavouritesResponseListener listener = new GetFavouritesResponseListener();
+        APIRequest.getInstance(getActivity()).getFavourites(listener, listener);
+
+    }
+
+    public class GetFavouritesResponseListener implements Response.Listener<Establishment[]>, Response.ErrorListener {
+
+        @Override
+        public void onResponse(final Establishment[] establishments) {
+
+            listView = (ListView) getActivity().findViewById(R.id.notification_list);
+            listView.setAdapter(new SettingsAdapter(getActivity()));
+
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+            if (error instanceof NoConnectionError) {
+                Log.e(TAG, "No connection!");
+            }
+        }
+
+
+    }
+
+
+
+
 
 
     /**

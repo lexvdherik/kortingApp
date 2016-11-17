@@ -21,6 +21,7 @@ public class APIRequest {
     //private static final String HOST = "http://145.28.144.168/api/";
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
     private static final String METHOD_POST_USER = "auth/login";
+    private static final String METHOD_GET_FAVOURITES = "favouriteEstablishment/";
 
     private Context mContext;
     private static APIRequest sInstance;
@@ -62,6 +63,16 @@ public class APIRequest {
 
         return true;
     }
+
+    public boolean getFavourites(Response.Listener<Establishment[]> responseListener, Response.ErrorListener errorListener) {
+
+
+        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_FAVOURITES, null,
+                responseListener, errorListener, Establishment[].class).setTag(METHOD_GET_FAVOURITES).setShouldCache(true));
+
+        return true;
+    }
+
 
 
 
