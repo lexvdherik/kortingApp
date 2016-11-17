@@ -23,7 +23,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
-import hva.flashdiscount.model.User;
 
 public class LoginDialogFragment extends DialogFragment {
 
@@ -31,6 +30,7 @@ public class LoginDialogFragment extends DialogFragment {
     private static final String TAG = LoginDialogFragment.class.getSimpleName();
     private String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
     private LinearLayout layout;
+    private GoogleSignInAccount acct;
 
     GoogleApiClient mGoogleApiClient;
 
@@ -90,11 +90,9 @@ public class LoginDialogFragment extends DialogFragment {
 
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
+            acct = result.getSignInAccount();
 
-            PostUser(acct.getId(),acct.getDisplayName(),acct.getEmail(), acct.getPhotoUrl().toString());
-
-            ((ImageView) layout.findViewById(R.id.profile_picture)).setImageURI(acct.getPhotoUrl());
+            PostUser(acct.getIdToken());
 
 
             this.dismiss();
@@ -108,26 +106,29 @@ public class LoginDialogFragment extends DialogFragment {
         }
     }
 
-    private void PostUser(String googleId, String name , String email, String picture) {
+    private void PostUser(String idToken) {
         System.gc();
         LoginDialogFragment.PostUserResponseListener listener = new LoginDialogFragment.PostUserResponseListener();
-        APIRequest.getInstance(getActivity()).postUser(listener, listener, googleId , email, name,picture);
+        APIRequest.getInstance(getActivity()).postUser(listener, listener, idToken);
     }
 
-    public class PostUserResponseListener implements Response.Listener<User>, Response.ErrorListener {
+    public class PostUserResponseListener implements Response.Listener, Response.ErrorListener {
 
         @Override
-        public void onResponse(User user) {
+        public void onResponse(Object response) {
+            Log.e(TAG," " + acct.getDisplayName());
+            ((ImageView) layout.findViewById(R.id.profile_picture)).setImageURI(acct.getPhotoUrl());
+            String firstName = acct.getGivenName().substring(0, 1).toUpperCase() + acct.getGivenName().substring(1);
+            String LastName = acct.getFamilyName().substring(0, 1).toUpperCase() + acct.getFamilyName().substring(1);
 
-            ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
+            ((TextView) layout.findViewById(R.id.naam)).setText(firstName + " " + LastName );
 
-
-            ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
+            ((TextView) layout.findViewById(R.id.email)).setText(acct.getEmail());
         }
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e(TAG + " content", error.getMessage());
+            Log.e(TAG + " content", " joil"+error.getMessage());
             if (error instanceof NoConnectionError) {
                 Log.e(TAG, "No connection!");
             }
