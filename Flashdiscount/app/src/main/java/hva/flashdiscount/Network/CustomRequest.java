@@ -89,14 +89,15 @@ class CustomRequest<T> extends Request<T> {
             Log.e(TAG, e.getMessage());
         }
 
-//        if(currentDate.compareTo(expireDate) != -1) {
+        if(currentDate.compareTo(expireDate) != -1) {
 
             OptionalPendingResult<GoogleSignInResult> pendingResult =
                     Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
             if (pendingResult.isDone()) {
                 // There's immediate result available.
-                pendingResult.get();
-//            }
+               GoogleSignInAccount account = pendingResult.get().getSignInAccount();
+                Log.e(TAG," login " + account.getIdToken().toString());
+            }
 
 
         } else {
