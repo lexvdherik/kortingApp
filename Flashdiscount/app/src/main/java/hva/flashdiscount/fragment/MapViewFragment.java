@@ -1,6 +1,7 @@
 package hva.flashdiscount.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -76,8 +77,12 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
         FragmentManager fm = getFragmentManager();
-        LoginDialogFragment dialogFragment = new LoginDialogFragment();
-        dialogFragment.show(fm, "Login Fragment");
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        if (!sharedPref.contains("idToken")) {
+            LoginDialogFragment dialogFragment = new LoginDialogFragment();
+            dialogFragment.show(fm, "Login Fragment");
+        }
+
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
