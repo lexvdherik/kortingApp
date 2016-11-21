@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_discounts"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Kortingen" />
-        <item
-            android:id="@+id/nav_myDiscounts"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Mijn Kortingen" />
-        <item
-            android:id="@+id/nav_favorites"
-            android:icon="@drawable/ic_menu_favorites"
-            android:title="Favorieten" />
+            android:icon="@android:drawable/ic_menu_mapmode"
+            android:title="@string/nav_kortingen" />
     </group>
 
-    <item android:title="Account">
+    <item android:title="@string/nav_account">
         <menu>
+            <item
+                android:id="@+id/nav_myDiscounts"
+                android:icon="@android:drawable/ic_menu_myplaces"
+                android:title="@string/nav_mijn_kortingen" />
+            <item
+                android:id="@+id/nav_favorites"
+                android:icon="@drawable/ic_menu_favorites"
+                android:title="@string/nav_favorieten" />
             <item
                 android:id="@+id/nav_account_settings"
                 android:icon="@drawable/ic_account_settings"
-                android:title="Instellingen" />
+                android:title="@string/nav_instellingen" />
         </menu>
     </item>
 

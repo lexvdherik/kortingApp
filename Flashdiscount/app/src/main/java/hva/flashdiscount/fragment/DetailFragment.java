@@ -3,7 +3,6 @@ package hva.flashdiscount.fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,16 +51,17 @@ public class DetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Log.e(TAG, "onCreate: " + String.valueOf(getFragmentManager().getBackStackEntryCount()));
+
         if (getArguments() != null) {
 //            Log.e(TAG, "getArguments() != null");
 
             String gson = getArguments().getString("establishment");
             establishment = new Gson().fromJson(gson, Establishment.class);
             discount = establishment.getDiscounts().get(getArguments().getInt("discountPosition"));
-
-            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-
-            actionBar.setDisplayShowHomeEnabled(true);
         }
     }
 
@@ -110,4 +110,5 @@ public class DetailFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }

@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,6 +18,8 @@ import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
 
+import net.steamcrafted.materialiconlib.MaterialMenuInflater;
+
 import hva.flashdiscount.fragment.TabFragment;
 import io.fabric.sdk.android.Fabric;
 
@@ -24,7 +27,9 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static Context contextOfApplication;
+    private Context contextOfApplication;
+
+    public boolean hasShownLogin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,10 @@ public class MainActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        MaterialMenuInflater
+                .with(this)
+                .setDefaultColor(R.color.colorPrimary)
+                .inflate(R.menu.activity_main_drawer, toolbar.getMenu());
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -53,7 +62,7 @@ public class MainActivity extends AppCompatActivity
         ft.commit();
     }
 
-    public static Context getContextOfApplication() {
+    public Context getContextOfApplication() {
         return contextOfApplication;
     }
 
@@ -78,13 +87,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.e(TAG, "BACK THROUGH NAV");
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
-            case R.id.action_settings:
-                return true;
+//            case R.id.action_settings:
+//                return true;
             case android.R.id.home:
-                getSupportFragmentManager().popBackStack();
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TabFragment()).commit();
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

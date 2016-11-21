@@ -2,8 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:tag="discount_list_frag"
-    android:background="#1A237E">
+    android:tag="discount_list_frag">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh"
@@ -15,7 +14,6 @@
             android:id="@+id/expListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:dividerHeight="5.0sp"
             android:paddingTop="5dp"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>

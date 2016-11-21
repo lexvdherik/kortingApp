@@ -36,9 +36,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
+import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
-//import hva.flashdiscount.adapter.CustomInfoWindowAdapter;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.service.GpsService;
 
@@ -78,9 +78,10 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
         FragmentManager fm = getFragmentManager();
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        if (!sharedPref.contains("idToken")) {
+        if (!sharedPref.contains("idToken") && !((MainActivity) getActivity()).hasShownLogin) {
             LoginDialogFragment dialogFragment = new LoginDialogFragment();
             dialogFragment.show(fm, "Login Fragment");
+            ((MainActivity) getActivity()).hasShownLogin = true;
         }
 
 
