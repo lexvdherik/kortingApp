@@ -7,12 +7,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
@@ -28,13 +33,16 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
+//import hva.flashdiscount.adapter.CustomInfoWindowAdapter;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.service.GpsService;
 
-public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
+        GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = MapViewFragment.class.getSimpleName();
     MapView mMapView;
@@ -95,9 +103,43 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 }
 
                 LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
-
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker) {
+                        final Establishment establishment = (Establishment) marker.getTag();
+                        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
+                        View bottomSheetView = getActivity().getLayoutInflater().inflate(R.layout.bottom_sheet, null);
+                        bottomSheetDialog.setContentView(bottomSheetView);
+
+                        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from((View) bottomSheetView.getParent());
+                        bottomSheetBehavior.setPeekHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics()));
+                        TextView title = (TextView) bottomSheetView.findViewById(R.id.title);
+                        title.setText(establishment.getCompany().getName());
+                        Button detailButton = (Button) bottomSheetView.findViewById(R.id.detail_view_button);
+                        detailButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Bundle arguments = new Bundle();
+                                arguments.putString("establishment", new Gson().toJson(establishment));
+
+                                DetailFragment detailFragment = new DetailFragment();
+
+                                detailFragment.setArguments(arguments);
+
+                                getFragmentManager().beginTransaction()
+                                        .replace(R.id.fragment_container, detailFragment)
+                                        .addToBackStack(null)
+                                        .commit();
+                            }
+                        });
+                        bottomSheetDialog.show();
+
+                        return true;
+                    }
+                });
 
                 getEstablishmentsFromAPI();
             }
@@ -105,6 +147,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
         return rootView;
     }
+
 
     @Override
     public void onResume() {
@@ -145,9 +188,10 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     }
 
-    protected Marker createMarker(String title, LatLng location, Establishment e) {
-
-        return googleMap.addMarker(new MarkerOptions().position(location).anchor(0.5f, 0.5f).title(title));
+    protected Marker createMarker(Establishment establishment) {
+            Marker marker = googleMap.addMarker(new MarkerOptions().position(establishment.getLocation()).anchor(0.5f, 0.5f));
+            marker.setTag(establishment);
+            return marker;
     }
 
     private void getEstablishmentsFromAPI() {
@@ -156,16 +200,18 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         APIRequest.getInstance(getActivity()).getEstablishment(listener, listener);
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return false;
+    }
+
+
     public class GetEstablishmentResponseListener implements Response.Listener<Establishment[]>, Response.ErrorListener {
 
         @Override
         public void onResponse(Establishment[] establishments) {
             for (Establishment establishment : establishments) {
-                createMarker(
-                        establishment.getCompany().getName(),
-                        establishment.getLocation(),
-                        establishment
-                );
+                createMarker(establishment);
             }
         }
 
