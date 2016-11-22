@@ -6,11 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Switch;
-
-
 import java.util.ArrayList;
-
 import hva.flashdiscount.R;
+import hva.flashdiscount.fragment.SettingsFragment;
 
 
 /**
@@ -20,19 +18,18 @@ import hva.flashdiscount.R;
 public class SettingsAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
-    private ArrayList<String> companySettings;
+    private ArrayList<SettingsFragment.SettingsObject> companySettings;
 
-    public SettingsAdapter(Activity activity) {
+    public SettingsAdapter(Activity activity, ArrayList<SettingsFragment.SettingsObject> companySettings) {
 
         inflater = LayoutInflater.from(activity);
+        this.companySettings = companySettings;
+    }
 
-        companySettings = new ArrayList<>();
-        companySettings.add("CoffeeCompany");
-        companySettings.add("Cafe Noire");
-        companySettings.add("Starbucks");
-        companySettings.add("De Roeter");
-
-
+    public void updateResults(ArrayList<SettingsFragment.SettingsObject> results) {
+        companySettings = results;
+        //Triggers the list update
+        notifyDataSetChanged();
     }
 
 
@@ -62,9 +59,9 @@ public class SettingsAdapter extends BaseAdapter {
         View rowView;
         rowView = inflater.inflate(R.layout.settings_row, null);
         holder.tv = (Switch) rowView.findViewById(R.id.setting_company_name);
-        holder.tv.setText(companySettings.get(position));
+        holder.tv.setText(companySettings.get(position).getTitle());
+        holder.tv.setChecked(companySettings.get(position).getChecked());
 
         return rowView;
     }
-
 }

@@ -1,14 +1,12 @@
 package hva.flashdiscount.fragment;
 
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Switch;
 
@@ -26,9 +24,9 @@ import hva.flashdiscount.model.Establishment;
 
 public class SettingsFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
-    private ArrayAdapter<String> arrayAdapter;
-    private ArrayList<String> listItems;
+
+    private ArrayList<SettingsObject> companySettings;
+    private SettingsAdapter test;
     ListView listView;
 
     private static final String TAG = SettingsFragment.class.getSimpleName();
@@ -37,15 +35,6 @@ public class SettingsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NotificationFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static SettingsFragment newInstance(String param1, String param2) {
         SettingsFragment fragment = new SettingsFragment();
         Bundle args = new Bundle();
@@ -73,18 +62,19 @@ public class SettingsFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
         final ListView lv = (ListView) rootView.findViewById(R.id.notification_list);
+        companySettings = fillList();
 
-        lv.setAdapter(new SettingsAdapter(getActivity()));
+        test = new SettingsAdapter(getActivity(), companySettings);
 
-        Switch swMain = (Switch) rootView.findViewById(R.id.switch_newsletter);
+        lv.setAdapter(test);
+
+        final Switch swMain = (Switch) rootView.findViewById(R.id.switch_newsletter);
         swMain.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Holder holder = new Holder();
-
-                holder.tv = (Switch) lv.findViewById(R.id.setting_company_name);
-                holder.tv.toggle();
+                setAllOptions(swMain.isChecked());
+                test.updateResults(companySettings);
             }
         });
 
@@ -112,7 +102,7 @@ public class SettingsFragment extends Fragment {
         public void onResponse(final Establishment[] establishments) {
 
             listView = (ListView) getActivity().findViewById(R.id.notification_list);
-            listView.setAdapter(new SettingsAdapter(getActivity()));
+            listView.setAdapter(new SettingsAdapter(getActivity(), companySettings));
             Switch sw = (Switch) getActivity().findViewById(R.id.setting_company_name);
             sw.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -120,7 +110,6 @@ public class SettingsFragment extends Fragment {
                     //TODO: enabling/disabling specific notifications
                 }
             });
-
 
         }
 
@@ -135,34 +124,44 @@ public class SettingsFragment extends Fragment {
 
     }
 
+    public ArrayList<SettingsObject> fillList() {
+        ArrayList<SettingsObject> temp = new ArrayList<>();
 
-
-
-
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        SettingsObject test = new SettingsObject("CoffeeCompany", true);
+        SettingsObject testTwee = new SettingsObject("Cafe Noire", false);
+        temp.add(test);
+        temp.add(testTwee);
+        return temp;
     }
 
+    public void setAllOptions(Boolean checkState) {
 
-    public ArrayList<String> fillList() {
-        ArrayList<String> temp = new ArrayList<>();
-        temp.add("CoffeeCompany");
-        temp.add("Cafe Noire");
-        temp.add("Starbucks");
-        temp.add("De Roeter");
+        for (SettingsObject item : companySettings) {
+            item.setChecked(checkState);
+        }
+    }
 
-        return temp;
+    public class SettingsObject {
+
+        private String title;
+        private Boolean checked;
+
+        public SettingsObject(String title, Boolean checked) {
+            this.title = title;
+            this.checked = checked;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public Boolean getChecked() {
+            return checked;
+        }
+
+        public void setChecked(Boolean checked) {
+            this.checked = checked;
+        }
+
     }
 }
