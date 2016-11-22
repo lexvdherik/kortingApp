@@ -11,6 +11,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -47,14 +48,13 @@ import hva.flashdiscount.service.GpsService;
 public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerClickListener {
 
+    private static final String TAG = MapViewFragment.class.getSimpleName();
     MapView mMapView;
     private GoogleMap googleMap;
     private Context context;
     private Location location;
     private GpsService gpsService;
     private BottomSheetBehavior mBottomSheetBehavior1;
-
-    private static final String TAG = MapViewFragment.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,6 +89,10 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
+        FragmentManager fm = getFragmentManager();
+        LoginDialogFragment dialogFragment = new LoginDialogFragment();
+        dialogFragment.show(fm, "Login Fragment");
+
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
@@ -115,7 +119,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 } else {
                     Log.e("nono", "no");
                 }
-
 
                 LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
@@ -230,9 +233,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         @Override
         public void onResponse(Establishment[] establishments) {
             for (Establishment establishment : establishments) {
-                createMarker(
-                        establishment
-                );
+                createMarker(establishment);
             }
         }
 
