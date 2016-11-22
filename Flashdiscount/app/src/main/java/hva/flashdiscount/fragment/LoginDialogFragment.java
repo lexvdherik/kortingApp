@@ -26,6 +26,7 @@ import java.util.Calendar;
 
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
+import hva.flashdiscount.model.Token;
 
 public class LoginDialogFragment extends DialogFragment {
 
@@ -125,10 +126,11 @@ public class LoginDialogFragment extends DialogFragment {
         APIRequest.getInstance(getActivity()).postUser(listener, listener, idToken);
     }
 
-    public class PostUserResponseListener implements Response.Listener, Response.ErrorListener {
+    public class PostUserResponseListener implements Response.Listener<Token>, Response.ErrorListener {
 
         @Override
-        public void onResponse(Object response) {
+        public void onResponse(Token token) {
+            Log.e(TAG,token.getExpireDate().toString());
             Log.e(TAG, " " + acct.getDisplayName());
             ((ImageView) layout.findViewById(R.id.profile_picture)).setImageURI(acct.getPhotoUrl());
             String firstName = acct.getGivenName().substring(0, 1).toUpperCase() + acct.getGivenName().substring(1);

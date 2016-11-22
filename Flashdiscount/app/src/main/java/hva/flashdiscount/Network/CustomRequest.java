@@ -143,6 +143,7 @@ class CustomRequest<T> extends Request<T> {
 
         try {
             assert responseData != null;
+            Log.e("JsonRpcRequest Response", responseData);
             resp = (JsonObject) parser.parse(new StringReader(responseData));
         } catch (JsonIOException | JsonSyntaxException e) {
             e.printStackTrace();
