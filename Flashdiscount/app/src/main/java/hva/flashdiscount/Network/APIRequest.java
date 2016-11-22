@@ -20,7 +20,6 @@ public class APIRequest {
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
     private static final String METHOD_POST_USER = "auth/login";
     private static final String METHOD_GET_FAVOURITES = "favouriteEstablishment/";
-    private Context mContext;
 
     private static APIRequest sInstance;
     private final RequestQueue mQueue;

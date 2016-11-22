@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_account_settings) {
             Log.i(TAG, "nav_account_settings");
 
+
             getSupportFragmentManager().popBackStack();
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
 

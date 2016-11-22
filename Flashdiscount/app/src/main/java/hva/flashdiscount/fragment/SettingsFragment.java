@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Switch;
 
 
 import com.android.volley.NoConnectionError;
@@ -61,15 +62,32 @@ public class SettingsFragment extends Fragment {
 
     }
 
+    public class Holder {
+        Switch tv;
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
         ListView lv = (ListView) rootView.findViewById(R.id.notification_list);
 
         lv.setAdapter(new SettingsAdapter(getActivity()));
+
+        Switch swMain = (Switch) rootView.findViewById(R.id.switch_newsletter);
+        swMain.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Holder holder = new Holder();
+                View rowView;
+                rowView = inflater.inflate(R.layout.settings_row, null);
+                holder.tv = (Switch) rowView.findViewById(R.id.setting_company_name);
+                holder.tv.toggle();
+            }
+        });
 
         return rootView;
     }
@@ -88,6 +106,7 @@ public class SettingsFragment extends Fragment {
 
     }
 
+
     public class GetFavouritesResponseListener implements Response.Listener<Establishment[]>, Response.ErrorListener {
 
         @Override
@@ -95,6 +114,14 @@ public class SettingsFragment extends Fragment {
 
             listView = (ListView) getActivity().findViewById(R.id.notification_list);
             listView.setAdapter(new SettingsAdapter(getActivity()));
+            Switch sw = (Switch) getActivity().findViewById(R.id.setting_company_name);
+            sw.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //TODO: enabling/disabling specific notifications
+                }
+            });
+
 
         }
 
