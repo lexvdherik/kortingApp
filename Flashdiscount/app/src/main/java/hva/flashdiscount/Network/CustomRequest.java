@@ -25,7 +25,6 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
@@ -68,19 +67,11 @@ class CustomRequest<T> extends Request<T> {
     }
 
     private Boolean loginExpired() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(token)
-                .requestEmail()
-                .build();
-        mGoogleApiClient = new GoogleApiClient.Builder(applicationContext)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+
         Calendar currentDate = Calendar.getInstance();
         currentDate.setTime(Calendar.getInstance().getTime());
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(applicationContext);
-
-        Log.e(TAG + " lll", sharedPref.getString("expireDate", ""));
 
         Calendar expireDate = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
@@ -93,20 +84,43 @@ class CustomRequest<T> extends Request<T> {
 
         if(currentDate.compareTo(expireDate) != -1) {
 
+            return false;
+        } else {
+
+            return true;
+        }
+    }
+
+    public void refreshToken(){
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(token)
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(applicationContext)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
             OptionalPendingResult<GoogleSignInResult> pendingResult =
                     Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
             if (pendingResult.isDone()) {
-                // There's immediate result available.
-               GoogleSignInAccount account = pendingResult.get().getSignInAccount();
-                Log.e(TAG," login " + account.getIdToken().toString());
+
+                acct = pendingResult.get().getSignInAccount();
+
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("idToken", acct.getIdToken());
+
+                Calendar c = Calendar.getInstance();
+                c.setTime(Calendar.getInstance().getTime());
+                c.add(Calendar.MINUTE, +59);
+
+                editor.putString("expireDate", c.getTime().toString());
+                editor.apply();
+
             }
 
-
-        } else {
-            this.idToken = sharedPref.getString("idToken", "");
-        }
-
-        return true;
     }
 
     protected Map<String, String> getParams() throws AuthFailureError {
