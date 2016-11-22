@@ -20,7 +20,7 @@ public class APIRequest {
     //private static final String HOST = "http://145.28.144.168/api/";
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
     private static final String METHOD_POST_USER = "auth/login";
-    private static final String METHOD_GET_FAVOURITES = "favoriteestablishment/";
+    private static final String METHOD_GET_FAVORITES = "favoriteestablishment/";
 
     private static APIRequest sInstance;
     private final RequestQueue mQueue;
@@ -59,8 +59,6 @@ public class APIRequest {
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_USER, params,
                 responseListener, errorListener, null).setTag(METHOD_POST_USER));
 
-//        Log.e(TAG, );
-
         return true;
     }
 
@@ -69,10 +67,8 @@ public class APIRequest {
         Map<String, Object> params = new HashMap<>();
         params.put("idToken", idToken);
 
-        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_FAVOURITES, params,
-                responseListener, errorListener, Favorite[].class).setTag(METHOD_GET_FAVOURITES).setShouldCache(true));
-
-//        Log.e(TAG, );
+        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_FAVORITES, params,
+                responseListener, errorListener, Favorite[].class).setTag(METHOD_GET_FAVORITES).setShouldCache(true));
 
         return true;
     }
