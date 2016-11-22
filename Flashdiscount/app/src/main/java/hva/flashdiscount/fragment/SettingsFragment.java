@@ -72,7 +72,7 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        ListView lv = (ListView) rootView.findViewById(R.id.notification_list);
+        final ListView lv = (ListView) rootView.findViewById(R.id.notification_list);
 
         lv.setAdapter(new SettingsAdapter(getActivity()));
 
@@ -82,9 +82,8 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Holder holder = new Holder();
-                View rowView;
-                rowView = inflater.inflate(R.layout.settings_row, null);
-                holder.tv = (Switch) rowView.findViewById(R.id.setting_company_name);
+
+                holder.tv = (Switch) lv.findViewById(R.id.setting_company_name);
                 holder.tv.toggle();
             }
         });
