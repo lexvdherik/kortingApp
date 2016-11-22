@@ -1,16 +1,32 @@
 package hva.flashdiscount.Network;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
+import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.model.Token;
 
@@ -24,10 +40,16 @@ public class APIRequest {
     private static APIRequest sInstance;
     private final RequestQueue mQueue;
     private Context mContext;
+    private Context applicationContext;
+    private String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
+    GoogleApiClient mGoogleApiClient;
+
+    private GoogleSignInAccount acct;
 
     private APIRequest(Context context) {
         this.mContext = context;
         this.mQueue = Volley.newRequestQueue(context);
+        this.applicationContext = MainActivity.getContextOfApplication();
     }
 
     public static APIRequest getInstance(Context context) {
@@ -62,17 +84,76 @@ public class APIRequest {
     }
 
     public boolean setFavorite(Response.Listener responseListener, Response.ErrorListener errorListener, String idToken, String establishmentId) {
+        if(loginExpired()){
+            idToken = refreshToken();
+        }
 
         Map<String, Object> params = new HashMap<>();
         params.put("idToken", idToken);
         params.put("establishmentId", establishmentId);
-
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_SET_FAVORITE, params,
                 responseListener, errorListener, null).setTag(METHOD_SET_FAVORITE));
 
-
         return true;
     }
+
+    private Boolean loginExpired() {
+
+        DateTimeZone london = DateTimeZone.forID( "Europe/London" );
+        DateTime current = DateTime.now( london );
+        Calendar currentDate;
+        currentDate = current.toCalendar(Locale.ENGLISH);
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+
+        Calendar expireDate = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+
+        Log.e(TAG, "expireDate = " + sharedPref.getString("expire_date", ""));
+
+        try{
+            expireDate.setTime(sdf.parse(sharedPref.getString("expire_date", "")));
+        } catch(ParseException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+        if(currentDate.compareTo(expireDate) != -1) {
+
+            return false;
+        } else {
+
+            return true;
+        }
+    }
+
+    public String refreshToken(){
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(token)
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(applicationContext)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+
+        OptionalPendingResult<GoogleSignInResult> pendingResult =
+                Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+        if (pendingResult.isDone()) {
+
+            acct = pendingResult.get().getSignInAccount();
+
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("idToken", acct.getIdToken());
+
+            editor.apply();
+
+        }
+
+        return acct.getIdToken();
+    }
+
 
 
 

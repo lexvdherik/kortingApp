@@ -52,14 +52,11 @@ class CustomRequest<T> extends Request<T> {
     private GoogleSignInAccount acct;
     private Class<?> mClass;
     private Response.Listener<T> listener;
-    private Context applicationContext;
-    private String idToken;
-    private String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
+
 
 
     CustomRequest(int method, String url, Map<String, String> params, Response.Listener<T> reponseListener, Response.ErrorListener errorListener, Class<?> clazz) {
         super(method, url, errorListener);
-        this.applicationContext = MainActivity.getContextOfApplication();
         this.listener = reponseListener;
         this.params = params;
         this.mClass = clazz;
@@ -67,66 +64,10 @@ class CustomRequest<T> extends Request<T> {
                 60000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        loginExpired();
+
 
     }
 
-    private Boolean loginExpired() {
-
-        DateTimeZone london = DateTimeZone.forID( "Europe/London" );
-        DateTime current = DateTime.now( london );
-        Calendar currentDate;
-        currentDate = current.toCalendar(Locale.ENGLISH);
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(applicationContext);
-
-        Calendar expireDate = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-
-        Log.e(TAG, "expireDate = " + sharedPref.getString("expire_date", ""));
-
-        try{
-            expireDate.setTime(sdf.parse(sharedPref.getString("expire_date", "")));
-        } catch(ParseException e) {
-            Log.e(TAG, e.getMessage());
-        }
-
-        if(currentDate.compareTo(expireDate) != -1) {
-
-            return false;
-        } else {
-
-            return true;
-        }
-    }
-
-    public String refreshToken(){
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(token)
-                .requestEmail()
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(applicationContext)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-            OptionalPendingResult<GoogleSignInResult> pendingResult =
-                    Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-            if (pendingResult.isDone()) {
-
-                acct = pendingResult.get().getSignInAccount();
-
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(applicationContext);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString("idToken", acct.getIdToken());
-                
-                editor.apply();
-
-            }
-
-        return acct.getIdToken();
-    }
 
     protected Map<String, String> getParams() throws AuthFailureError {
         return params;
@@ -138,6 +79,7 @@ class CustomRequest<T> extends Request<T> {
 
         try {
             responseData = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+            Log.e(TAG,"test" + responseData);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

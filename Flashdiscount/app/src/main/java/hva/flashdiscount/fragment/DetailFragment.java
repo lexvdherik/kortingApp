@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
@@ -66,18 +67,6 @@ public class DetailFragment extends Fragment {
             discount = establishment.getDiscounts().get(getArguments().getInt("discountPosition"));
 
 
-            favoriteButton = (ImageButton) mRootView.findViewById(R.id.btnFavorite);
-
-            favoriteButton.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-
-                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(MainActivity.get);
-
-                    setFavorite(idToken,String.valueOf(establishment.getEstablishmentId()));
-                }
-            });
 
         }
     }
@@ -115,6 +104,18 @@ public class DetailFragment extends Fragment {
             setCompanyText();
             setDiscountText();
         }
+        favoriteButton = (ImageButton) mRootView.findViewById(R.id.btnFavorite);
+
+        favoriteButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(MainActivity.getContextOfApplication());
+                String idToken = sharedPref.getString("idToken", "");
+                setFavorite(idToken,String.valueOf(establishment.getEstablishmentId()));
+            }
+        });
 
         // Inflate the layout for this fragment
         return mRootView;
