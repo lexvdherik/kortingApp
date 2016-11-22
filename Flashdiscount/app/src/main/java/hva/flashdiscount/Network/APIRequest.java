@@ -18,6 +18,7 @@ public class APIRequest {
     private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
     //private static final String HOST = "http://145.28.144.168/api/";
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
+    private static final String METHOD_SET_FAVORITE = "favoriteestablishment/favorite";
     private static final String METHOD_POST_USER = "auth/login";
     private static APIRequest sInstance;
     private final RequestQueue mQueue;
@@ -56,10 +57,21 @@ public class APIRequest {
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_USER, params,
                 responseListener, errorListener, null).setTag(METHOD_POST_USER));
 
-//        Log.e(TAG, );
+        return true;
+    }
+
+    public boolean setFavorite(Response.Listener responseListener, Response.ErrorListener errorListener, String idToken, String establishmentId) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("idToken", idToken);
+        params.put("establishmentId", establishmentId);
+
+        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_SET_FAVORITE, params,
+                responseListener, errorListener, null).setTag(METHOD_SET_FAVORITE));
 
         return true;
     }
+
 
 
 }
