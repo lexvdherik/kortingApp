@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import hva.flashdiscount.model.Establishment;
+import hva.flashdiscount.model.Favorite;
 
 public class APIRequest {
     private static final String TAG = APIRequest.class.getSimpleName();
@@ -19,7 +20,7 @@ public class APIRequest {
     //private static final String HOST = "http://145.28.144.168/api/";
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
     private static final String METHOD_POST_USER = "auth/login";
-    private static final String METHOD_GET_FAVOURITES = "favouriteEstablishment/";
+    private static final String METHOD_GET_FAVOURITES = "favoriteestablishment/";
 
     private static APIRequest sInstance;
     private final RequestQueue mQueue;
@@ -63,15 +64,18 @@ public class APIRequest {
         return true;
     }
 
-    public boolean getFavourites(Response.Listener<Establishment[]> responseListener, Response.ErrorListener errorListener) {
+    public boolean getFavourites(Response.Listener<Favorite[]> responseListener, Response.ErrorListener errorListener, String idToken) {
 
+        Map<String, Object> params = new HashMap<>();
+        params.put("idToken", idToken);
 
-        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_FAVOURITES, null,
-                responseListener, errorListener, Establishment[].class).setTag(METHOD_GET_FAVOURITES).setShouldCache(true));
+        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_FAVOURITES, params,
+                responseListener, errorListener, Favorite[].class).setTag(METHOD_GET_FAVOURITES).setShouldCache(true));
+
+//        Log.e(TAG, );
 
         return true;
     }
-
 
 
 }

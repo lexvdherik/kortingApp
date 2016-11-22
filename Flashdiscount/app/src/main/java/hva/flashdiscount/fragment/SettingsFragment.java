@@ -20,14 +20,13 @@ import java.util.ArrayList;
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.SettingsAdapter;
-import hva.flashdiscount.model.Establishment;
+import hva.flashdiscount.model.Favorite;
 
 public class SettingsFragment extends Fragment {
 
 
     private ArrayList<SettingsObject> companySettings;
-    private SettingsAdapter test;
-    ListView listView;
+    private SettingsAdapter settingsAdapter;
 
     private static final String TAG = SettingsFragment.class.getSimpleName();
 
@@ -51,10 +50,6 @@ public class SettingsFragment extends Fragment {
 
     }
 
-    public class Holder {
-        Switch tv;
-    }
-
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,9 +59,9 @@ public class SettingsFragment extends Fragment {
         final ListView lv = (ListView) rootView.findViewById(R.id.notification_list);
         companySettings = fillList();
 
-        test = new SettingsAdapter(getActivity(), companySettings);
+        settingsAdapter = new SettingsAdapter(getActivity(), companySettings);
 
-        lv.setAdapter(test);
+        lv.setAdapter(settingsAdapter);
 
         final Switch swMain = (Switch) rootView.findViewById(R.id.switch_newsletter);
         swMain.setOnClickListener(new View.OnClickListener() {
@@ -74,9 +69,11 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 setAllOptions(swMain.isChecked());
-                test.updateResults(companySettings);
+                settingsAdapter.updateResults(companySettings);
             }
         });
+
+        getFavourites();
 
         return rootView;
     }
@@ -85,42 +82,31 @@ public class SettingsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        getFavouritesFromAPI();
+        getFavourites();
     }
 
-    private void getFavouritesFromAPI() {
+    private void getFavourites() {
+        String idToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE0YmM2ZjRhZjFkZWFhMGExZGUzNDYwNzBiM2UwNjYyMTI0MWUzMmYifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJpYXQiOjE0Nzk4MjM1NDUsImV4cCI6MTQ3OTgyNzE0NSwiYXVkIjoiNDQ0OTUzNDA3ODA1LW41bTlxaXR2ZmNucm04azNtdWM3M3NxdjVnOTFkbW1pLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA1MzM4MDI4NDA5MTU5MDkxNzk1IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjQ0NDk1MzQwNzgwNS1oMmxpdGdsdnNxdTY0djFoZjhsazllaTlrOGw3azRkMi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImVtYWlsIjoiYW50aG9ueS5zaXRhcmFtQGdtYWlsLmNvbSIsIm5hbWUiOiJBbnRob255IFNpdGFyYW0iLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDUuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy1QdU9mZmgxbHhuSS9BQUFBQUFBQUFBSS9BQUFBQUFBQUFDby9YUlFTQ1RUUDFDRS9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiQW50aG9ueSIsImZhbWlseV9uYW1lIjoiU2l0YXJhbSIsImxvY2FsZSI6ImVuLUJFIn0.fcD8rYFybU7xXgJm3vo8l15H3Fo_5iSQmW4DFGT5Y0PqzTqUp5xpb6ypJHOkjsG-ff7E6YYFLS2z44SdJids6bgy0-FHdNNeGwypTeAf7Oa-fBYxGIQI7ppPwOzD2eXFy5WDW-YJaUuhfDoJlwhdY1cZMucQypIbo7xvv3nRFEppSyzXgTv_SQG9jQjXI6kgtPQ-bsoCOYgtiO0EDzT7IA5xf6abB-3Np9p_LW0yg7uCrgnkZBiyj3GPDp-Ci9-XA-LCvpIbq-0OdvXe34jkviOipvkMJ1ECvq7QepcuaEQg7vnYbrg9qFtJgkJ1BOLGsHT2hkqx7edmRoZv7YoJsg";
         System.gc();
-        GetFavouritesResponseListener listener = new GetFavouritesResponseListener();
-        APIRequest.getInstance(getActivity()).getFavourites(listener, listener);
-
+        SettingsFragment.GetFavoritesResponseListener listener = new SettingsFragment.GetFavouritesResponseListener();
+        APIRequest.getInstance(getActivity()).getFavourites(listener, listener, idToken);
     }
 
-
-    public class GetFavouritesResponseListener implements Response.Listener<Establishment[]>, Response.ErrorListener {
+    public class GetFavoritesResponseListener implements Response.Listener<Favorite[]>, Response.ErrorListener {
 
         @Override
-        public void onResponse(final Establishment[] establishments) {
-
-            listView = (ListView) getActivity().findViewById(R.id.notification_list);
-            listView.setAdapter(new SettingsAdapter(getActivity(), companySettings));
-            Switch sw = (Switch) getActivity().findViewById(R.id.setting_company_name);
-            sw.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //TODO: enabling/disabling specific notifications
-                }
-            });
-
+        public void onResponse(final Favorite[] favorite) {
+            Log.e(TAG, " getFavorites");
+                Log.e(TAG, " " + favorite[0].toString());
         }
 
         @Override
         public void onErrorResponse(VolleyError error) {
-
+            Log.e(TAG + " content", " joil" + error.getMessage());
             if (error instanceof NoConnectionError) {
                 Log.e(TAG, "No connection!");
             }
         }
-
 
     }
 
