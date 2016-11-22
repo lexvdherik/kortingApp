@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.TypedValue;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.NoConnectionError;
@@ -32,8 +34,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.vision.text.Line;
 import com.google.gson.Gson;
 
+import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
 //import hva.flashdiscount.adapter.CustomInfoWindowAdapter;
@@ -48,12 +52,15 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private Context context;
     private Location location;
     private GpsService gpsService;
+    private BottomSheetBehavior mBottomSheetBehavior1;
 
     private static final String TAG = MapViewFragment.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         gpsService = new GpsService(getActivity());
         context = getActivity();
@@ -68,17 +75,28 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             location.setLatitude(52.375368);
             location.setLongitude(4.894486);
         }
+
+
+
+
+
+
+
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume();
+
+        //View bottomSheet = getView().findViewById(R.id.bottom_sheet);
+        final View bottomSheet = rootView.findViewById(R.id.bottom_sheet);
+        mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -104,37 +122,39 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
+
                     @Override
                     public boolean onMarkerClick(Marker marker) {
                         final Establishment establishment = (Establishment) marker.getTag();
-                        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
-                        View bottomSheetView = getActivity().getLayoutInflater().inflate(R.layout.bottom_sheet, null);
-                        bottomSheetDialog.setContentView(bottomSheetView);
 
-                        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from((View) bottomSheetView.getParent());
-                        bottomSheetBehavior.setPeekHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics()));
-                        TextView title = (TextView) bottomSheetView.findViewById(R.id.title);
-                        title.setText(establishment.getCompany().getName());
-                        Button detailButton = (Button) bottomSheetView.findViewById(R.id.detail_view_button);
-                        detailButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Bundle arguments = new Bundle();
-                                arguments.putString("establishment", new Gson().toJson(establishment));
 
-                                DetailFragment detailFragment = new DetailFragment();
+                        if(mBottomSheetBehavior1.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                            TextView title = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
+                            title.setText(establishment.getCompany().getName());
+                        }
+                        else if(mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                            mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
+                            //mButton1.setText(R.string.collapse_button1);
+                            TextView title = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
+                            title.setText(establishment.getCompany().getName());
 
-                                detailFragment.setArguments(arguments);
+                        }
+                        else {
+                            mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                          //  mButton1.setText(R.string.button1);
+                        }
 
-                                getFragmentManager().beginTransaction()
-                                        .replace(R.id.fragment_container, detailFragment)
-                                        .addToBackStack(null)
-                                        .commit();
-                            }
-                        });
-                        bottomSheetDialog.show();
+
 
                         return true;
+                    }
+                });
+
+                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+                        mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     }
                 });
 
@@ -144,6 +164,8 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
         return rootView;
     }
+
+
 
 
     @Override
