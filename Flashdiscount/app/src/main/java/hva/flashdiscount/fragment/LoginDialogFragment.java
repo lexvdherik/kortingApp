@@ -37,6 +37,7 @@ public class LoginDialogFragment extends DialogFragment {
     private LinearLayout layout;
     private GoogleSignInAccount acct;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login_dialog, container, false);
@@ -130,8 +131,8 @@ public class LoginDialogFragment extends DialogFragment {
 
         @Override
         public void onResponse(Token token) {
-            Log.e(TAG, " date " + token.getExpireDate());
-            Log.e(TAG, " " + acct.getDisplayName());
+            token.getExpireDate();
+
             ((ImageView) layout.findViewById(R.id.profile_picture)).setImageURI(acct.getPhotoUrl());
             String firstName = acct.getGivenName().substring(0, 1).toUpperCase() + acct.getGivenName().substring(1);
             String lastName = acct.getFamilyName().substring(0, 1).toUpperCase() + acct.getFamilyName().substring(1);

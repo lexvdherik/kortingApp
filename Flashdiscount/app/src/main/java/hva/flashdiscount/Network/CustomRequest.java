@@ -25,6 +25,10 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
@@ -32,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import hva.flashdiscount.MainActivity;
 
@@ -68,8 +73,10 @@ class CustomRequest<T> extends Request<T> {
 
     private Boolean loginExpired() {
 
-        Calendar currentDate = Calendar.getInstance();
-        currentDate.setTime(Calendar.getInstance().getTime());
+        DateTimeZone london = DateTimeZone.forID( "Europe/London" );
+        DateTime current = DateTime.now( london );
+        Calendar currentDate;
+        currentDate = current.toCalendar(Locale.ENGLISH);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(applicationContext);
 
@@ -143,7 +150,7 @@ class CustomRequest<T> extends Request<T> {
 
         try {
             assert responseData != null;
-            Log.e("JsonRpcRequest Response", responseData);
+            Log.e("testresponse", responseData);
             resp = (JsonObject) parser.parse(new StringReader(responseData));
         } catch (JsonIOException | JsonSyntaxException e) {
             e.printStackTrace();

@@ -48,6 +48,7 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         transitive = true;
     }
+    compile 'joda-time:joda-time:2.9.6'
     compile 'com.google.android.gms:play-services-auth:9.8.0'
     compile 'com.google.android.gms:play-services:9.8.0'
     compile 'com.android.support:appcompat-v7:25.0.0'
