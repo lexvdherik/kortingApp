@@ -103,11 +103,7 @@ public class LoginDialogFragment extends DialogFragment {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("idToken", acct.getIdToken());
 
-            Calendar c = Calendar.getInstance();
-            c.setTime(Calendar.getInstance().getTime());
-            c.add(Calendar.MINUTE, +59);
 
-            editor.putString("expireDate", c.getTime().toString());
             editor.apply();
 
             this.dismiss();
@@ -131,7 +127,7 @@ public class LoginDialogFragment extends DialogFragment {
 
         @Override
         public void onResponse(Token token) {
-            token.getExpireDate();
+            Token t = new Token(token.getExpireDate());
 
             ((ImageView) layout.findViewById(R.id.profile_picture)).setImageURI(acct.getPhotoUrl());
             String firstName = acct.getGivenName().substring(0, 1).toUpperCase() + acct.getGivenName().substring(1);
@@ -144,7 +140,6 @@ public class LoginDialogFragment extends DialogFragment {
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e(TAG + " content", " joil" + error.getMessage());
             if (error instanceof NoConnectionError) {
                 Log.e(TAG, "No connection!");
             }
