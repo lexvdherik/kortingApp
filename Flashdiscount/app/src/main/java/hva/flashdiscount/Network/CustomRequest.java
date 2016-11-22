@@ -100,7 +100,7 @@ class CustomRequest<T> extends Request<T> {
         }
     }
 
-    public void refreshToken(){
+    public String refreshToken(){
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(token)
@@ -120,22 +120,17 @@ class CustomRequest<T> extends Request<T> {
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(applicationContext);
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("idToken", acct.getIdToken());
-
-                Calendar c = Calendar.getInstance();
-                c.setTime(Calendar.getInstance().getTime());
-                c.add(Calendar.MINUTE, +59);
-
-                editor.putString("expireDate", c.getTime().toString());
+                
                 editor.apply();
 
             }
 
+        return acct.getIdToken();
     }
 
     protected Map<String, String> getParams() throws AuthFailureError {
         return params;
     }
-
 
     @Override
     public Response<T> parseNetworkResponse(NetworkResponse response) {
