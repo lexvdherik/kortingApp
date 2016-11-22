@@ -64,7 +64,7 @@ public class APIRequest {
         return true;
     }
 
-    public boolean getFavourites(Response.Listener<Favorite[]> responseListener, Response.ErrorListener errorListener, String idToken) {
+    public boolean getFavorites(Response.Listener<Favorite[]> responseListener, Response.ErrorListener errorListener, String idToken) {
 
         Map<String, Object> params = new HashMap<>();
         params.put("idToken", idToken);

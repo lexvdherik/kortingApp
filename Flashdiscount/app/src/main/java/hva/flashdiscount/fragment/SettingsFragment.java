@@ -88,8 +88,8 @@ public class SettingsFragment extends Fragment {
     private void getFavourites() {
         String idToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjE0YmM2ZjRhZjFkZWFhMGExZGUzNDYwNzBiM2UwNjYyMTI0MWUzMmYifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJpYXQiOjE0Nzk4MjM1NDUsImV4cCI6MTQ3OTgyNzE0NSwiYXVkIjoiNDQ0OTUzNDA3ODA1LW41bTlxaXR2ZmNucm04azNtdWM3M3NxdjVnOTFkbW1pLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA1MzM4MDI4NDA5MTU5MDkxNzk1IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjQ0NDk1MzQwNzgwNS1oMmxpdGdsdnNxdTY0djFoZjhsazllaTlrOGw3azRkMi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImVtYWlsIjoiYW50aG9ueS5zaXRhcmFtQGdtYWlsLmNvbSIsIm5hbWUiOiJBbnRob255IFNpdGFyYW0iLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDUuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy1QdU9mZmgxbHhuSS9BQUFBQUFBQUFBSS9BQUFBQUFBQUFDby9YUlFTQ1RUUDFDRS9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiQW50aG9ueSIsImZhbWlseV9uYW1lIjoiU2l0YXJhbSIsImxvY2FsZSI6ImVuLUJFIn0.fcD8rYFybU7xXgJm3vo8l15H3Fo_5iSQmW4DFGT5Y0PqzTqUp5xpb6ypJHOkjsG-ff7E6YYFLS2z44SdJids6bgy0-FHdNNeGwypTeAf7Oa-fBYxGIQI7ppPwOzD2eXFy5WDW-YJaUuhfDoJlwhdY1cZMucQypIbo7xvv3nRFEppSyzXgTv_SQG9jQjXI6kgtPQ-bsoCOYgtiO0EDzT7IA5xf6abB-3Np9p_LW0yg7uCrgnkZBiyj3GPDp-Ci9-XA-LCvpIbq-0OdvXe34jkviOipvkMJ1ECvq7QepcuaEQg7vnYbrg9qFtJgkJ1BOLGsHT2hkqx7edmRoZv7YoJsg";
         System.gc();
-        SettingsFragment.GetFavoritesResponseListener listener = new SettingsFragment.GetFavouritesResponseListener();
-        APIRequest.getInstance(getActivity()).getFavourites(listener, listener, idToken);
+        SettingsFragment.GetFavoritesResponseListener listener = new SettingsFragment.GetFavoritesResponseListener();
+        APIRequest.getInstance(getActivity()).getFavorites(listener, listener, idToken);
     }
 
     public class GetFavoritesResponseListener implements Response.Listener<Favorite[]>, Response.ErrorListener {
