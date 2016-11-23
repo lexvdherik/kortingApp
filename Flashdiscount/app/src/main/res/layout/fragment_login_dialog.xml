@@ -1,35 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="10dp">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_horizontal_margin">
 
-    <ImageView
-        android:id="@+id/image"
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/title"
+        android:text="@string/login_popup_title"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:textColor="@color/textColorSecondary"/>
+
+    <Button
+        android:id="@+id/google_sign_in_button"
+        style="?attr/borderlessButtonStyle"
+        android:layout_below="@id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/common_signin_button_text_long" />
+
+    <Button
+        android:text="FB Sign In"
+        android:id="@+id/fb_sign_in_button"
+        style="?attr/borderlessButtonStyle"
+        android:layout_below="@id/google_sign_in_button"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/login_popup_title"
-        android:textAppearance="?android:attr/textAppearanceLargePopupMenu" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
+    <Button
+        android:text="Twitter Sign In"
+        android:id="@+id/twitter_sign_in_button"
         style="?attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
+        android:layout_below="@id/fb_sign_in_button"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/dismiss"
+        android:text="Email Sign In"
+        android:id="@+id/sign_in_button"
         style="?attr/borderlessButtonStyle"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/dismiss" />
-</LinearLayout>
+        android:layout_below="@id/twitter_sign_in_button"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

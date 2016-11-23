@@ -4,19 +4,19 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">About</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="nav_kortingen">Kortingen</string>
-    <string name="nav_mijn_kortingen">Mijn actieve kortingen</string>
-    <string name="nav_favorieten">Favorieten</string>
-    <string name="nav_account">Account</string>
-    <string name="nav_instellingen">Instellingen</string>
+    <string name="nav_kortingen">Discounts</string>
+    <string name="nav_my_discounts">My active discounts</string>
+    <string name="nav_favorites">Favorites</string>
+    <string name="nav_account">Me</string>
+    <string name="nav_settings">Settings</string>
     <string name="claims_left">Claims left:</string>
     <string name="time_left">Time left:</string>
     <string name="favorite">Favorite</string>
     <string name="claim">Claim</string>
     <string name="dismiss">Dismiss</string>
-    <string name="login_popup_title">Log in with an account</string>
+    <string name="login_popup_title">Pick an account</string>
+    <string name="profile_picture_desc">Profile picture</string>
+    <string name="claim_fab_desc">Claim</string>
 </resources>

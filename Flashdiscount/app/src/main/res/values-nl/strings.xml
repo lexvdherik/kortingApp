@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Flashdiscount</string>
+    <string name="action_settings">Instellingen</string>
+    <string name="claim">Claim</string>
+    <string name="claims_left">Claims over:</string>
+    <string name="dismiss">Weg</string>
+    <string name="favorite">Favoriet</string>
+    <string name="hello_blank_fragment">Hallo blank fragment</string>
+    <string name="login_popup_title">Kies een account</string>
+    <string name="nav_account">Persoonlijk</string>
+    <string name="nav_favorites">Favorieten</string>
+    <string name="nav_settings">Instellingen</string>
+    <string name="nav_kortingen">Kortingen</string>
+    <string name="nav_my_discounts">Mijn actieve kortingen</string>
+    <string name="navigation_drawer_close">Sluit navigatie</string>
+    <string name="navigation_drawer_open">Open navigatie</string>
+    <string name="time_left">Tijd resterend:</string>
+    <string name="profile_picture_desc">Profiel foto</string>
+</resources>
