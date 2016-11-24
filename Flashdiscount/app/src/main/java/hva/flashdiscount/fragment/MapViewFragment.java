@@ -8,14 +8,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -38,7 +36,6 @@ import com.google.gson.Gson;
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.BottomDiscountAdapter;
-import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.service.GpsService;
 
@@ -76,12 +73,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             location.setLatitude(52.375368);
             location.setLongitude(4.894486);
         }
-
-
-
-
-
-
 
     }
 
@@ -136,38 +127,8 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                     @Override
                     public boolean onMarkerClick(Marker marker) {
                         final Establishment establishment = (Establishment) marker.getTag();
-
-                        if (establishment.getDiscounts().size() > 1) {
-
-                            final ListView listView = (ListView) rootView.findViewById(R.id.discount_list_view);
-                            BottomDiscountAdapter adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
-                            listView.setAdapter(adapter);
-
-                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                                //    int itemPosition = position;
-                                    Discount value = (Discount) listView.getItemAtPosition(position);
-                                    value.toString();
-                                }
-                            });
-
-                        } else {
-                            listView = null;
-                        }
-
-//
-//                        if (establishment.getDiscounts().size() > 1) {
-//
-//                            mBottomSheetBehavior1.setPeekHeight(500);
-//                           CoordinatorLayout.LayoutParams lay = new CoordinatorLayout.LayoutParams(bottomSheet.getLayoutParams().width, 500);
-//                            lay.gravity = 80;
-//                            //       bottomSheet.getLayoutParams().height = 400;
-//                           bottomSheet.setLayoutParams(lay);
-//                          //  mBottomSheetBehavior1.notify();
-//
-//                        }
-
+                        final ListView listView = (ListView) rootView.findViewById(R.id.discount_list_view);
+                        BottomDiscountAdapter adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
 
                         if (mBottomSheetBehavior1.getState() == BottomSheetBehavior.STATE_EXPANDED) {
                             TextView title = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
@@ -185,17 +146,26 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
                         } else {
                             mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                          //  mButton1.setText(R.string.button1);
                         }
 
+                        if (establishment.getDiscounts().size() > 1) {
 
-                        FloatingActionButton detailView = (FloatingActionButton) rootView.findViewById(R.id.detail_view_button);
-                        detailView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                goToDetailView(establishment);
-                            }
-                        });
+                            listView.setNestedScrollingEnabled(true);
+                            listView.setAdapter(adapter);
+
+//                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                                @Override
+//                                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+//                                    //    int itemPosition = position;
+//                                    Discount value = (Discount) listView.getItemAtPosition(position);
+//                                    value.toString();
+//                                }
+//                            });
+
+                        } else {
+                            adapter.clear();
+                            listView.setAdapter(adapter);
+                        }
 
                         return true;
                     }

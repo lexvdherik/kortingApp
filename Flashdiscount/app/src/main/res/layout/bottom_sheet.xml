@@ -32,17 +32,10 @@
             android:textAlignment="center"
             android:layout_height="wrap_content"/>
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="match_parent"
-            android:id="@+id/detail_view_button"
-            android:layout_height="match_parent"
-            android:src="@drawable/cast_ic_notification_play"/>
-
         <ListView
             android:id="@+id/discount_list_view"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent">
-        </ListView>
+            android:layout_height="110dp"
+            android:layout_width="match_parent"/>
 
 
     </LinearLayout>
