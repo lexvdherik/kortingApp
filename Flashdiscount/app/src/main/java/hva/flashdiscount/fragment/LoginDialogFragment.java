@@ -85,8 +85,9 @@ public class LoginDialogFragment extends DialogFragment {
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             acct = result.getSignInAccount();
-
-            postUser(acct.getIdToken());
+            if (acct != null) {
+                postUser(acct.getIdToken());
+            }
 
             SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();

@@ -37,10 +37,6 @@ public class DetailFragment extends Fragment {
     private TextView timeLeft;
     private TextView discountDescription;
 
-
-    public DetailFragment() {
-    }
-
     public static DetailFragment newInstance() {
         DetailFragment fragment = new DetailFragment();
         Bundle args = new Bundle();
@@ -52,13 +48,14 @@ public class DetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        if(((AppCompatActivity) getActivity()).getSupportActionBar() != null){
+            Log.e(TAG, "SupportActionbar found");
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
         Log.e(TAG, "onCreate: " + String.valueOf(getFragmentManager().getBackStackEntryCount()));
 
         if (getArguments() != null) {
-//            Log.e(TAG, "getArguments() != null");
-
             String gson = getArguments().getString("establishment");
             establishment = new Gson().fromJson(gson, Establishment.class);
             discount = establishment.getDiscounts().get(getArguments().getInt("discountPosition"));
@@ -91,9 +88,7 @@ public class DetailFragment extends Fragment {
     }
 
     public void setCompanyText() {
-        //String urlString = "http://www.arenapoort.nl/wp-content/uploads/2014/05/12874-proost.jpg";
         companyImage.setImageUrl(establishment.getCompany().getLogo(), mImageLoader);
-
 
         companyName.setText(establishment.getCompany().getName());
         companyDescription.setText(establishment.getCompany().getDescription());
