@@ -24,8 +24,6 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-import hva.flashdiscount.MainActivity;
-
 class CustomRequest<T> extends Request<T> {
 
     private static final String TAG = CustomRequest.class.getSimpleName();
@@ -43,9 +41,9 @@ class CustomRequest<T> extends Request<T> {
     private String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
 
 
-    CustomRequest(int method, String url, Map<String, String> params, Response.Listener<T> reponseListener, Response.ErrorListener errorListener, Class<?> clazz) {
+    CustomRequest(int method, String url, Map<String, String> params, Response.Listener<T> reponseListener, Response.ErrorListener errorListener, Class<?> clazz, Context context) {
         super(method, url, errorListener);
-        this.applicationContext = MainActivity.getContextOfApplication();
+        this.applicationContext = context;
         this.listener = reponseListener;
         this.params = params;
         this.mClass = clazz;

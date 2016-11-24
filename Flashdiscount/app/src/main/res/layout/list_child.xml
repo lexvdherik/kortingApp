@@ -1,7 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#64B5F6"
     android:paddingRight="10dp"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
@@ -31,26 +30,14 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearance"
+        android:layout_toEndOf="@+id/list_icon"
+        android:layout_centerInParent="true"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Description"
         android:id="@+id/description"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/list_icon"
         android:ellipsize="end"
         android:maxLines="1"
-        android:layout_marginBottom="2dp"
         />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearance"
-        android:text="Company Name"
-        android:layout_toEndOf="@+id/list_icon"
-        android:id="@+id/company_name"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/description"
-        android:ellipsize="end"
-        android:maxLines="1"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

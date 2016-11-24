@@ -1,6 +1,7 @@
 package hva.flashdiscount.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,9 +36,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
+import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
-//import hva.flashdiscount.adapter.CustomInfoWindowAdapter;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.service.GpsService;
 
@@ -76,8 +77,13 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
         FragmentManager fm = getFragmentManager();
-        LoginDialogFragment dialogFragment = new LoginDialogFragment();
-        dialogFragment.show(fm, "Login Fragment");
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        if (!sharedPref.contains("idToken") && !((MainActivity) getActivity()).hasShownLogin) {
+            LoginDialogFragment dialogFragment = new LoginDialogFragment();
+            dialogFragment.show(fm, "Login Fragment");
+            ((MainActivity) getActivity()).hasShownLogin = true;
+        }
+
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);

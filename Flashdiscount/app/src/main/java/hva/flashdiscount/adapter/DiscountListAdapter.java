@@ -92,7 +92,7 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
 
         Discount discount = getChild(groupPosition, childPosition);
         ((TextView) convertView.findViewById(R.id.description)).setText(discount.getDescription());
-        ((TextView) convertView.findViewById(R.id.company_name)).setText(getGroup(groupPosition).getCompany().getName());
+//        ((TextView) convertView.findViewById(R.id.company_name)).setText(getGroup(groupPosition).getCompany().getName());
         ((TextView) convertView.findViewById(R.id.time_remaining)).setText(discount.getTimeRemaining());
         ((ImageView) convertView.findViewById(R.id.list_icon)).setImageResource(discount.getCategoryImage(getGroup(groupPosition).getCompany().getCategoryId()));
 

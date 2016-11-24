@@ -43,7 +43,7 @@ public class APIRequest {
     public boolean getEstablishment(Response.Listener<Establishment[]> responseListener, Response.ErrorListener errorListener) {
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_ESTABLISHMENT, null,
-                responseListener, errorListener, Establishment[].class).setTag(METHOD_GET_ESTABLISHMENT).setShouldCache(true));
+                responseListener, errorListener, Establishment[].class, mContext).setTag(METHOD_GET_ESTABLISHMENT).setShouldCache(true));
 
         return true;
     }
@@ -54,7 +54,7 @@ public class APIRequest {
         params.put("idToken", idToken);
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_USER, params,
-                responseListener, errorListener, null).setTag(METHOD_POST_USER));
+                responseListener, errorListener, null, mContext).setTag(METHOD_POST_USER));
 
 //        Log.e(TAG, );
 
