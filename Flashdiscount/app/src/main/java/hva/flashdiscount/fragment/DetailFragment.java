@@ -71,10 +71,10 @@ public class DetailFragment extends Fragment {
             }
         }
     }
-    private void setFavorite(String idToken,String EstablishmentId) {
+    private void setFavorite(String idToken, String establishmentId) {
         System.gc();
         DetailFragment.SetFavoriteResponseListener listener = new DetailFragment.SetFavoriteResponseListener();
-        APIRequest.getInstance(getActivity()).setFavorite(listener, listener, idToken,EstablishmentId);
+        APIRequest.getInstance(getActivity()).setFavorite(listener, listener, idToken, establishmentId);
     }
 
     public class SetFavoriteResponseListener implements Response.Listener, Response.ErrorListener {
@@ -117,7 +117,7 @@ public class DetailFragment extends Fragment {
                         ((MainActivity) getActivity()).getContextOfApplication()
                 );
                 String idToken = sharedPref.getString("idToken", "");
-                setFavorite(idToken,String.valueOf(establishment.getEstablishmentId()));
+                setFavorite(idToken, String.valueOf(establishment.getEstablishmentId()));
             }
         });
 

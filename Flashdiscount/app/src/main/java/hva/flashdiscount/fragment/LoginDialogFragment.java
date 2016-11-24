@@ -1,4 +1,5 @@
 package hva.flashdiscount.fragment;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -86,7 +87,7 @@ public class LoginDialogFragment extends DialogFragment {
             acct = result.getSignInAccount();
             if (acct != null) {
                 postUser(acct.getIdToken());
-                Log.e(TAG,acct.getIdToken().toString());
+                Log.e(TAG, acct.getIdToken().toString());
             }
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());

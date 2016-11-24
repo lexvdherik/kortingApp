@@ -80,7 +80,7 @@ public class APIRequest {
     }
 
     public boolean setFavorite(Response.Listener responseListener, Response.ErrorListener errorListener, String idToken, String establishmentId) {
-        if(loginExpired()){
+        if (loginExpired()) {
             idToken = refreshToken();
         }
 
@@ -95,8 +95,8 @@ public class APIRequest {
 
     private Boolean loginExpired() {
 
-        DateTimeZone london = DateTimeZone.forID( "Europe/London" );
-        DateTime current = DateTime.now( london );
+        DateTimeZone london = DateTimeZone.forID("Europe/London");
+        DateTime current = DateTime.now(london);
         Calendar currentDate;
         currentDate = current.toCalendar(Locale.ENGLISH);
 
@@ -107,22 +107,16 @@ public class APIRequest {
 
         Log.e(TAG, "expireDate = " + sharedPref.getString("expire_date", ""));
 
-        try{
+        try {
             expireDate.setTime(sdf.parse(sharedPref.getString("expire_date", "")));
-        } catch(ParseException e) {
+        } catch (ParseException e) {
             Log.e(TAG, e.getMessage());
         }
 
-        if(currentDate.compareTo(expireDate) != -1) {
-
-            return false;
-        } else {
-
-            return true;
-        }
+        return currentDate.compareTo(expireDate) == -1;
     }
 
-    public String refreshToken(){
+    public String refreshToken() {
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(token)
