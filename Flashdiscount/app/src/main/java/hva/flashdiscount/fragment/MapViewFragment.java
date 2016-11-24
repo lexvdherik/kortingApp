@@ -8,17 +8,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.NoConnectionError;
@@ -35,15 +33,15 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.vision.text.Line;
 import com.google.gson.Gson;
 
-import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
-//import hva.flashdiscount.adapter.CustomInfoWindowAdapter;
+import hva.flashdiscount.adapter.BottomDiscountAdapter;
+import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.service.GpsService;
+
 
 public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerClickListener {
@@ -55,6 +53,9 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private Location location;
     private GpsService gpsService;
     private BottomSheetBehavior mBottomSheetBehavior1;
+    private BottomSheetBehavior mBottomSheetBehavior2;
+    private ListView listView;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,12 +87,13 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
         FragmentManager fm = getFragmentManager();
         LoginDialogFragment dialogFragment = new LoginDialogFragment();
-        dialogFragment.show(fm, "Login Fragment");
+        //dialogFragment.show(fm, "Login Fragment");
+
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
@@ -100,8 +102,13 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
         //View bottomSheet = getView().findViewById(R.id.bottom_sheet);
         final View bottomSheet = rootView.findViewById(R.id.bottom_sheet);
-        mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
+        final View bottomSheetMultiple = rootView.findViewById(R.id.bottom_sheet_multiple_discounts);
 
+        mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
+       // mBottomSheetBehavior2 = BottomSheetBehavior.from(bottomSheetMultiple);
+
+
+        listView = (ListView) rootView.findViewById(R.id.discount_list_view);
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
@@ -126,33 +133,74 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
-
                     @Override
                     public boolean onMarkerClick(Marker marker) {
                         final Establishment establishment = (Establishment) marker.getTag();
 
+                        if (establishment.getDiscounts().size() > 1) {
 
-                        if(mBottomSheetBehavior1.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                            final ListView listView = (ListView) rootView.findViewById(R.id.discount_list_view);
+                            BottomDiscountAdapter adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
+                            listView.setAdapter(adapter);
+
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                                //    int itemPosition = position;
+                                    Discount value = (Discount) listView.getItemAtPosition(position);
+                                    value.toString();
+                                }
+                            });
+
+                        } else {
+                            listView = null;
+                        }
+
+//
+//                        if (establishment.getDiscounts().size() > 1) {
+//
+//                            mBottomSheetBehavior1.setPeekHeight(500);
+//                           CoordinatorLayout.LayoutParams lay = new CoordinatorLayout.LayoutParams(bottomSheet.getLayoutParams().width, 500);
+//                            lay.gravity = 80;
+//                            //       bottomSheet.getLayoutParams().height = 400;
+//                           bottomSheet.setLayoutParams(lay);
+//                          //  mBottomSheetBehavior1.notify();
+//
+//                        }
+
+
+                        if (mBottomSheetBehavior1.getState() == BottomSheetBehavior.STATE_EXPANDED) {
                             TextView title = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
                             title.setText(establishment.getCompany().getName());
-                        }
-                        else if(mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+
+                        } else if (mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
                             mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
-                            //mButton1.setText(R.string.collapse_button1);
-                            TextView title = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
-                            title.setText(establishment.getCompany().getName());
 
-                        }
-                        else {
+                            TextView title = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
+                            TextView description = (TextView) rootView.findViewById(R.id.description);
+
+
+                            title.setText(establishment.getCompany().getName());
+                            description.setText(String.valueOf(establishment.getDiscounts().size()));
+
+                        } else {
                             mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
                           //  mButton1.setText(R.string.button1);
                         }
 
 
+                        FloatingActionButton detailView = (FloatingActionButton) rootView.findViewById(R.id.detail_view_button);
+                        detailView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                goToDetailView(establishment);
+                            }
+                        });
 
                         return true;
                     }
                 });
+
 
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
@@ -167,6 +215,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
         return rootView;
     }
+
 
 
 
@@ -225,6 +274,23 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     @Override
     public boolean onMarkerClick(Marker marker) {
         return false;
+    }
+
+
+
+    private void goToDetailView(Establishment establishment) {
+
+        Bundle arguments = new Bundle();
+        arguments.putString("establishment", new Gson().toJson(establishment));
+
+        DetailFragment detailFragment = new DetailFragment();
+
+        detailFragment.setArguments(arguments);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, detailFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
 
