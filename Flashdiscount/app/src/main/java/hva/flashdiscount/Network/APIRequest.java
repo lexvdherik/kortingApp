@@ -10,11 +10,6 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +20,8 @@ import hva.flashdiscount.model.Favorite;
 
 public class APIRequest {
     private static final String TAG = APIRequest.class.getSimpleName();
-//    private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
-    private static final String HOST = "http://145.28.159.215/api/";
+    private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
+//    private static final String HOST = "http://145.28.159.215/api/";
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
     private static final String METHOD_POST_USER = "auth/login";
     private static final String METHOD_GET_FAVORITES = "favoriteestablishment/";

@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
 
@@ -15,8 +14,6 @@ import android.widget.Switch;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-
-import java.util.ArrayList;
 
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
@@ -91,7 +88,7 @@ public class SettingsFragment extends Fragment {
 
         int checked = 0;
 
-        if(checkState == true){
+        if (checkState) {
             checked = 1;
         }
 
@@ -101,14 +98,14 @@ public class SettingsFragment extends Fragment {
     }
 
     private void getFavorites() {
-        String idToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjM4Y2FjZjM3ZjUyOWQ4YzM2ZDBlNmJkYzU5OTNlNWQ3Njk1ZDg5NzgifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJpYXQiOjE0Nzk4MjcyMzMsImV4cCI6MTQ3OTgzMDgzMywiYXVkIjoiNDQ0OTUzNDA3ODA1LW41bTlxaXR2ZmNucm04azNtdWM3M3NxdjVnOTFkbW1pLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA1MzM4MDI4NDA5MTU5MDkxNzk1IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjQ0NDk1MzQwNzgwNS1oMmxpdGdsdnNxdTY0djFoZjhsazllaTlrOGw3azRkMi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImVtYWlsIjoiYW50aG9ueS5zaXRhcmFtQGdtYWlsLmNvbSIsIm5hbWUiOiJBbnRob255IFNpdGFyYW0iLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDUuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy1QdU9mZmgxbHhuSS9BQUFBQUFBQUFBSS9BQUFBQUFBQUFDby9YUlFTQ1RUUDFDRS9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiQW50aG9ueSIsImZhbWlseV9uYW1lIjoiU2l0YXJhbSIsImxvY2FsZSI6ImVuLUJFIn0.L734Sa4090IBuKM0CwOoeMOI-H82Z7wcscA0R8jdhgI9NtC2G6ARlOtNQ_WhdpYQF7dNH6uXrJVDkpsKRrebjU-bwkTD-HDC6VsuS3BoVlO_daVnY15Ci395nFOV18zNaC_vgYXHgn7dh_OeND5e4ZmBhvOrttTc7pszZ5TRiHndEnmt8RvNRRcGP2QEU-VNhca1obzIC5IILY7yQ_XrShhX_tIjL83ohGSoLALKnevqAX6l2H-hYg3841JvK1HTIVfGtyM-CBN1jWD5xBssz58vIgyRuNE3WWqUDn7PcuBFR6evNxph9Utz8pQZs4pavsxEOLsfNJwQ9leXeT3oUA";
+        String idToken = "TEST";
         System.gc();
         SettingsFragment.GetFavoritesResponseListener listener = new GetFavoritesResponseListener();
         APIRequest.getInstance(getActivity()).getFavorites(listener, listener, idToken);
     }
 
     public void saveSettings() {
-        String idToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjM4Y2FjZjM3ZjUyOWQ4YzM2ZDBlNmJkYzU5OTNlNWQ3Njk1ZDg5NzgifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJpYXQiOjE0Nzk4MjcyMzMsImV4cCI6MTQ3OTgzMDgzMywiYXVkIjoiNDQ0OTUzNDA3ODA1LW41bTlxaXR2ZmNucm04azNtdWM3M3NxdjVnOTFkbW1pLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA1MzM4MDI4NDA5MTU5MDkxNzk1IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjQ0NDk1MzQwNzgwNS1oMmxpdGdsdnNxdTY0djFoZjhsazllaTlrOGw3azRkMi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImVtYWlsIjoiYW50aG9ueS5zaXRhcmFtQGdtYWlsLmNvbSIsIm5hbWUiOiJBbnRob255IFNpdGFyYW0iLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDUuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy1QdU9mZmgxbHhuSS9BQUFBQUFBQUFBSS9BQUFBQUFBQUFDby9YUlFTQ1RUUDFDRS9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiQW50aG9ueSIsImZhbWlseV9uYW1lIjoiU2l0YXJhbSIsImxvY2FsZSI6ImVuLUJFIn0.L734Sa4090IBuKM0CwOoeMOI-H82Z7wcscA0R8jdhgI9NtC2G6ARlOtNQ_WhdpYQF7dNH6uXrJVDkpsKRrebjU-bwkTD-HDC6VsuS3BoVlO_daVnY15Ci395nFOV18zNaC_vgYXHgn7dh_OeND5e4ZmBhvOrttTc7pszZ5TRiHndEnmt8RvNRRcGP2QEU-VNhca1obzIC5IILY7yQ_XrShhX_tIjL83ohGSoLALKnevqAX6l2H-hYg3841JvK1HTIVfGtyM-CBN1jWD5xBssz58vIgyRuNE3WWqUDn7PcuBFR6evNxph9Utz8pQZs4pavsxEOLsfNJwQ9leXeT3oUA";
+        String idToken = "TEST";
         System.gc();
         SetSettingsResponseListener listener = new SetSettingsResponseListener();
         APIRequest.getInstance(getActivity()).setSettings(listener, listener, idToken, companySettings);
@@ -119,7 +116,7 @@ public class SettingsFragment extends Fragment {
 
         @Override
         public void onResponse(Favorite[] favorites) {
-            if(favorites.length > 0){
+            if (favorites.length > 0) {
                 System.out.println(favorites[0].getCompany());
 
                 final ListView lv = (ListView) getActivity().findViewById(R.id.notification_list);

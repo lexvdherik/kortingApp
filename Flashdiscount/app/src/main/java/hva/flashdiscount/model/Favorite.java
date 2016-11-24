@@ -137,22 +137,4 @@ public class Favorite {
     public void setCompany(Company company) {
         this.company = company;
     }
-
-    @Override
-    public String toString() {
-        return "Favorite{" +
-                "establishmentId=" + establishmentId +
-                ", companyId=" + companyId +
-                ", street='" + street + '\'' +
-                ", postalcode='" + postalcode + '\'' +
-                ", streetnumber='" + streetnumber + '\'' +
-                ", city='" + city + '\'' +
-                ", longitude='" + longitude + '\'' +
-                ", latitude='" + latitude + '\'' +
-                ", picture='" + picture + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", website='" + website + '\'' +
-                ", notification=" + notification +
-                '}';
-    }
 }
