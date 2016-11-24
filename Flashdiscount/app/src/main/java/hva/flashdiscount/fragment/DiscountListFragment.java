@@ -13,7 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 
-import hva.flashdiscount.Network.APIRequest;
+import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.DiscountListAdapter;
 import hva.flashdiscount.model.Establishment;
@@ -55,7 +55,8 @@ public class DiscountListFragment extends Fragment {
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));
         arguments.putInt("discountPostion", discountPostion);
-
+        arguments.putBoolean("dialog",false);
+        arguments.putBoolean("succes",false);
         DetailFragment detailFragment = new DetailFragment();
 
         detailFragment.setArguments(arguments);

@@ -1,4 +1,4 @@
-package hva.flashdiscount.Network;
+package hva.flashdiscount.network;
 
 
 public final class JsonRpcRemoteException extends JsonRpcException {

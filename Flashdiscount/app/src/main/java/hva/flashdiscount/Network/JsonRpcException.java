@@ -1,4 +1,4 @@
-package hva.flashdiscount.Network;
+package hva.flashdiscount.network;
 
 import com.android.volley.VolleyError;
 

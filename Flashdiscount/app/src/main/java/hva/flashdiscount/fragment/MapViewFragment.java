@@ -37,7 +37,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
 import hva.flashdiscount.MainActivity;
-import hva.flashdiscount.Network.APIRequest;
+import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.service.GpsService;
