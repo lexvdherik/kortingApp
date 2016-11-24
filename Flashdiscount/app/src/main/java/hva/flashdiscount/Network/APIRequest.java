@@ -70,12 +70,11 @@ public class APIRequest {
     }
 
     public boolean postUser(Response.Listener<Token> responseListener, Response.ErrorListener errorListener, String idToken) {
-
         Map<String, Object> params = new HashMap<>();
         params.put("idToken", idToken);
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_USER, params,
-                responseListener, errorListener, null).setTag(METHOD_POST_USER));
+                responseListener, errorListener, Token.class).setTag(METHOD_POST_USER));
 
         return true;
     }

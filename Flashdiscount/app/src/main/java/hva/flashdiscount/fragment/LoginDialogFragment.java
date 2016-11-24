@@ -55,7 +55,7 @@ public class LoginDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 signIn();
-                getDialog().dismiss();
+//                getDialog().dismiss();
             }
         });
 
@@ -124,6 +124,8 @@ public class LoginDialogFragment extends DialogFragment {
             ((TextView) layout.findViewById(R.id.naam)).setText(firstName + " " + lastName);
 
             ((TextView) layout.findViewById(R.id.email)).setText(acct.getEmail());
+
+            getDialog().dismiss();
         }
 
         @Override
