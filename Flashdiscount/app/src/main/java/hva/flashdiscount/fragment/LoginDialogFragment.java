@@ -94,7 +94,6 @@ public class LoginDialogFragment extends DialogFragment {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("idToken", acct.getIdToken());
 
-
             editor.apply();
 
             // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));

@@ -15,7 +15,6 @@ import hva.flashdiscount.R;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
 
-
 public class DiscountListAdapter extends BaseExpandableListAdapter {
 
     private final LayoutInflater inf;
@@ -48,6 +47,8 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
         inf = LayoutInflater.from(activity);
 
     }
+
+
 
     @Override
     public int getGroupCount() {

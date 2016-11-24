@@ -2,6 +2,8 @@ package hva.flashdiscount.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,14 +26,31 @@ public class DiscountListFragment extends Fragment {
 
     View rootView;
     ExpandableListView expandableListView;
+    DiscountListFragment dlf;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.dlf = this;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_discount_list, container, false);
+
+        SwipeRefreshLayout s = (SwipeRefreshLayout) rootView.findViewById(R.id.swiperefresh);
+
+        s.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.detach(dlf);
+                ft.attach(dlf);
+                ft.commit();
+            }
+        });
+
+        s.setRefreshing(false);
+
         return rootView;
     }
 
@@ -46,12 +65,9 @@ public class DiscountListFragment extends Fragment {
         System.gc();
         GetEstablishmentResponseListener listener = new GetEstablishmentResponseListener();
         APIRequest.getInstance(getActivity()).getEstablishment(listener, listener);
-
-
     }
 
     private void goToDetailView(Establishment establishment, int discountPostion) {
-
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));
         arguments.putInt("discountPostion", discountPostion);
@@ -110,8 +126,5 @@ public class DiscountListFragment extends Fragment {
                 Log.e(TAG, "No connection!");
             }
         }
-
-
     }
-
 }
