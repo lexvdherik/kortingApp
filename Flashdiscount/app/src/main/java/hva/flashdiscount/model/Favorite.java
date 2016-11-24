@@ -13,9 +13,12 @@ public class Favorite {
     private String picture;
     private String phoneNumber;
     private String website;
+    private Company company;
     private int notification;
 
-    public Favorite(int establishmentId, int companyId, String street, String postalcode, String streetnumber, String city, String longitude, String latitude, String picture, String phoneNumber, String website, int notification) {
+    public Favorite(int establishmentId, int companyId, String street, String postalcode, String streetnumber,
+                    String city, String longitude, String latitude, String picture, String phoneNumber,
+                    String website, int notification, Company company) {
         this.establishmentId = establishmentId;
         this.companyId = companyId;
         this.street = street;
@@ -28,6 +31,7 @@ public class Favorite {
         this.phoneNumber = phoneNumber;
         this.website = website;
         this.notification = notification;
+        this.company = company;
     }
 
     public int getEstablishmentId() {
@@ -124,6 +128,14 @@ public class Favorite {
 
     public void setNotification(int notification) {
         this.notification = notification;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     @Override

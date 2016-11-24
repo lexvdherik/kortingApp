@@ -9,6 +9,7 @@ import android.widget.Switch;
 import java.util.ArrayList;
 import hva.flashdiscount.R;
 import hva.flashdiscount.fragment.SettingsFragment;
+import hva.flashdiscount.model.Favorite;
 
 
 /**
@@ -18,15 +19,15 @@ import hva.flashdiscount.fragment.SettingsFragment;
 public class SettingsAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
-    private ArrayList<SettingsFragment.SettingsObject> companySettings;
+    private Favorite[] companySettings;
 
-    public SettingsAdapter(Activity activity, ArrayList<SettingsFragment.SettingsObject> companySettings) {
+    public SettingsAdapter(Activity activity, Favorite[] companySettings) {
 
         inflater = LayoutInflater.from(activity);
         this.companySettings = companySettings;
     }
 
-    public void updateResults(ArrayList<SettingsFragment.SettingsObject> results) {
+    public void updateResults(Favorite[] results) {
         companySettings = results;
         //Triggers the list update
         notifyDataSetChanged();
@@ -35,7 +36,7 @@ public class SettingsAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return companySettings.size();
+        return companySettings.length;
     }
 
     @Override
@@ -59,8 +60,14 @@ public class SettingsAdapter extends BaseAdapter {
         View rowView;
         rowView = inflater.inflate(R.layout.settings_row, null);
         holder.tv = (Switch) rowView.findViewById(R.id.setting_company_name);
-        holder.tv.setText(companySettings.get(position).getTitle());
-        holder.tv.setChecked(companySettings.get(position).getChecked());
+        holder.tv.setText(companySettings[position].getCompany().getName());
+        Boolean checked = false;
+
+        if(companySettings[position].getNotification() == 1){
+            checked = true;
+        }
+
+        holder.tv.setChecked(checked);
 
         return rowView;
     }

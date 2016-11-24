@@ -22,7 +22,6 @@ import hva.flashdiscount.model.Establishment;
 public class DetailFragment extends Fragment {
 
     private static final String TAG = DetailFragment.class.getSimpleName();
-    private OnFragmentInteractionListener mListener;
     private ImageLoader mImageLoader;
     private View mRootView;
     private Establishment establishment;
@@ -51,15 +50,9 @@ public class DetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-//            Log.e(TAG, "getArguments() != null");
-
             String gson = getArguments().getString("establishment");
             establishment = new Gson().fromJson(gson, Establishment.class);
             discount = establishment.getDiscounts().get(getArguments().getInt("discountPosition"));
-
-//            Log.e(TAG, establishment.getCompany().getName());
-//            Log.e(TAG, discount.getDescription());
-
         }
     }
 
@@ -89,9 +82,7 @@ public class DetailFragment extends Fragment {
     }
 
     public void setCompanyText() {
-        //String urlString = "http://www.arenapoort.nl/wp-content/uploads/2014/05/12874-proost.jpg";
         companyImage.setImageUrl(establishment.getCompany().getLogo(), mImageLoader);
-
 
         companyName.setText(establishment.getCompany().getName());
         companyDescription.setText(establishment.getCompany().getDescription());
@@ -104,8 +95,4 @@ public class DetailFragment extends Fragment {
         discountDescription.setText(discount.getDescription());
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

@@ -25,7 +25,7 @@ import hva.flashdiscount.model.Favorite;
 public class SettingsFragment extends Fragment {
 
 
-    private ArrayList<SettingsObject> companySettings;
+    private Favorite[] companySettings;
     private SettingsAdapter settingsAdapter;
 
     private static final String TAG = SettingsFragment.class.getSimpleName();
@@ -57,8 +57,7 @@ public class SettingsFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
         final ListView lv = (ListView) rootView.findViewById(R.id.notification_list);
-        companySettings = fillList();
-
+        companySettings = new Favorite[0];
         settingsAdapter = new SettingsAdapter(getActivity(), companySettings);
 
         lv.setAdapter(settingsAdapter);
@@ -85,6 +84,21 @@ public class SettingsFragment extends Fragment {
         getFavourites();
     }
 
+
+    public void setAllOptions(Boolean checkState) {
+
+        int checked = 0;
+
+        if(checkState == true){
+            checked = 1;
+        }
+
+        for (Favorite item : companySettings) {
+            item.setNotification(checked);
+        }
+    }
+
+
     private void getFavourites() {
         Log.e(TAG, " getFavorites");
         String idToken = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjM4Y2FjZjM3ZjUyOWQ4YzM2ZDBlNmJkYzU5OTNlNWQ3Njk1ZDg5NzgifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJpYXQiOjE0Nzk4MjcyMzMsImV4cCI6MTQ3OTgzMDgzMywiYXVkIjoiNDQ0OTUzNDA3ODA1LW41bTlxaXR2ZmNucm04azNtdWM3M3NxdjVnOTFkbW1pLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA1MzM4MDI4NDA5MTU5MDkxNzk1IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF6cCI6IjQ0NDk1MzQwNzgwNS1oMmxpdGdsdnNxdTY0djFoZjhsazllaTlrOGw3azRkMi5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImVtYWlsIjoiYW50aG9ueS5zaXRhcmFtQGdtYWlsLmNvbSIsIm5hbWUiOiJBbnRob255IFNpdGFyYW0iLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDUuZ29vZ2xldXNlcmNvbnRlbnQuY29tLy1QdU9mZmgxbHhuSS9BQUFBQUFBQUFBSS9BQUFBQUFBQUFDby9YUlFTQ1RUUDFDRS9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiQW50aG9ueSIsImZhbWlseV9uYW1lIjoiU2l0YXJhbSIsImxvY2FsZSI6ImVuLUJFIn0.L734Sa4090IBuKM0CwOoeMOI-H82Z7wcscA0R8jdhgI9NtC2G6ARlOtNQ_WhdpYQF7dNH6uXrJVDkpsKRrebjU-bwkTD-HDC6VsuS3BoVlO_daVnY15Ci395nFOV18zNaC_vgYXHgn7dh_OeND5e4ZmBhvOrttTc7pszZ5TRiHndEnmt8RvNRRcGP2QEU-VNhca1obzIC5IILY7yQ_XrShhX_tIjL83ohGSoLALKnevqAX6l2H-hYg3841JvK1HTIVfGtyM-CBN1jWD5xBssz58vIgyRuNE3WWqUDn7PcuBFR6evNxph9Utz8pQZs4pavsxEOLsfNJwQ9leXeT3oUA";
@@ -96,9 +110,16 @@ public class SettingsFragment extends Fragment {
     public class GetFavoritesResponseListener implements Response.Listener<Favorite[]>, Response.ErrorListener {
 
         @Override
-        public void onResponse(Favorite[] favorite) {
-            Log.e(TAG, " getFavorites Response");
-                Log.e(TAG, " response array " + favorite.length);
+        public void onResponse(Favorite[] favorites) {
+            if(favorites.length > 0){
+                System.out.println(favorites[0].getCompany());
+
+                final ListView lv = (ListView) getActivity().findViewById(R.id.notification_list);
+                companySettings = favorites;
+                settingsAdapter = new SettingsAdapter(getActivity(), favorites);
+
+                lv.setAdapter(settingsAdapter);
+            }
         }
 
         @Override
@@ -111,44 +132,15 @@ public class SettingsFragment extends Fragment {
 
     }
 
-    public ArrayList<SettingsObject> fillList() {
-        ArrayList<SettingsObject> temp = new ArrayList<>();
-
-        SettingsObject test = new SettingsObject("CoffeeCompany", true);
-        SettingsObject testTwee = new SettingsObject("Cafe Noire", false);
-        temp.add(test);
-        temp.add(testTwee);
-        return temp;
-    }
-
-    public void setAllOptions(Boolean checkState) {
-
-        for (SettingsObject item : companySettings) {
-            item.setChecked(checkState);
-        }
-    }
-
-    public class SettingsObject {
-
-        private String title;
-        private Boolean checked;
-
-        public SettingsObject(String title, Boolean checked) {
-            this.title = title;
-            this.checked = checked;
+    public class SetSettingsResponseListener implements Response.Listener<Favorite[]>, Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            if (error instanceof NoConnectionError) {
+            }
         }
 
-        public String getTitle() {
-            return title;
+        @Override
+        public void onResponse(Favorite[] response) {
         }
-
-        public Boolean getChecked() {
-            return checked;
-        }
-
-        public void setChecked(Boolean checked) {
-            this.checked = checked;
-        }
-
     }
 }

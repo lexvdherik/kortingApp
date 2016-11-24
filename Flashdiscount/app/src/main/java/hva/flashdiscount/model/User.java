@@ -90,4 +90,5 @@ public class User {
     public void setGoogleId(String googleId) {
         this.googleId = googleId;
     }
+
 }
