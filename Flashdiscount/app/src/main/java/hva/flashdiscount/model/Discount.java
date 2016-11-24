@@ -67,11 +67,11 @@ public class Discount {
     public int getCategoryImage(int categoryId) {
         switch (categoryId) {
             case 1:
-                return R.drawable.ic_breakfast;
+                return R.drawable.ic_coffee;
             case 2:
                 return R.drawable.ic_restaurant;
             default:
-                return R.drawable.ic_account_settings;
+                return R.drawable.ic_settings;
         }
     }
 

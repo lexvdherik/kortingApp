@@ -1,6 +1,5 @@
 package hva.flashdiscount.Network;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -36,14 +35,13 @@ class CustomRequest<T> extends Request<T> {
     private GoogleSignInAccount acct;
     private Class<?> mClass;
     private Response.Listener<T> listener;
-    private Context applicationContext;
-    private String idToken;
-    private String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
 
 
-    CustomRequest(int method, String url, Map<String, String> params, Response.Listener<T> reponseListener, Response.ErrorListener errorListener, Class<?> clazz, Context context) {
+    CustomRequest(int method, String url, Map<String, String> params,
+                  Response.Listener<T> reponseListener, Response.ErrorListener errorListener,
+                  Class<?> clazz) {
         super(method, url, errorListener);
-        this.applicationContext = context;
+
         this.listener = reponseListener;
         this.params = params;
         this.mClass = clazz;
@@ -52,47 +50,13 @@ class CustomRequest<T> extends Request<T> {
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
+
     }
 
-//    private Boolean loginExpired() {
-//        Calendar currentDate = Calendar.getInstance();
-//        currentDate.setTime(Calendar.getInstance().getTime());
-//
-//        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(applicationContext);
-//
-//        Calendar expireDate = Calendar.getInstance();
-//        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
-//
-//        try{
-//            expireDate.setTime(sdf.parse(sharedPref.getString("expireDate", "")));
-//        } catch(ParseException e) {
-//            Log.e(TAG, e.getMessage());
-//        }
-//
-//        if(currentDate.compareTo(expireDate) != -1) {
-//            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                    .requestIdToken(token)
-//                    .requestEmail()
-//                    .build();
-//
-//            mGoogleApiClient = new GoogleApiClient.Builder(applicationContext)
-//                    .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-//                    .build();
-//
-//            acct = result.getSignInAccount();
-//
-//
-//        } else {
-//            this.idToken = sharedPref.getString("idToken", "");
-//        }
-//
-//        return true;
-//    }
 
     protected Map<String, String> getParams() throws AuthFailureError {
         return params;
     }
-
 
     @Override
     public Response<T> parseNetworkResponse(NetworkResponse response) {
@@ -100,6 +64,7 @@ class CustomRequest<T> extends Request<T> {
 
         try {
             responseData = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+            Log.e(TAG, "test" + responseData);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -109,6 +74,7 @@ class CustomRequest<T> extends Request<T> {
 
         try {
             assert responseData != null;
+            Log.e("testresponse", responseData);
             resp = (JsonObject) parser.parse(new StringReader(responseData));
         } catch (JsonIOException | JsonSyntaxException e) {
             e.printStackTrace();

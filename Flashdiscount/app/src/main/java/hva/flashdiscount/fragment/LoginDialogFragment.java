@@ -1,9 +1,8 @@
 package hva.flashdiscount.fragment;
-
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,10 +21,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import java.util.Calendar;
-
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
+import hva.flashdiscount.model.Token;
 
 public class LoginDialogFragment extends DialogFragment {
 
@@ -34,6 +32,7 @@ public class LoginDialogFragment extends DialogFragment {
     GoogleApiClient mGoogleApiClient;
     private LinearLayout layout;
     private GoogleSignInAccount acct;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,17 +86,14 @@ public class LoginDialogFragment extends DialogFragment {
             acct = result.getSignInAccount();
             if (acct != null) {
                 postUser(acct.getIdToken());
+                Log.e(TAG,acct.getIdToken().toString());
             }
 
-            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("idToken", acct.getIdToken());
 
-            Calendar c = Calendar.getInstance();
-            c.setTime(Calendar.getInstance().getTime());
-            c.add(Calendar.MINUTE, +59);
 
-            editor.putString("expireDate", c.getTime().toString());
             editor.apply();
 
             // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
@@ -115,11 +111,12 @@ public class LoginDialogFragment extends DialogFragment {
         APIRequest.getInstance(getActivity()).postUser(listener, listener, idToken);
     }
 
-    public class PostUserResponseListener implements Response.Listener, Response.ErrorListener {
+    public class PostUserResponseListener implements Response.Listener<Token>, Response.ErrorListener {
 
         @Override
-        public void onResponse(Object response) {
-            Log.e(TAG, " " + acct.getDisplayName());
+        public void onResponse(Token token) {
+            Token t = new Token(token.getExpireDate(), getContext());
+
             ((ImageView) layout.findViewById(R.id.profile_picture)).setImageURI(acct.getPhotoUrl());
             String firstName = acct.getGivenName().substring(0, 1).toUpperCase() + acct.getGivenName().substring(1);
             String lastName = acct.getFamilyName().substring(0, 1).toUpperCase() + acct.getFamilyName().substring(1);
@@ -131,7 +128,6 @@ public class LoginDialogFragment extends DialogFragment {
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e(TAG + " content", " joil" + error.getMessage());
             if (error instanceof NoConnectionError) {
                 Log.e(TAG, "No connection!");
             }

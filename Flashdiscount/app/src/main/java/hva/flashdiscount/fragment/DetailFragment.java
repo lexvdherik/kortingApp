@@ -1,19 +1,27 @@
 package hva.flashdiscount.fragment;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.NoConnectionError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 
+import hva.flashdiscount.MainActivity;
+import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.Utils.VolleySingleton;
 import hva.flashdiscount.model.Discount;
@@ -30,7 +38,6 @@ public class DetailFragment extends Fragment {
     private Discount discount;
 
     private NetworkImageView companyImage;
-
     private TextView companyName;
     private TextView companyDescription;
     private TextView claimsLeft;
@@ -48,18 +55,43 @@ public class DetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(((AppCompatActivity) getActivity()).getSupportActionBar() != null){
-            Log.e(TAG, "SupportActionbar found");
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
-        Log.e(TAG, "onCreate: " + String.valueOf(getFragmentManager().getBackStackEntryCount()));
-
         if (getArguments() != null) {
-            String gson = getArguments().getString("establishment");
-            establishment = new Gson().fromJson(gson, Establishment.class);
-            discount = establishment.getDiscounts().get(getArguments().getInt("discountPosition"));
+
+            if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+                Log.e(TAG, "SupportActionbar found");
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+            }
+            Log.e(TAG, "onCreate: " + String.valueOf(getFragmentManager().getBackStackEntryCount()));
+
+            if (getArguments() != null) {
+                String gson = getArguments().getString("establishment");
+                establishment = new Gson().fromJson(gson, Establishment.class);
+                discount = establishment.getDiscounts().get(getArguments().getInt("discountPosition"));
+            }
         }
+    }
+    private void setFavorite(String idToken,String EstablishmentId) {
+        System.gc();
+        DetailFragment.SetFavoriteResponseListener listener = new DetailFragment.SetFavoriteResponseListener();
+        APIRequest.getInstance(getActivity()).setFavorite(listener, listener, idToken,EstablishmentId);
+    }
+
+    public class SetFavoriteResponseListener implements Response.Listener, Response.ErrorListener {
+
+        @Override
+        public void onResponse(Object response) {
+
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.e(TAG + " content", " joil" + error.getMessage());
+            if (error instanceof NoConnectionError) {
+                Log.e(TAG, "No connection!");
+            }
+        }
+
     }
 
     @Override
@@ -73,6 +105,21 @@ public class DetailFragment extends Fragment {
             setCompanyText();
             setDiscountText();
         }
+        Button favoriteButton = (Button) mRootView.findViewById(R.id.favorite_button);
+
+        favoriteButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(
+                        ((MainActivity) getActivity()).getContextOfApplication()
+                );
+                String idToken = sharedPref.getString("idToken", "");
+                setFavorite(idToken,String.valueOf(establishment.getEstablishmentId()));
+            }
+        });
 
         // Inflate the layout for this fragment
         return mRootView;
