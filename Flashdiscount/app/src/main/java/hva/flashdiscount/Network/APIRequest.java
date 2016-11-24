@@ -7,11 +7,17 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import hva.flashdiscount.model.Establishment;
@@ -47,14 +53,6 @@ public class APIRequest {
         mQueue.cancelAll(tag);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        saveSettings();
-        APIRequest.getInstance(getActivity()).cancelRequest(APIRequest.METHOD_GET_SETTINGS);
-        getMainActivity().inProgress(false);
-    }
-
     public boolean getEstablishment(Response.Listener<Establishment[]> responseListener, Response.ErrorListener errorListener) {
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_ESTABLISHMENT, null,
@@ -85,13 +83,17 @@ public class APIRequest {
         return true;
     }
 
-    public boolean setSettings(Response.Listener<> responseListener, Response.ErrorListener errorListener, String idToken, Favorite[] favorites) {
+    public boolean setSettings(Response.Listener responseListener, Response.ErrorListener errorListener, String idToken, Favorite[] favorites) {
 
-        JSONArray favoritesJson = new JSONArray(Arrays.asList(favorites));
+        List<Favorite> test = Arrays.asList(favorites);
+//        JSONArray favoritesJson = new JSONArray();
 
+        Gson gson = new GsonBuilder().create();
+        JsonArray favoritesJson = gson.toJsonTree(test).getAsJsonArray();
+        Log.e(TAG, favoritesJson.toString());
         Map<String, Object> params = new HashMap<>();
         params.put("idToken", idToken);
-        params.put("favorites", favoritsJson);
+        params.put("settings", favoritesJson.toString());
 
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_SET_SETTINGS, params,

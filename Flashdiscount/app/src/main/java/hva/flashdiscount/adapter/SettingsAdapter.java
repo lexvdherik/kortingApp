@@ -1,12 +1,21 @@
 package hva.flashdiscount.adapter;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.Switch;
+
+import com.android.volley.NoConnectionError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
 import java.util.ArrayList;
+
+import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.fragment.SettingsFragment;
 import hva.flashdiscount.model.Favorite;
@@ -20,6 +29,7 @@ public class SettingsAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
     private Favorite[] companySettings;
+    private static final String TAG = SettingsAdapter.class.getSimpleName();
 
     public SettingsAdapter(Activity activity, Favorite[] companySettings) {
 
@@ -49,6 +59,7 @@ public class SettingsAdapter extends BaseAdapter {
         return position;
     }
 
+
     public class Holder {
         Switch tv;
     }
@@ -62,7 +73,6 @@ public class SettingsAdapter extends BaseAdapter {
         holder.tv = (Switch) rowView.findViewById(R.id.setting_company_name);
         holder.tv.setText(companySettings[position].getCompany().getName());
         Boolean checked = false;
-
         if(companySettings[position].getNotification() == 1){
             checked = true;
         }
@@ -71,4 +81,6 @@ public class SettingsAdapter extends BaseAdapter {
 
         return rowView;
     }
+
+
 }
