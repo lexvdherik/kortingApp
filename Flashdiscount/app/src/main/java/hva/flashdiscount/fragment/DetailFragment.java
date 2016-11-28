@@ -58,11 +58,9 @@ public class DetailFragment extends Fragment {
         if (getArguments() != null) {
 
             if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-                Log.e(TAG, "SupportActionbar found");
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
             }
-            Log.e(TAG, "onCreate: " + String.valueOf(getFragmentManager().getBackStackEntryCount()));
 
             if (getArguments() != null) {
                 String gson = getArguments().getString("establishment");
@@ -88,7 +86,7 @@ public class DetailFragment extends Fragment {
         public void onErrorResponse(VolleyError error) {
             Log.e(TAG + " content", " joil" + error.getMessage());
             if (error instanceof NoConnectionError) {
-                Log.e(TAG, "No connection!");
+                Log.w(TAG, "No connection!");
             }
         }
 

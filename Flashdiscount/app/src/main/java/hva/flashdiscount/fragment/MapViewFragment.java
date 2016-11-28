@@ -105,7 +105,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 if (gpsService.checkWriteExternalPermission()) {
                     googleMap.setMyLocationEnabled(true);
                 } else {
-                    Log.e("nono", "no");
+                    Log.w(TAG, "No checkWriteExternalPermission()");
                 }
 
                 LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
@@ -225,7 +225,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         public void onErrorResponse(VolleyError error) {
 
             if (error instanceof NoConnectionError) {
-                Log.e(TAG, "No connection!");
+                Log.w(TAG, "No connection!");
             }
         }
 

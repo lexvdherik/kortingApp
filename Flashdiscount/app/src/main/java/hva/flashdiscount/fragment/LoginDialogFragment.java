@@ -20,7 +20,9 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 
 import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.Network.APIRequest;
@@ -47,7 +49,10 @@ public class LoginDialogFragment extends DialogFragment {
         getDialog().setTitle(R.string.login_popup_title);
         getDialog().setCanceledOnTouchOutside(true);
         String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestScopes(new Scope(Scopes.PLUS_LOGIN))
+                .requestScopes(new Scope(Scopes.PLUS_ME))
                 .requestIdToken(token)
                 .requestEmail()
                 .build();
@@ -60,7 +65,6 @@ public class LoginDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 signIn();
-//                getDialog().dismiss();
             }
         });
 
@@ -84,14 +88,13 @@ public class LoginDialogFragment extends DialogFragment {
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+        Log.d(TAG, result.getStatus().toString());
 
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             acct = result.getSignInAccount();
             if (acct != null) {
                 postUser(acct.getIdToken());
-                Log.e(TAG, acct.getIdToken().toString());
             }
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -103,7 +106,7 @@ public class LoginDialogFragment extends DialogFragment {
             // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             // updateUI(true);
         } else {
-            Log.e(TAG, "Something went wrong... You signed out");
+            Log.i(TAG, "Something went wrong... You signed out");
             // Signed out, show unauthenticated UI.
             // updateUI(false);
         }
@@ -112,7 +115,7 @@ public class LoginDialogFragment extends DialogFragment {
     private void postUser(String idToken) {
         System.gc();
         LoginDialogFragment.PostUserResponseListener listener = new LoginDialogFragment.PostUserResponseListener();
-        APIRequest.getInstance(getActivity()).postUser(listener, listener, idToken);
+        APIRequest.getInstance(getActivity().getApplicationContext()).postUser(listener, listener, idToken);
     }
 
     public class PostUserResponseListener implements Response.Listener<Token>, Response.ErrorListener {
@@ -126,7 +129,11 @@ public class LoginDialogFragment extends DialogFragment {
             ((MainActivity) getActivity()).user = user;
 
             ImageLoader mImageLoader = VolleySingleton.getInstance(getActivity()).getImageLoader();
-            ((RoundNetworkImageView) layout.findViewById(R.id.profile_picture)).setImageUrl(user.getPicture().toString(), mImageLoader);
+            RoundNetworkImageView image = (RoundNetworkImageView) layout.findViewById(R.id.profile_picture);
+            image.setImageUrl(user.getPicture().toString(), mImageLoader);
+
+            Log.e(TAG, "onResponse: " + user.getPicture());
+
             ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
             ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
 
@@ -136,7 +143,7 @@ public class LoginDialogFragment extends DialogFragment {
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error instanceof NoConnectionError) {
-                Log.e(TAG, "No connection!");
+                Log.w(TAG, "No connection!");
             }
         }
 

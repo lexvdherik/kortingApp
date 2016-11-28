@@ -6,7 +6,7 @@
     <string name="claims_left">Claims over:</string>
     <string name="dismiss">Weg</string>
     <string name="favorite">Favoriet</string>
-    <string name="login_popup_title">Kies een account</string>
+    <string name="login_popup_title">Kies een account om favorieten toe te voegen en aanbiedingen te claimen</string>
     <string name="nav_account">Persoonlijk</string>
     <string name="nav_favorites">Favorieten</string>
     <string name="nav_settings">Instellingen</string>

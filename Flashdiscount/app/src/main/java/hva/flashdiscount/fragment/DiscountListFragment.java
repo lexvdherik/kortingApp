@@ -123,7 +123,7 @@ public class DiscountListFragment extends Fragment {
         public void onErrorResponse(VolleyError error) {
 
             if (error instanceof NoConnectionError) {
-                Log.e(TAG, "No connection!");
+                Log.w(TAG, "No connection!");
             }
         }
     }

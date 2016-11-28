@@ -31,11 +31,14 @@ import hva.flashdiscount.model.Token;
 
 public class APIRequest {
     private static final String TAG = APIRequest.class.getSimpleName();
+
     private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
     //private static final String HOST = "http://145.28.186.199/api/";
+
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
     private static final String METHOD_SET_FAVORITE = "favoriteestablishment/favorite";
     private static final String METHOD_POST_USER = "auth/login";
+
     private static APIRequest sInstance;
     private final RequestQueue mQueue;
     private Context mContext;
@@ -73,6 +76,8 @@ public class APIRequest {
         Map<String, Object> params = new HashMap<>();
         params.put("idToken", idToken);
 
+        Log.e(TAG, "start post");
+
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_USER, params,
                 responseListener, errorListener, Token.class).setTag(METHOD_POST_USER));
 
@@ -104,8 +109,6 @@ public class APIRequest {
 
         Calendar expireDate = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-
-        Log.e(TAG, "expireDate = " + sharedPref.getString("expire_date", ""));
 
         try {
             expireDate.setTime(sdf.parse(sharedPref.getString("expire_date", "")));

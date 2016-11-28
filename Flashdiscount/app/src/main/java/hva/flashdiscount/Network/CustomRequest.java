@@ -1,7 +1,5 @@
 package hva.flashdiscount.Network;
 
-import android.util.Log;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -38,13 +36,13 @@ class CustomRequest<T> extends Request<T> {
 
 
     CustomRequest(int method, String url, Map<String, String> params,
-                  Response.Listener<T> reponseListener, Response.ErrorListener errorListener,
-                  Class<?> clazz) {
+                  Response.Listener<T> responseListener, Response.ErrorListener errorListener,
+                  Class<?> aClass) {
         super(method, url, errorListener);
 
-        this.listener = reponseListener;
+        this.listener = responseListener;
         this.params = params;
-        this.mClass = clazz;
+        this.mClass = aClass;
         setRetryPolicy(new DefaultRetryPolicy(
                 60000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
@@ -64,7 +62,6 @@ class CustomRequest<T> extends Request<T> {
 
         try {
             responseData = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-            Log.e(TAG, "test" + responseData);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -74,21 +71,16 @@ class CustomRequest<T> extends Request<T> {
 
         try {
             assert responseData != null;
-            Log.e("testresponse", responseData);
             resp = (JsonObject) parser.parse(new StringReader(responseData));
         } catch (JsonIOException | JsonSyntaxException e) {
             e.printStackTrace();
             return Response.error(new VolleyError(e));
         }
 
-        Log.e("JsonRpcRequest Response", responseData);
-
         JsonElement result = resp.get("result");
         if (result == null) {
             result = resp;
         }
-
-        Log.e(TAG, "message: " + resp.get("message").toString().replace("\"", ""));
 
         if (mClass == null && resp.get("message").toString().replace("\"", "").equals("OK")) {
             return Response.success((T) response, HttpHeaderParser.parseCacheHeaders(response));
@@ -100,7 +92,6 @@ class CustomRequest<T> extends Request<T> {
             return Response.success((T) mGson.fromJson("true", mClass), HttpHeaderParser.parseCacheHeaders(response));
         }
 
-        Log.e("da", mGson.fromJson(result.toString(), mClass).toString());
         return Response.success((T) mGson.fromJson(result.toString(), mClass), HttpHeaderParser.parseCacheHeaders(response));
     }
 
