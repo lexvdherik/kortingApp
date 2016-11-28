@@ -21,6 +21,7 @@ import com.crashlytics.android.Crashlytics;
 import net.steamcrafted.materialiconlib.MaterialMenuInflater;
 
 import hva.flashdiscount.fragment.TabFragment;
+import hva.flashdiscount.model.User;
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private Context contextOfApplication;
-
+    public User user;
     public boolean hasShownLogin = false;
 
     @Override

@@ -1,20 +1,18 @@
 package hva.flashdiscount.model;
 
+import android.net.Uri;
+
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+
 public class User {
-    private int userId;
-    private String role;
     private String name;
-    private String password;
     private String email;
     private String age;
-    private String picture;
+    private Uri picture;
     private String googleId;
 
-    public User(int userId, String role, String name, String password, String email, String age, String picture, String googleId) {
-        this.userId = userId;
-        this.role = role;
+    public User(String name, String email, String age, Uri picture, String googleId) {
         this.name = name;
-        this.password = password;
         this.email = email;
         this.age = age;
         this.picture = picture;
@@ -27,20 +25,14 @@ public class User {
         this.email = email;
     }
 
-    public int getUserId() {
-        return userId;
-    }
+    public User(GoogleSignInAccount acct) {
+        String firstName = acct.getGivenName().substring(0, 1).toUpperCase() + acct.getGivenName().substring(1);
+        String lastName = acct.getFamilyName().substring(0, 1).toUpperCase() + acct.getFamilyName().substring(1);
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
+        this.name = firstName + " " + lastName;
+        this.email = acct.getEmail();
+        this.picture = acct.getPhotoUrl();
+        this.googleId = acct.getIdToken();
     }
 
     public String getName() {
@@ -49,14 +41,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {
@@ -75,11 +59,11 @@ public class User {
         this.age = age;
     }
 
-    public String getPicture() {
+    public Uri getPicture() {
         return picture;
     }
 
-    public void setPicture(String picture) {
+    public void setPicture(Uri picture) {
         this.picture = picture;
     }
 

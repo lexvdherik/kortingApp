@@ -1,6 +1,8 @@
 package hva.flashdiscount.adapter;
 
 import android.app.Activity;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +19,10 @@ import hva.flashdiscount.model.Establishment;
 
 public class DiscountListAdapter extends BaseExpandableListAdapter {
 
+    private static final String TAG = DiscountListAdapter.class.getSimpleName();
     private final LayoutInflater inf;
     private ArrayList<Establishment> groups;
     private ArrayList<ArrayList<Discount>> children;
-
-    private static final String TAG = DiscountListAdapter.class.getSimpleName();
 
     public DiscountListAdapter(Establishment[] establishmentsArray, Activity activity) {
 
@@ -47,7 +48,6 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
         inf = LayoutInflater.from(activity);
 
     }
-
 
 
     @Override
@@ -105,6 +105,17 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             convertView = inf.inflate(R.layout.list_parent, parent, false);
         }
+
+        ImageView lineColorCode = (ImageView) convertView.findViewById(R.id.list_icon);
+        int color;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            color = convertView.getContext().getColor(R.color.textColorSecondary);
+        } else {
+            color = convertView.getContext().getResources().getColor(R.color.textColorSecondary);
+        }
+
+        lineColorCode.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
 
         Establishment establishment = getGroup(groupPosition);
         int cCount = getChildrenCount(groupPosition);

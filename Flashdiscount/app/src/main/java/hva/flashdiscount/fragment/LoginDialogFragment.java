@@ -9,22 +9,26 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.Network.APIRequest;
 import hva.flashdiscount.R;
+import hva.flashdiscount.Utils.VolleySingleton;
+import hva.flashdiscount.layout.RoundNetworkImageView;
 import hva.flashdiscount.model.Token;
+import hva.flashdiscount.model.User;
 
 public class LoginDialogFragment extends DialogFragment {
 
@@ -115,15 +119,16 @@ public class LoginDialogFragment extends DialogFragment {
 
         @Override
         public void onResponse(Token token) {
-            Token t = new Token(token.getExpireDate(), getContext());
+            Token t = new Token(getContext());
+            t.setExpireDate(token.getExpireDate());
 
-            ((ImageView) layout.findViewById(R.id.profile_picture)).setImageURI(acct.getPhotoUrl());
-            String firstName = acct.getGivenName().substring(0, 1).toUpperCase() + acct.getGivenName().substring(1);
-            String lastName = acct.getFamilyName().substring(0, 1).toUpperCase() + acct.getFamilyName().substring(1);
+            User user = new User(acct);
+            ((MainActivity) getActivity()).user = user;
 
-            ((TextView) layout.findViewById(R.id.naam)).setText(firstName + " " + lastName);
-
-            ((TextView) layout.findViewById(R.id.email)).setText(acct.getEmail());
+            ImageLoader mImageLoader = VolleySingleton.getInstance(getActivity()).getImageLoader();
+            ((RoundNetworkImageView) layout.findViewById(R.id.profile_picture)).setImageUrl(user.getPicture().toString(), mImageLoader);
+            ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
+            ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
 
             getDialog().dismiss();
         }
