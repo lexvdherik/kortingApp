@@ -137,7 +137,7 @@ public class APIRequest {
         return true;
     }
 
-    public boolean claimDisount(Response.Listener responseListener, Response.ErrorListener errorListener, String idToken, String establishmentId, String discountId) {
+    public boolean claimDiscount(Response.Listener responseListener, Response.ErrorListener errorListener, String idToken, String establishmentId, String discountId) {
         if (loginExpired()) {
             idToken = refreshToken();
         }

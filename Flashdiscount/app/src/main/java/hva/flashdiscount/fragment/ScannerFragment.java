@@ -16,7 +16,6 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.zxing.Result;
 
-import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.R;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
@@ -43,9 +42,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
             establishment = new Gson().fromJson(gson, Establishment.class);
             discount = establishment.getDiscounts().get(getArguments().getInt("discountPosition"));
         }
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(
-                ((MainActivity) getActivity()).getContextOfApplication()
-        );
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         Log.i(TAG, sharedPref.getString("expire_date", ""));
         idToken = sharedPref.getString("idToken", "");
         return mScannerView;
@@ -100,7 +97,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     private void claimDiscount(String idToken, String establishmentId, String discountId) {
         System.gc();
         ClaimDiscountResponseListener listener = new ClaimDiscountResponseListener();
-        APIRequest.getInstance(getActivity()).claimDisount(listener, listener, idToken, establishmentId, discountId);
+        APIRequest.getInstance(getActivity()).claimDiscount(listener, listener, idToken, establishmentId, discountId);
     }
 
 

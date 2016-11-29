@@ -1,7 +1,9 @@
 package hva.flashdiscount.fragment;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,15 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Switch;
 
-
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.SettingsAdapter;
 import hva.flashdiscount.model.Favorite;
+import hva.flashdiscount.network.APIRequest;
 
 public class SettingsFragment extends Fragment {
 
@@ -98,15 +99,17 @@ public class SettingsFragment extends Fragment {
     }
 
     private void getFavorites() {
-        String idToken = "TEST";
         System.gc();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String idToken = sharedPref.getString("idToken", "");
         SettingsFragment.GetFavoritesResponseListener listener = new GetFavoritesResponseListener();
         APIRequest.getInstance(getActivity()).getFavorites(listener, listener, idToken);
     }
 
     public void saveSettings() {
-        String idToken = "TEST";
         System.gc();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String idToken = sharedPref.getString("idToken", "");
         SetSettingsResponseListener listener = new SetSettingsResponseListener();
         APIRequest.getInstance(getActivity()).setSettings(listener, listener, idToken, companySettings);
     }

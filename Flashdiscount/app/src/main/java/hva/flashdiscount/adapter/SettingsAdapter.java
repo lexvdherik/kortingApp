@@ -13,6 +13,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import hva.flashdiscount.model.Company;
 import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.fragment.SettingsFragment;
@@ -69,7 +70,6 @@ public class SettingsAdapter extends BaseAdapter {
         View rowView;
         rowView = inflater.inflate(R.layout.settings_row, null);
         holder.tv = (Switch) rowView.findViewById(R.id.setting_company_name);
-        holder.tv.setText(companySettings[position].getCompany().getName());
         Boolean checked = false;
         if (companySettings[position].getNotification() == 1) {
             checked = true;
@@ -91,6 +91,13 @@ public class SettingsAdapter extends BaseAdapter {
                 saveSettings();
             }
         });
+
+        Company company = companySettings[position].getCompany();
+        if (company == null) {
+            holder.tv.setText("No company data available");
+            return rowView;
+        }
+        holder.tv.setText(company.getName());
 
         return rowView;
     }
