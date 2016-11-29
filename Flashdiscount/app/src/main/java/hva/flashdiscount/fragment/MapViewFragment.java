@@ -9,15 +9,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.NoConnectionError;
@@ -39,8 +37,10 @@ import com.google.gson.Gson;
 import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.R;
+import hva.flashdiscount.adapter.BottomDiscountAdapter;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.service.GpsService;
+
 
 public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerClickListener {
@@ -51,10 +51,16 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private Context context;
     private Location location;
     private GpsService gpsService;
+    private BottomSheetBehavior mBottomSheetBehavior1;
+    private BottomSheetBehavior mBottomSheetBehavior2;
+    private ListView listView;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         gpsService = new GpsService(getActivity());
         context = getActivity();
@@ -69,14 +75,16 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             location.setLatitude(52.375368);
             location.setLongitude(4.894486);
         }
+
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+        final View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
         FragmentManager fm = getFragmentManager();
+
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         if (!sharedPref.contains("idToken") && !((MainActivity) getActivity()).hasShownLogin) {
             LoginDialogFragment dialogFragment = new LoginDialogFragment();
@@ -90,6 +98,15 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
         mMapView.onResume();
 
+        //View bottomSheet = getView().findViewById(R.id.bottom_sheet);
+        final View bottomSheet = rootView.findViewById(R.id.bottom_sheet);
+        final View bottomSheetMultiple = rootView.findViewById(R.id.bottom_sheet_multiple_discounts);
+
+        mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
+       // mBottomSheetBehavior2 = BottomSheetBehavior.from(bottomSheetMultiple);
+
+
+        listView = (ListView) rootView.findViewById(R.id.discount_list_view);
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
@@ -113,37 +130,59 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+
                     @Override
                     public boolean onMarkerClick(Marker marker) {
                         final Establishment establishment = (Establishment) marker.getTag();
-                        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
-                        View bottomSheetView = getActivity().getLayoutInflater().inflate(R.layout.bottom_sheet, null);
-                        bottomSheetDialog.setContentView(bottomSheetView);
+                        final ListView listView = (ListView) rootView.findViewById(R.id.discount_list_view);
+                        BottomDiscountAdapter adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
 
-                        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from((View) bottomSheetView.getParent());
-                        bottomSheetBehavior.setPeekHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics()));
-                        TextView title = (TextView) bottomSheetView.findViewById(R.id.title);
-                        title.setText(establishment.getCompany().getName());
-                        Button detailButton = (Button) bottomSheetView.findViewById(R.id.detail_view_button);
-                        detailButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Bundle arguments = new Bundle();
-                                arguments.putString("establishment", new Gson().toJson(establishment));
+                        if (mBottomSheetBehavior1.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                            TextView title = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
+                            title.setText(establishment.getCompany().getName());
 
-                                DetailFragment detailFragment = new DetailFragment();
+                        } else if (mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                            mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
 
-                                detailFragment.setArguments(arguments);
+                            TextView title = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
+                            TextView description = (TextView) rootView.findViewById(R.id.description);
 
-                                getFragmentManager().beginTransaction()
-                                        .replace(R.id.fragment_container, detailFragment)
-                                        .addToBackStack(null)
-                                        .commit();
-                            }
-                        });
-                        bottomSheetDialog.show();
+
+                            title.setText(establishment.getCompany().getName());
+                            description.setText(String.valueOf(establishment.getDiscounts().size()));
+
+                        } else {
+                            mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        }
+
+                        if (establishment.getDiscounts().size() > 1) {
+
+                            listView.setNestedScrollingEnabled(true);
+                            listView.setAdapter(adapter);
+
+//                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                                @Override
+//                                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+//                                    //    int itemPosition = position;
+//                                    Discount value = (Discount) listView.getItemAtPosition(position);
+//                                    value.toString();
+//                                }
+//                            });
+
+                        } else {
+                            adapter.clear();
+                            listView.setAdapter(adapter);
+                        }
 
                         return true;
+                    }
+                });
+
+
+                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(LatLng latLng) {
+                        mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     }
                 });
 
@@ -153,6 +192,9 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
         return rootView;
     }
+
+
+
 
 
     @Override
@@ -209,6 +251,23 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     @Override
     public boolean onMarkerClick(Marker marker) {
         return false;
+    }
+
+
+
+    private void goToDetailView(Establishment establishment) {
+
+        Bundle arguments = new Bundle();
+        arguments.putString("establishment", new Gson().toJson(establishment));
+
+        DetailFragment detailFragment = new DetailFragment();
+
+        detailFragment.setArguments(arguments);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, detailFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
 
