@@ -15,18 +15,24 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import hva.flashdiscount.model.Establishment;
+import hva.flashdiscount.model.Favorite;
 import hva.flashdiscount.model.Token;
 
 public class APIRequest {
@@ -35,10 +41,12 @@ public class APIRequest {
     private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
     //private static final String HOST = "http://145.28.186.199/api/";
 
+    private static final String METHOD_GET_FAVORITES = "favoriteestablishment/";
     private static final String METHOD_SET_FAVORITE = "favoriteestablishment/favorite";
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
     private static final String METHOD_CLAIM_DISCOUNT = "discount/claim";
     private static final String METHOD_POST_USER = "auth/login";
+    private static final String METHOD_SET_SETTINGS = "favoriteestablishment/setnotifications";
 
     private static APIRequest sInstance;
     private final RequestQueue mQueue;
@@ -95,6 +103,36 @@ public class APIRequest {
         params.put("establishmentId", establishmentId);
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_SET_FAVORITE, params,
                 responseListener, errorListener, null).setTag(METHOD_SET_FAVORITE));
+
+        return true;
+    }
+
+    public boolean getFavorites(Response.Listener<Favorite[]> responseListener, Response.ErrorListener errorListener, String idToken) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("idToken", idToken);
+
+        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_FAVORITES, params,
+                responseListener, errorListener, Favorite[].class).setTag(METHOD_GET_FAVORITES).setShouldCache(true));
+
+        return true;
+    }
+
+    public boolean setSettings(Response.Listener responseListener, Response.ErrorListener errorListener, String idToken, Favorite[] favorites) {
+
+        List<Favorite> test = Arrays.asList(favorites);
+//        JSONArray favoritesJson = new JSONArray();
+
+        Gson gson = new GsonBuilder().create();
+        JsonArray favoritesJson = gson.toJsonTree(test).getAsJsonArray();
+        Log.e(TAG, favoritesJson.toString());
+        Map<String, Object> params = new HashMap<>();
+        params.put("idToken", idToken);
+        params.put("settings", favoritesJson.toString());
+
+
+        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_SET_SETTINGS, params,
+                responseListener, errorListener, Favorite[].class).setTag(METHOD_SET_SETTINGS).setShouldCache(true));
 
         return true;
     }

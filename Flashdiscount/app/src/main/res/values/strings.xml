@@ -21,4 +21,5 @@
     <string name="claim_fab_desc">Claim</string>
     <string name="temp_name_menu">Log in to</string>
     <string name="temp_email_nav">see your info here</string>
+    <string name="all_notifications">All notifications</string>
 </resources>

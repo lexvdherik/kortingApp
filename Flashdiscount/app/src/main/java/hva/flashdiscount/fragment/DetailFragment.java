@@ -33,7 +33,6 @@ import hva.flashdiscount.model.Establishment;
 public class DetailFragment extends Fragment {
 
     private static final String TAG = DetailFragment.class.getSimpleName();
-    private OnFragmentInteractionListener mListener;
     private ImageLoader mImageLoader;
     private View mRootView;
     private Establishment establishment;
@@ -61,7 +60,6 @@ public class DetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         FragmentManager fm = getFragmentManager();
         if (getArguments() != null) {
-
             if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -192,5 +190,4 @@ public class DetailFragment extends Fragment {
                 .addToBackStack(null)
                 .commit();
     }
-
 }

@@ -20,6 +20,7 @@ import com.crashlytics.android.Crashlytics;
 
 import net.steamcrafted.materialiconlib.MaterialMenuInflater;
 
+import hva.flashdiscount.fragment.SettingsFragment;
 import hva.flashdiscount.fragment.TabFragment;
 import hva.flashdiscount.model.User;
 import io.fabric.sdk.android.Fabric;
@@ -108,12 +109,20 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_discounts) {
             Log.i(TAG, "nav_discounts");
+            getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TabFragment()).commit();
         } else if (id == R.id.nav_myDiscounts) {
             Log.i(TAG, "nav_myDiscounts");
         } else if (id == R.id.nav_favorites) {
             Log.i(TAG, "nav_favorites");
         } else if (id == R.id.nav_account_settings) {
             Log.i(TAG, "nav_account_settings");
+
+
+            getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
+
+            return false;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

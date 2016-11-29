@@ -71,6 +71,7 @@ class CustomRequest<T> extends Request<T> {
 
         try {
             assert responseData != null;
+            Log.e(TAG, responseData);
             resp = (JsonObject) parser.parse(new StringReader(responseData));
         } catch (JsonIOException | JsonSyntaxException e) {
             e.printStackTrace();
