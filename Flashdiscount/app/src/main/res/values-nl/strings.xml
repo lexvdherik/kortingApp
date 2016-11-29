@@ -16,4 +16,6 @@
     <string name="navigation_drawer_open">Open navigatie</string>
     <string name="time_left">Tijd resterend:</string>
     <string name="profile_picture_desc">Profiel foto</string>
+    <string name="temp_name_menu">Log in om</string>
+    <string name="temp_email_nav">jouw info hier te zien</string>
 </resources>
