@@ -88,8 +88,6 @@ public class LoginDialogFragment extends DialogFragment {
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, result.getStatus().toString());
-
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             acct = result.getSignInAccount();
@@ -131,8 +129,6 @@ public class LoginDialogFragment extends DialogFragment {
             ImageLoader mImageLoader = VolleySingleton.getInstance(getActivity()).getImageLoader();
             RoundNetworkImageView image = (RoundNetworkImageView) layout.findViewById(R.id.profile_picture);
             image.setImageUrl(user.getPicture().toString(), mImageLoader);
-
-            Log.e(TAG, "onResponse: " + user.getPicture());
 
             ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
             ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
