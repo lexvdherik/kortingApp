@@ -6,8 +6,7 @@
     <string name="claims_left">Claims over:</string>
     <string name="dismiss">Weg</string>
     <string name="favorite">Favoriet</string>
-    <string name="hello_blank_fragment">Hallo blank fragment</string>
-    <string name="login_popup_title">Kies een account</string>
+    <string name="login_popup_title">Kies een account om favorieten toe te voegen en aanbiedingen te claimen</string>
     <string name="nav_account">Persoonlijk</string>
     <string name="nav_favorites">Favorieten</string>
     <string name="nav_settings">Instellingen</string>
@@ -17,4 +16,6 @@
     <string name="navigation_drawer_open">Open navigatie</string>
     <string name="time_left">Tijd resterend:</string>
     <string name="profile_picture_desc">Profiel foto</string>
+    <string name="temp_name_menu">Log in om</string>
+    <string name="temp_email_nav">jouw info hier te zien</string>
 </resources>

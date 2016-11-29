@@ -9,22 +9,28 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
 
+import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.R;
+import hva.flashdiscount.utils.VolleySingleton;
+import hva.flashdiscount.layout.RoundNetworkImageView;
 import hva.flashdiscount.model.Token;
+import hva.flashdiscount.model.User;
 
 public class LoginDialogFragment extends DialogFragment {
 
@@ -43,7 +49,10 @@ public class LoginDialogFragment extends DialogFragment {
         getDialog().setTitle(R.string.login_popup_title);
         getDialog().setCanceledOnTouchOutside(true);
         String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestScopes(new Scope(Scopes.PLUS_LOGIN))
+                .requestScopes(new Scope(Scopes.PLUS_ME))
                 .requestIdToken(token)
                 .requestEmail()
                 .build();
@@ -56,7 +65,6 @@ public class LoginDialogFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 signIn();
-//                getDialog().dismiss();
             }
         });
 
@@ -80,14 +88,11 @@ public class LoginDialogFragment extends DialogFragment {
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
-
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             acct = result.getSignInAccount();
             if (acct != null) {
                 postUser(acct.getIdToken());
-                Log.e(TAG, acct.getIdToken().toString());
             }
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -99,7 +104,7 @@ public class LoginDialogFragment extends DialogFragment {
             // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             // updateUI(true);
         } else {
-            Log.e(TAG, "Something went wrong... You signed out");
+            Log.i(TAG, "Something went wrong... You signed out");
             // Signed out, show unauthenticated UI.
             // updateUI(false);
         }
@@ -108,22 +113,25 @@ public class LoginDialogFragment extends DialogFragment {
     private void postUser(String idToken) {
         System.gc();
         LoginDialogFragment.PostUserResponseListener listener = new LoginDialogFragment.PostUserResponseListener();
-        APIRequest.getInstance(getActivity()).postUser(listener, listener, idToken);
+        APIRequest.getInstance(getActivity().getApplicationContext()).postUser(listener, listener, idToken);
     }
 
     public class PostUserResponseListener implements Response.Listener<Token>, Response.ErrorListener {
 
         @Override
         public void onResponse(Token token) {
-            Token t = new Token(token.getExpireDate(), getContext());
+            Token t = new Token(getContext());
+            t.setExpireDate(token.getExpireDate());
 
-            ((ImageView) layout.findViewById(R.id.profile_picture)).setImageURI(acct.getPhotoUrl());
-            String firstName = acct.getGivenName().substring(0, 1).toUpperCase() + acct.getGivenName().substring(1);
-            String lastName = acct.getFamilyName().substring(0, 1).toUpperCase() + acct.getFamilyName().substring(1);
+            User user = new User(acct);
+            ((MainActivity) getActivity()).user = user;
 
-            ((TextView) layout.findViewById(R.id.naam)).setText(firstName + " " + lastName);
+            ImageLoader mImageLoader = VolleySingleton.getInstance(getActivity()).getImageLoader();
+            RoundNetworkImageView image = (RoundNetworkImageView) layout.findViewById(R.id.profile_picture);
+            image.setImageUrl(user.getPicture().toString(), mImageLoader);
 
-            ((TextView) layout.findViewById(R.id.email)).setText(acct.getEmail());
+            ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
+            ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
 
             getDialog().dismiss();
         }
@@ -131,7 +139,7 @@ public class LoginDialogFragment extends DialogFragment {
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error instanceof NoConnectionError) {
-                Log.e(TAG, "No connection!");
+                Log.w(TAG, "No connection!");
             }
         }
 

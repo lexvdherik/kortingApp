@@ -71,8 +71,8 @@ public class DiscountListFragment extends Fragment {
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));
         arguments.putInt("discountPostion", discountPostion);
-        arguments.putBoolean("dialog",false);
-        arguments.putBoolean("succes",false);
+        arguments.putBoolean("dialog", false);
+        arguments.putBoolean("succes", false);
         DetailFragment detailFragment = new DetailFragment();
 
         detailFragment.setArguments(arguments);
@@ -124,7 +124,7 @@ public class DiscountListFragment extends Fragment {
         public void onErrorResponse(VolleyError error) {
 
             if (error instanceof NoConnectionError) {
-                Log.e(TAG, "No connection!");
+                Log.w(TAG, "No connection!");
             }
         }
     }

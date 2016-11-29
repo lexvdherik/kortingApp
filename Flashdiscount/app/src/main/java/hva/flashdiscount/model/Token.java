@@ -11,14 +11,11 @@ import android.preference.PreferenceManager;
 public class Token {
 
     private String expireDate;
+    private Context mContext;
 
-    public Token(String expireDate, Context context) {
-        this.expireDate = expireDate;
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("expire_date", expireDate);
-        editor.apply();
+    public Token(Context context) {
+        this.mContext = context;
+        this.setExpireDate(expireDate);
     }
 
     public String getExpireDate() {
@@ -27,5 +24,10 @@ public class Token {
 
     public void setExpireDate(String expireDate) {
         this.expireDate = expireDate;
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.mContext);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("expire_date", expireDate);
+        editor.apply();
     }
 }

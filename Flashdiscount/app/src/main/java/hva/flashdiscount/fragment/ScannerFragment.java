@@ -46,7 +46,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(
                 ((MainActivity) getActivity()).getContextOfApplication()
         );
-        Log.e(TAG,sharedPref.getString("expire_date",""));
+        Log.e(TAG, sharedPref.getString("expire_date", ""));
         idToken = sharedPref.getString("idToken", "");
         return mScannerView;
     }
@@ -61,7 +61,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     @Override
     public void handleResult(Result rawResult) {
 
-       String establishmentId = rawResult.toString().substring(rawResult.toString().lastIndexOf("/") + 1);
+        String establishmentId = rawResult.toString().substring(rawResult.toString().lastIndexOf("/") + 1);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -70,8 +70,8 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
                 mScannerView.resumeCameraPreview(ScannerFragment.this);
             }
         }, 2000);
-        Log.e(TAG,establishmentId);
-        claimDiscount(idToken,establishmentId,String.valueOf(discount.getDiscountId()));
+        Log.e(TAG, establishmentId);
+        claimDiscount(idToken, establishmentId, String.valueOf(discount.getDiscountId()));
     }
 
     @Override
@@ -85,7 +85,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));
         arguments.putInt("discountPostion", discountPostion);
-        arguments.putBoolean("dialog",true);
+        arguments.putBoolean("dialog", true);
         arguments.putBoolean("succes", true);
         DetailFragment detailFragment = new DetailFragment();
 
@@ -97,21 +97,20 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
                 .commit();
     }
 
-    private void claimDiscount(String idToken,String EstablishmentId,String discountId) {
+    private void claimDiscount(String idToken, String establishmentId, String discountId) {
         System.gc();
-        ScannerFragment.claimDiscountResponseListener listener = new ScannerFragment.claimDiscountResponseListener();
-        APIRequest.getInstance(getActivity()).claimDisount(listener, listener, idToken,EstablishmentId,discountId);
+        ClaimDiscountResponseListener listener = new ClaimDiscountResponseListener();
+        APIRequest.getInstance(getActivity()).claimDisount(listener, listener, idToken, establishmentId, discountId);
     }
 
 
-
-    public class claimDiscountResponseListener implements Response.Listener, Response.ErrorListener {
+    public class ClaimDiscountResponseListener implements Response.Listener, Response.ErrorListener {
 
         @Override
         public void onResponse(Object response) {
-           // NetworkResponse response1 = (NetworkResponse) response;
+            // NetworkResponse response1 = (NetworkResponse) response;
             //Log.e(TAG,response.);
-            goToDetailView(establishment,dicountPosition);
+            goToDetailView(establishment, dicountPosition);
         }
 
         @Override

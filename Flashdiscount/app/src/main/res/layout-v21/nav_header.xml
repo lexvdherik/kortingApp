@@ -17,6 +17,7 @@
         android:id="@+id/profile_picture"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:elevation="1dp"
         android:contentDescription="@string/profile_picture_desc" />
 
     <TextView

@@ -63,11 +63,9 @@ public class DetailFragment extends Fragment {
         if (getArguments() != null) {
 
             if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-                Log.e(TAG, "SupportActionbar found");
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
             }
-            Log.e(TAG, "onCreate: " + String.valueOf(getFragmentManager().getBackStackEntryCount()));
 
             if (getArguments() != null) {
                 String gson = getArguments().getString("establishment");
@@ -77,21 +75,20 @@ public class DetailFragment extends Fragment {
                 succes = getArguments().getBoolean("succes");
                 dialog = getArguments().getBoolean("dialog");
             }
-            if(dialog){
+            if (dialog) {
                 MessageDialogFragment dialogFragment = new MessageDialogFragment();
                 dialogFragment.show(fm, "Message Fragment");
             }
 
 
-
         }
     }
+
     private void setFavorite(String idToken, String establishmentId) {
         System.gc();
         DetailFragment.SetFavoriteResponseListener listener = new DetailFragment.SetFavoriteResponseListener();
         APIRequest.getInstance(getActivity()).setFavorite(listener, listener, idToken, establishmentId);
     }
-
 
 
     public class SetFavoriteResponseListener implements Response.Listener, Response.ErrorListener {
@@ -105,7 +102,7 @@ public class DetailFragment extends Fragment {
         public void onErrorResponse(VolleyError error) {
             Log.e(TAG + " content", " joil" + error.getMessage());
             if (error instanceof NoConnectionError) {
-                Log.e(TAG, "No connection!");
+                Log.w(TAG, "No connection!");
             }
         }
 
@@ -143,7 +140,7 @@ public class DetailFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                goToScanner(establishment,dicountPosition);
+                goToScanner(establishment, dicountPosition);
 
             }
         });
