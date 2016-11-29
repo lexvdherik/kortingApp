@@ -46,7 +46,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(
                 ((MainActivity) getActivity()).getContextOfApplication()
         );
-        Log.e(TAG, sharedPref.getString("expire_date", ""));
+        Log.i(TAG, sharedPref.getString("expire_date", ""));
         idToken = sharedPref.getString("idToken", "");
         return mScannerView;
     }
@@ -70,7 +70,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
                 mScannerView.resumeCameraPreview(ScannerFragment.this);
             }
         }, 2000);
-        Log.e(TAG, establishmentId);
+        Log.i(TAG, establishmentId);
         claimDiscount(idToken, establishmentId, String.valueOf(discount.getDiscountId()));
     }
 

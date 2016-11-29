@@ -15,7 +15,7 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import hva.flashdiscount.Network.APIRequest;
+import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.SettingsAdapter;
 import hva.flashdiscount.model.Favorite;
@@ -147,7 +147,7 @@ public class SettingsFragment extends Fragment {
 
         @Override
         public void onResponse(Object response) {
-            Log.e(TAG, "Response of Settings!");
+            Log.i(TAG, "Response of Settings!");
         }
     }
 }

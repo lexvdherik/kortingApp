@@ -1,5 +1,7 @@
 package hva.flashdiscount.network;
 
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
@@ -71,7 +73,7 @@ class CustomRequest<T> extends Request<T> {
 
         try {
             assert responseData != null;
-            Log.e(TAG, responseData);
+            Log.i(TAG, responseData);
             resp = (JsonObject) parser.parse(new StringReader(responseData));
         } catch (JsonIOException | JsonSyntaxException e) {
             e.printStackTrace();

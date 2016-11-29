@@ -85,7 +85,7 @@ public class APIRequest {
         Map<String, Object> params = new HashMap<>();
         params.put("idToken", idToken);
 
-        Log.e(TAG, "start post");
+        Log.i(TAG, "start post");
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_USER, params,
                 responseListener, errorListener, Token.class).setTag(METHOD_POST_USER));
@@ -125,7 +125,7 @@ public class APIRequest {
 
         Gson gson = new GsonBuilder().create();
         JsonArray favoritesJson = gson.toJsonTree(test).getAsJsonArray();
-        Log.e(TAG, favoritesJson.toString());
+        Log.i(TAG, favoritesJson.toString());
         Map<String, Object> params = new HashMap<>();
         params.put("idToken", idToken);
         params.put("settings", favoritesJson.toString());

@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.e(TAG, "BACK THROUGH NAV");
+        Log.i(TAG, "BACK THROUGH NAV");
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
 //            case R.id.action_settings:
