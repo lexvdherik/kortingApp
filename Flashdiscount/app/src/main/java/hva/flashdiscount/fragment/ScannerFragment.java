@@ -46,6 +46,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(
                 ((MainActivity) getActivity()).getContextOfApplication()
         );
+        Log.e(TAG,sharedPref.getString("expire_date",""));
         idToken = sharedPref.getString("idToken", "");
         return mScannerView;
     }
@@ -59,7 +60,9 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
 
     @Override
     public void handleResult(Result rawResult) {
-        Log.e(TAG,rawResult.toString());
+
+       String establishmentId = rawResult.toString().substring(rawResult.toString().lastIndexOf("/") + 1);
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -67,8 +70,8 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
                 mScannerView.resumeCameraPreview(ScannerFragment.this);
             }
         }, 2000);
-
-        claimDiscount(idToken,String.valueOf(establishment.getEstablishmentId()),String.valueOf(discount.getDiscountId()));
+        Log.e(TAG,establishmentId);
+        claimDiscount(idToken,establishmentId,String.valueOf(discount.getDiscountId()));
     }
 
     @Override
@@ -106,7 +109,8 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
 
         @Override
         public void onResponse(Object response) {
-            Log.e(TAG,response.toString());
+           // NetworkResponse response1 = (NetworkResponse) response;
+            //Log.e(TAG,response.);
             goToDetailView(establishment,dicountPosition);
         }
 
