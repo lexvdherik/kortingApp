@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,10 +21,11 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 
+
 import hva.flashdiscount.MainActivity;
-import hva.flashdiscount.Network.APIRequest;
+import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.R;
-import hva.flashdiscount.Utils.VolleySingleton;
+import hva.flashdiscount.utils.VolleySingleton;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
 
@@ -36,13 +38,16 @@ public class DetailFragment extends Fragment {
     private View mRootView;
     private Establishment establishment;
     private Discount discount;
-
     private NetworkImageView companyImage;
     private TextView companyName;
     private TextView companyDescription;
     private TextView claimsLeft;
     private TextView timeLeft;
     private TextView discountDescription;
+    private int dicountPosition;
+    private boolean dialog;
+    private boolean succes;
+
 
     public static DetailFragment newInstance() {
         DetailFragment fragment = new DetailFragment();
@@ -54,7 +59,7 @@ public class DetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        FragmentManager fm = getFragmentManager();
         if (getArguments() != null) {
 
             if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
@@ -66,9 +71,19 @@ public class DetailFragment extends Fragment {
 
             if (getArguments() != null) {
                 String gson = getArguments().getString("establishment");
+                dicountPosition = getArguments().getInt("discountPosition");
                 establishment = new Gson().fromJson(gson, Establishment.class);
                 discount = establishment.getDiscounts().get(getArguments().getInt("discountPosition"));
+                succes = getArguments().getBoolean("succes");
+                dialog = getArguments().getBoolean("dialog");
             }
+            if(dialog){
+                MessageDialogFragment dialogFragment = new MessageDialogFragment();
+                dialogFragment.show(fm, "Message Fragment");
+            }
+
+
+
         }
     }
     private void setFavorite(String idToken, String establishmentId) {
@@ -76,6 +91,8 @@ public class DetailFragment extends Fragment {
         DetailFragment.SetFavoriteResponseListener listener = new DetailFragment.SetFavoriteResponseListener();
         APIRequest.getInstance(getActivity()).setFavorite(listener, listener, idToken, establishmentId);
     }
+
+
 
     public class SetFavoriteResponseListener implements Response.Listener, Response.ErrorListener {
 
@@ -120,6 +137,16 @@ public class DetailFragment extends Fragment {
                 setFavorite(idToken, String.valueOf(establishment.getEstablishmentId()));
             }
         });
+        Button claimButton = (Button) mRootView.findViewById(R.id.claim_button);
+
+        claimButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                goToScanner(establishment,dicountPosition);
+
+            }
+        });
 
         // Inflate the layout for this fragment
         return mRootView;
@@ -151,6 +178,22 @@ public class DetailFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void goToScanner(Establishment establishment, int discountPostion) {
+
+        Bundle arguments = new Bundle();
+        arguments.putString("establishment", new Gson().toJson(establishment));
+        arguments.putInt("discountPostion", discountPostion);
+
+        ScannerFragment scannerFragment = new ScannerFragment();
+
+        scannerFragment.setArguments(arguments);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, scannerFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
 }

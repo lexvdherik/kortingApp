@@ -1,4 +1,4 @@
-package hva.flashdiscount.Utils;
+package hva.flashdiscount.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;

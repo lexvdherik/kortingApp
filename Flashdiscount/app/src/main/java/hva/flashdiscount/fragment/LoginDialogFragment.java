@@ -22,7 +22,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import hva.flashdiscount.Network.APIRequest;
+import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.model.Token;
 

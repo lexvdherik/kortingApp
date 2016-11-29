@@ -1,4 +1,4 @@
-package hva.flashdiscount.Network;
+package hva.flashdiscount.network;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -31,11 +31,12 @@ import hva.flashdiscount.model.Token;
 
 public class APIRequest {
     private static final String TAG = APIRequest.class.getSimpleName();
-    private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
-    //private static final String HOST = "http://145.28.186.199/api/";
+    //private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
+    private static final String HOST = "http://145.28.198.183/api/";
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
     private static final String METHOD_SET_FAVORITE = "favoriteestablishment/favorite";
     private static final String METHOD_POST_USER = "auth/login";
+    private static final String METHOD_CLAIM_DISCOUNT = "discount/claim";
     private static APIRequest sInstance;
     private final RequestQueue mQueue;
     private Context mContext;
@@ -89,6 +90,21 @@ public class APIRequest {
         params.put("establishmentId", establishmentId);
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_SET_FAVORITE, params,
                 responseListener, errorListener, null).setTag(METHOD_SET_FAVORITE));
+
+        return true;
+    }
+
+    public boolean claimDisount(Response.Listener responseListener, Response.ErrorListener errorListener, String idToken, String establishmentId, String discountId) {
+        if(loginExpired()){
+            idToken = refreshToken();
+        }
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("idToken", idToken);
+        params.put("establishmentId", establishmentId);
+        params.put("discountId", discountId);
+        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_CLAIM_DISCOUNT, params,
+                responseListener, errorListener, null).setTag(METHOD_CLAIM_DISCOUNT));
 
         return true;
     }
