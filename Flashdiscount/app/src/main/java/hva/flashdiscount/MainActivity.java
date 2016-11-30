@@ -1,6 +1,7 @@
 package hva.flashdiscount;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -15,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -29,6 +31,10 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    public static final int REQUEST_CAMERA_PERMISSION = 100;
+    public static final int REQUEST_LOCATION_PERMISSION = 101;
+
     private Context contextOfApplication;
     public User user;
     public boolean hasShownLogin = false;
@@ -131,4 +137,26 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case REQUEST_CAMERA_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getContextOfApplication(), R.string.camera_success, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContextOfApplication(), R.string.no_permission_camera, Toast.LENGTH_LONG).show();
+                }
+
+                break;
+            case REQUEST_LOCATION_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getContextOfApplication(), "Location permission granted", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getContextOfApplication(), R.string.no_permission_location, Toast.LENGTH_LONG).show();
+                }
+            default:
+                Toast.makeText(getContextOfApplication(), "Permission granted!", Toast.LENGTH_LONG).show();
+        }
+    }
 }
