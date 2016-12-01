@@ -130,7 +130,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                         establishment = (Establishment) marker.getTag();
                         adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
                         mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        if (establishment.getDiscounts().size() > 1) {
+                        if (establishment.getDiscounts().size() > 0) {
                             listView.setNestedScrollingEnabled(true);
                             listView.setAdapter(adapter);
                         } else {
@@ -141,7 +141,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                         if (mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
                             mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
                             bottomSheettitle.setText(establishment.getCompany().getName());
-                            bottomSheetdescription.setText(String.valueOf(establishment.getDiscounts().size()));
+                            bottomSheetdescription.setText(String.valueOf(establishment.getStreet() + " " + establishment.getStreetNumber() + ", " + establishment.getCity()));
                         } else {
                             mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         }
