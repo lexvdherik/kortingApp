@@ -1,11 +1,14 @@
 package hva.flashdiscount.fragment;
 
+import android.Manifest;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
@@ -43,9 +47,9 @@ public class DetailFragment extends Fragment {
     private TextView claimsLeft;
     private TextView timeLeft;
     private TextView discountDescription;
-    private int dicountPosition;
+    private int discountPostion;
     private boolean dialog;
-    private boolean succes;
+    private boolean success;
 
 
     public static DetailFragment newInstance() {
@@ -54,6 +58,17 @@ public class DetailFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    public static MessageDialogFragment newInstance(String message) {
+        MessageDialogFragment f = new MessageDialogFragment();
+
+        Bundle args = new Bundle();
+        args.putString("message", message);
+        f.setArguments(args);
+
+        return f;
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,15 +82,20 @@ public class DetailFragment extends Fragment {
 
             if (getArguments() != null) {
                 String gson = getArguments().getString("establishment");
-                dicountPosition = getArguments().getInt("discountPosition");
+                discountPostion = getArguments().getInt("discountPosition");
                 establishment = new Gson().fromJson(gson, Establishment.class);
                 discount = establishment.getDiscounts().get(getArguments().getInt("discountPosition"));
-                succes = getArguments().getBoolean("succes");
+                success = getArguments().getBoolean("success");
                 dialog = getArguments().getBoolean("dialog");
             }
             if (dialog) {
-                MessageDialogFragment dialogFragment = new MessageDialogFragment();
-                dialogFragment.show(fm, "Message Fragment");
+                MessageDialogFragment dialogFragment = newInstance(getArguments().getString("message"));
+
+//                Bundle args = new Bundle();
+//                args.putString("message", getArguments().getString("message"));
+//
+//                dialogFragment.setArguments(args);
+                dialogFragment.show(fm, "");
             }
 
 
@@ -138,13 +158,36 @@ public class DetailFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                goToScanner(establishment, dicountPosition);
+                int cameraPermission = ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.CAMERA);
+                if (cameraPermission == PackageManager.PERMISSION_GRANTED) {
+
+                    goToScanner(establishment, discountPostion);
+                } else {
+                    requestCameraPermissions();
+                }
 
             }
         });
 
         // Inflate the layout for this fragment
         return mRootView;
+    }
+
+    private void requestCameraPermissions() {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                Toast.makeText(getContext(), R.string.camera_explanation, Toast.LENGTH_LONG).show();
+                requestPermissions(new String[]{Manifest.permission.CAMERA},
+                        MainActivity.REQUEST_CAMERA_PERMISSION);
+            } else {
+                requestPermissions(new String[]{Manifest.permission.CAMERA},
+                        MainActivity.REQUEST_CAMERA_PERMISSION);
+            }
+        }
     }
 
     public void initViews() {

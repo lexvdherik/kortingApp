@@ -1,22 +1,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:tag="discount_list_frag">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#e8f5e9"
+                android:orientation="vertical"
+                android:tag="discount_list_frag">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swiperefresh"
-        android:layout_below="@+id/tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tab_layout">
 
         <ExpandableListView
             android:id="@+id/expListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:divider="@color/colorPrimaryLight"
-            android:dividerHeight="2px"/>
+            android:groupIndicator="@null"
+            android:paddingTop="5dp"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

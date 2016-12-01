@@ -89,6 +89,9 @@ public class DiscountListFragment extends Fragment {
         public void onResponse(final Establishment[] establishments) {
 
             expandableListView = (ExpandableListView) getActivity().findViewById(R.id.expListView);
+            if (expandableListView == null) {
+                return;
+            }
             expandableListView.setAdapter(new DiscountListAdapter(establishments, getActivity()));
 
             expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {

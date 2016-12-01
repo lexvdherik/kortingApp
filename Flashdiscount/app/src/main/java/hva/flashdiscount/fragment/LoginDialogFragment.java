@@ -25,12 +25,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 
 import hva.flashdiscount.MainActivity;
-import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.R;
-import hva.flashdiscount.utils.VolleySingleton;
 import hva.flashdiscount.layout.RoundNetworkImageView;
 import hva.flashdiscount.model.Token;
 import hva.flashdiscount.model.User;
+import hva.flashdiscount.network.APIRequest;
+import hva.flashdiscount.utils.VolleySingleton;
 
 public class LoginDialogFragment extends DialogFragment {
 
@@ -126,9 +126,18 @@ public class LoginDialogFragment extends DialogFragment {
             User user = new User(acct);
             ((MainActivity) getActivity()).user = user;
 
+            if (layout == null) {
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String id = sharedPref.getString("idToken", null);
+                postUser(id);
+                getDialog().dismiss();
+            }
+
             ImageLoader mImageLoader = VolleySingleton.getInstance(getActivity()).getImageLoader();
             RoundNetworkImageView image = (RoundNetworkImageView) layout.findViewById(R.id.profile_picture);
-            image.setImageUrl(user.getPicture().toString(), mImageLoader);
+            if (image != null) {
+                image.setImageUrl(user.getPicture().toString(), mImageLoader);
+            }
 
             ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
             ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
