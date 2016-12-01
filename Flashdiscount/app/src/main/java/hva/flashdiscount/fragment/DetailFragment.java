@@ -49,7 +49,7 @@ public class DetailFragment extends Fragment {
     private TextView discountDescription;
     private int discountPostion;
     private boolean dialog;
-    private boolean succes;
+    private boolean success;
 
 
     public static DetailFragment newInstance() {
@@ -74,12 +74,17 @@ public class DetailFragment extends Fragment {
                 discountPostion = getArguments().getInt("discountPosition");
                 establishment = new Gson().fromJson(gson, Establishment.class);
                 discount = establishment.getDiscounts().get(getArguments().getInt("discountPosition"));
-                succes = getArguments().getBoolean("succes");
+                success = getArguments().getBoolean("success");
                 dialog = getArguments().getBoolean("dialog");
             }
             if (dialog) {
                 MessageDialogFragment dialogFragment = new MessageDialogFragment();
-                dialogFragment.show(fm, "Message Fragment");
+
+                Bundle args = new Bundle();
+                args.putString("message", getArguments().getString("message"));
+
+                dialogFragment.setArguments(args);
+                dialogFragment.show(fm, "");
             }
 
 

@@ -10,12 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.zxing.Result;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.R;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
@@ -30,7 +35,6 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     private int dicountPosition;
     private Discount discount;
     private String idToken;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,13 +81,14 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         mScannerView.stopCamera();
     }
 
-    private void goToDetailView(Establishment establishment, int discountPostion) {
+    private void goToDetailView(Establishment establishment, int discountPostion, boolean success, String message) {
 
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));
         arguments.putInt("discountPostion", discountPostion);
-        arguments.putBoolean("dialog", true);
-        arguments.putBoolean("succes", true);
+        arguments.putBoolean("dialog",true);
+        arguments.putBoolean("success", success);
+        arguments.putString("message", message);
         DetailFragment detailFragment = new DetailFragment();
 
         detailFragment.setArguments(arguments);
@@ -105,14 +110,23 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
 
         @Override
         public void onResponse(Object response) {
-            // NetworkResponse response1 = (NetworkResponse) response;
-            //Log.e(TAG,response.);
-            goToDetailView(establishment, dicountPosition);
+            NetworkResponse response1 = (NetworkResponse) response;
+            Log.e(TAG,"blah = " + response1.headers);
+            goToDetailView(establishment, dicountPosition, true, "SUCCESS");
         }
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e(TAG + " content", " joil" + error.getMessage());
+            Log.e(TAG + " content", " joil" + error.networkResponse.headers);
+            JSONObject jsonHeaders = new JSONObject(error.networkResponse.headers);
+
+            try {
+                String errorCode = jsonHeaders.get("X-Android-Response-Source").toString();
+                goToDetailView(establishment, dicountPosition, false, errorCode);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
             if (error instanceof NoConnectionError) {
                 Log.e(TAG, "No connection!");
             }
