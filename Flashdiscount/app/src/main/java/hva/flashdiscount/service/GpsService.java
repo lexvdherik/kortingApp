@@ -1,13 +1,14 @@
 package hva.flashdiscount.service;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -79,16 +80,15 @@ public class GpsService implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     /**
      * Request permission for location.
      */
+    @TargetApi(Build.VERSION_CODES.M)
     public void askLocationPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (activity.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
             Toast.makeText(activity.getApplicationContext().getApplicationContext(), R.string.location_explanation, Toast.LENGTH_LONG).show();
-        } else {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+            activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MainActivity.REQUEST_LOCATION_PERMISSION);
-        }
-
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MainActivity.REQUEST_LOCATION_PERMISSION);
+        } else {
+            activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MainActivity.REQUEST_LOCATION_PERMISSION);
         }
     }
 

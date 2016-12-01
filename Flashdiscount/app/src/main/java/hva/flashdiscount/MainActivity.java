@@ -1,5 +1,6 @@
 package hva.flashdiscount;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -30,14 +31,12 @@ import io.fabric.sdk.android.Fabric;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     public static final int REQUEST_CAMERA_PERMISSION = 100;
     public static final int REQUEST_LOCATION_PERMISSION = 101;
-
-    private Context contextOfApplication;
+    private static final String TAG = MainActivity.class.getSimpleName();
     public User user;
     public boolean hasShownLogin = false;
+    private Context contextOfApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,8 +139,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case REQUEST_CAMERA_PERMISSION:
+
+        if (permissions.length == 0) {
+            Log.i(TAG, "Permissions denied");
+            return;
+        }
+
+        switch (permissions[0]) {
+            case Manifest.permission.CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(getContextOfApplication(), R.string.camera_success, Toast.LENGTH_LONG).show();
                 } else {
@@ -149,14 +154,16 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 break;
-            case REQUEST_LOCATION_PERMISSION:
+            case Manifest.permission.ACCESS_FINE_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(getContextOfApplication(), "Location permission granted", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getContextOfApplication(), R.string.no_permission_location, Toast.LENGTH_LONG).show();
                 }
             default:
-                Toast.makeText(getContextOfApplication(), "Permission granted!", Toast.LENGTH_LONG).show();
+                Log.e(TAG, "onRequestPermissionsResult: " + grantResults[0]);
+                Log.e(TAG, "onRequestPermissionsResult: " + permissions[0]);
+                Toast.makeText(getContextOfApplication(), "Permission " + grantResults[0] + " for " + permissions[0], Toast.LENGTH_LONG).show();
         }
     }
 }
