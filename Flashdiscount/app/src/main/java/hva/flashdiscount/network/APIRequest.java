@@ -47,7 +47,8 @@ public class APIRequest {
     private static final String METHOD_CLAIM_DISCOUNT = "discount/claim";
     private static final String METHOD_POST_USER = "auth/login";
     private static final String METHOD_SET_SETTINGS = "favoriteestablishment/setnotifications";
-
+    private static final String METHOD_POST_FIID = "device/token";//TODO: finish METHOD_POST_FIID
+    private static APIRequest sInstance;
     private final RequestQueue mQueue;
     private static Context mContext;
     private static APIRequest sInstance;
@@ -87,6 +88,16 @@ public class APIRequest {
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_USER, params,
                 responseListener, errorListener, Token.class).setTag(METHOD_POST_USER));
+
+        return true;
+    }
+
+    public boolean postFirebaseIID(Response.Listener<String> responseListener, Response.ErrorListener errorListener, String fiidToken) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("fiidToken", fiidToken);
+
+        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_FIID, params,
+                responseListener, errorListener, Token.class).setTag(METHOD_POST_FIID));
 
         return true;
     }
@@ -199,6 +210,4 @@ public class APIRequest {
 
         return acct.getIdToken();
     }
-
-
 }

@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "444953407805",
-    "project_id": "black-agility-145609"
+    "firebase_url": "https://black-agility-145609.firebaseio.com",
+    "project_id": "black-agility-145609",
+    "storage_bucket": "black-agility-145609.appspot.com"
   },
   "client": [
     {
@@ -13,12 +15,40 @@
       },
       "oauth_client": [
         {
+          "client_id": "444953407805-4mc809iq5ile3bk66glrub8rnoduffar.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hva.flashdiscount",
+            "certificate_hash": "568BB9209F652B32206A9470F121B2F40692F76A"
+          }
+        },
+        {
+          "client_id": "444953407805-46ehtbqfj56p39s6dkcpphvaukekl6kj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hva.flashdiscount",
+            "certificate_hash": "26096159C2C4566D12C676E2FC5D11A84B4A3892"
+          }
+        },
+        {
+          "client_id": "444953407805-h2litglvsqu64v1hf8lk9ei9k8l7k4d2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hva.flashdiscount",
+            "certificate_hash": "42A7D9A1EBF23E639361A677CE8DB783C685155D"
+          }
+        },
+        {
           "client_id": "444953407805-7ds1247dl287fin06ffnlv45pkqc5qlo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "hva.flashdiscount",
             "certificate_hash": "95B02A5120F2748F07F30A1B8194383046F615AF"
           }
+        },
+        {
+          "client_id": "444953407805-5g9v39c2o9u0pl8qefhlon9olj94oip0.apps.googleusercontent.com",
+          "client_type": 3
         },
         {
           "client_id": "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com",
@@ -35,11 +65,16 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "444953407805-5g9v39c2o9u0pl8qefhlon9olj94oip0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }
