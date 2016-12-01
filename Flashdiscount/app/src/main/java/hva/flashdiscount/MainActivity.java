@@ -47,6 +47,7 @@ import hva.flashdiscount.fragment.LoginDialogFragment;
 import hva.flashdiscount.fragment.SettingsFragment;
 import hva.flashdiscount.fragment.TabFragment;
 import hva.flashdiscount.layout.RoundNetworkImageView;
+import hva.flashdiscount.model.Token;
 import hva.flashdiscount.model.User;
 import hva.flashdiscount.utils.VolleySingleton;
 import io.fabric.sdk.android.Fabric;
@@ -69,6 +70,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         contextOfApplication = getApplicationContext();
         loggedIn = false;
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.e(TAG, "expire date = " + sharedPref.getString("expire_date", "er is geen expire date hahaha"));
 
         Fabric.with(this, new Crashlytics());
 
