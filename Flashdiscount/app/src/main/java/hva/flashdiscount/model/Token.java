@@ -4,10 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-/**
- * Created by Maiko on 22-11-2016.
- */
-
 public class Token {
 
     private String expireDate;
