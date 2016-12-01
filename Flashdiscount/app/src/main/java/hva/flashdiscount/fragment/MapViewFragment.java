@@ -56,6 +56,10 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private ListView listView;
     private TextView bottomSheettitle;
     private TextView bottomSheetdescription;
+    private BottomDiscountAdapter adapter;
+    private Establishment establishment;
+    private View bottomSheet;
+    private FragmentManager fm;
 
 
     @Override
@@ -85,36 +89,27 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
-        FragmentManager fm = getFragmentManager();
+
 
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        initAttributes(rootView);
+
         if (!sharedPref.contains("idToken") && !((MainActivity) getActivity()).hasShownLogin) {
             LoginDialogFragment dialogFragment = new LoginDialogFragment();
             dialogFragment.show(fm, "Login Fragment");
             ((MainActivity) getActivity()).hasShownLogin = true;
         }
 
-
-        mMapView = (MapView) rootView.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
-
-        mMapView.onResume();
-
-        //View bottomSheet = getView().findViewById(R.id.bottom_sheet);
-        final View bottomSheet = rootView.findViewById(R.id.bottom_sheet);
-        final View bottomSheetMultiple = rootView.findViewById(R.id.bottom_sheet_multiple_discounts);
-
-        mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
-       // mBottomSheetBehavior2 = BottomSheetBehavior.from(bottomSheetMultiple);
-
-
-        listView = (ListView) rootView.findViewById(R.id.discount_list_view);
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+
+
+        mMapView.onCreate(savedInstanceState);
+        mMapView.onResume();
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -130,47 +125,23 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
                 CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
                     @Override
                     public boolean onMarkerClick(Marker marker) {
 
-                        Log.e(TAG, "onMarkerClickListener");
-
-                        Establishment establishment = (Establishment) marker.getTag();
-                        ListView listView = (ListView) rootView.findViewById(R.id.discount_list_view);
-                        BottomDiscountAdapter adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
+                        establishment = (Establishment) marker.getTag();
+                        adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
                         mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         if (establishment.getDiscounts().size() > 1) {
-                            Log.e(TAG, "Discount Size > 1");
                             listView.setNestedScrollingEnabled(true);
                             listView.setAdapter(adapter);
-
-//                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                                @Override
-//                                public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-//                                    //    int itemPosition = position;
-//                                    Discount value = (Discount) listView.getItemAtPosition(position);
-//                                    value.toString();
-//                                }
-//                            });
-
                         } else {
-                            Log.e(TAG, "Discount Size only 1");
                             adapter.clear();
                             listView.setAdapter(adapter);
                         }
 
-                        if (bottomSheettitle == null) {
-                            bottomSheettitle = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
-                            bottomSheetdescription = (TextView) rootView.findViewById(R.id.description);
-                        }
-                        
-                        if (mBottomSheetBehavior1.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                            mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
-                            bottomSheettitle.setText(establishment.getCompany().getName());
-                        } else if (mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                       if (mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
                             mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
                             bottomSheettitle.setText(establishment.getCompany().getName());
                             bottomSheetdescription.setText(String.valueOf(establishment.getDiscounts().size()));
@@ -186,7 +157,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(LatLng latLng) {
-                        Log.e(TAG, "onMapClick");
                         mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     }
                 });
@@ -196,6 +166,17 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         });
 
         return rootView;
+    }
+
+
+    private void initAttributes(View rootView) {
+        fm = getFragmentManager();
+        mMapView = (MapView) rootView.findViewById(R.id.mapView);
+        bottomSheet = rootView.findViewById(R.id.bottom_sheet);
+        bottomSheettitle = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
+        bottomSheetdescription = (TextView) rootView.findViewById(R.id.description);
+        mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
+        listView = (ListView) rootView.findViewById(R.id.discount_list_view);
     }
 
 
