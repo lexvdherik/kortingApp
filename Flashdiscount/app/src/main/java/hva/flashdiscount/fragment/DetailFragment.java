@@ -56,6 +56,17 @@ public class DetailFragment extends Fragment {
         return fragment;
     }
 
+    public static MessageDialogFragment newInstance(String message) {
+        MessageDialogFragment f = new MessageDialogFragment();
+
+        Bundle args = new Bundle();
+        args.putString("message", message);
+        f.setArguments(args);
+
+        return f;
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,12 +89,14 @@ public class DetailFragment extends Fragment {
                 dialog = getArguments().getBoolean("dialog");
             }
             if(dialog){
-                MessageDialogFragment dialogFragment = new MessageDialogFragment();
+//                MessageDialogFragment dialogFragment = new MessageDialogFragment();
 
-                Bundle args = new Bundle();
-                args.putString("message", getArguments().getString("message"));
+                MessageDialogFragment dialogFragment = newInstance(getArguments().getString("message"));
 
-                dialogFragment.setArguments(args);
+//                Bundle args = new Bundle();
+//                args.putString("message", getArguments().getString("message"));
+//
+//                dialogFragment.setArguments(args);
                 dialogFragment.show(fm, "");
             }
 
