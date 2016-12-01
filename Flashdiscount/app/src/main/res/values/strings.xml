@@ -22,4 +22,11 @@
     <string name="temp_name_menu">Log in to</string>
     <string name="temp_email_nav">see your info here</string>
     <string name="all_notifications">All notifications</string>
+    <string name="camera_explanation">Camera permission is needed to scan the QR code.</string>
+    <string name="camera_success">Click \"Claim\" again to claim your discount</string>
+    <string name="location_explanation">You want the discounts arround you, don\'t you?</string>
+    <string name="gps_usage_explanation">GPS required to show discounts in the neighbourhood</string>
+    <string name="gps_settings_title">Turn on GPS in the settings menu?</string>
+    <string name="no_permission_camera">We need the camera to scan a QR code :(</string>
+    <string name="no_permission_location">oh noes, now we\'ll just show you Amsterdam :(</string>
 </resources>

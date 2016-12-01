@@ -46,83 +46,73 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = MapViewFragment.class.getSimpleName();
-    MapView mMapView;
+    private MapView mapView;
     private GoogleMap googleMap;
-    private Context context;
     private Location location;
-    private GpsService gpsService;
+    private GpsService mGpsService;
     private BottomSheetBehavior mBottomSheetBehavior1;
-    private BottomSheetBehavior mBottomSheetBehavior2;
-    private ListView listView;
+//    private BottomSheetBehavior mBottomSheetBehavior2;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mGpsService = new GpsService(getActivity());
 
+        location = new Location("");
+        location.setLatitude(52.375368);
+        location.setLongitude(4.894486);
 
-        gpsService = new GpsService(getActivity());
-        context = getActivity();
-
-        if (gpsService.canGetLocation()) {
-            location = new Location(gpsService.getLocation());
-
-            location.setLatitude(gpsService.getLatitude());
-            location.setLongitude(gpsService.getLongitude());
-        } else {
-            location = new Location("");
-            location.setLatitude(52.375368);
-            location.setLongitude(4.894486);
+        if (!mGpsService.checkPermission()) {
+            mGpsService.askLocationPermission();
         }
 
     }
 
-
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
+    public void onStart() {
+        super.onStart();
 
         FragmentManager fm = getFragmentManager();
-
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         if (!sharedPref.contains("idToken") && !((MainActivity) getActivity()).hasShownLogin) {
             LoginDialogFragment dialogFragment = new LoginDialogFragment();
             dialogFragment.show(fm, "Login Fragment");
             ((MainActivity) getActivity()).hasShownLogin = true;
         }
+    }
 
+    @Override
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+        final View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
-        mMapView = (MapView) rootView.findViewById(R.id.mapView);
-        mMapView.onCreate(savedInstanceState);
+        mapView = (MapView) rootView.findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
 
-        mMapView.onResume();
+        mapView.onResume();
 
         //View bottomSheet = getView().findViewById(R.id.bottom_sheet);
         final View bottomSheet = rootView.findViewById(R.id.bottom_sheet);
-        final View bottomSheetMultiple = rootView.findViewById(R.id.bottom_sheet_multiple_discounts);
+//        final View bottomSheetMultiple = rootView.findViewById(R.id.bottom_sheet_multiple_discounts);
 
         mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
-       // mBottomSheetBehavior2 = BottomSheetBehavior.from(bottomSheetMultiple);
+        // mBottomSheetBehavior2 = BottomSheetBehavior.from(bottomSheetMultiple);
 
-
-        listView = (ListView) rootView.findViewById(R.id.discount_list_view);
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        mMapView.getMapAsync(new OnMapReadyCallback() {
+        mapView.getMapAsync(new OnMapReadyCallback() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
-                if (gpsService.checkWriteExternalPermission()) {
+                if (mGpsService.checkPermission()) {
                     googleMap.setMyLocationEnabled(true);
-                } else {
-                    Log.w(TAG, "No checkWriteExternalPermission()");
                 }
 
                 LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
@@ -135,7 +125,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                     public boolean onMarkerClick(Marker marker) {
                         final Establishment establishment = (Establishment) marker.getTag();
                         final ListView listView = (ListView) rootView.findViewById(R.id.discount_list_view);
-                        BottomDiscountAdapter adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
+                        BottomDiscountAdapter adapter = new BottomDiscountAdapter(establishment.getDiscounts(), getActivity());
 
                         if (mBottomSheetBehavior1.getState() == BottomSheetBehavior.STATE_EXPANDED) {
                             TextView title = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
@@ -193,32 +183,40 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         return rootView;
     }
 
-
-
+    private void updateLocation() {
+        location = (mGpsService.getLocation() == null) ? location : mGpsService.getLocation();
+    }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        mMapView.onResume();
+        mapView.onResume();
+
+        updateLocation();
+        if (location != null && googleMap != null) {
+            LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mMapView.onPause();
+        mapView.onPause();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mMapView.onDestroy();
+        mapView.onDestroy();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mMapView.onLowMemory();
+        mapView.onLowMemory();
     }
 
     @Override
@@ -237,9 +235,9 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     }
 
     protected Marker createMarker(Establishment establishment) {
-            Marker marker = googleMap.addMarker(new MarkerOptions().position(establishment.getLocation()).anchor(0.5f, 0.5f));
-            marker.setTag(establishment);
-            return marker;
+        Marker marker = googleMap.addMarker(new MarkerOptions().position(establishment.getLocation()).anchor(0.5f, 0.5f));
+        marker.setTag(establishment);
+        return marker;
     }
 
     private void getEstablishmentsFromAPI() {
@@ -254,7 +252,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     }
 
 
-
+    @Deprecated
     private void goToDetailView(Establishment establishment) {
 
         Bundle arguments = new Bundle();
