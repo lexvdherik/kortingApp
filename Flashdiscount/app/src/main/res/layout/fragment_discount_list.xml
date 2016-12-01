@@ -14,9 +14,8 @@
             android:id="@+id/expListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:divider="@color/colorPrimaryLight"
-            android:dividerHeight="2px"/>
+            android:groupIndicator="@null"
+            android:paddingTop="5dp"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
