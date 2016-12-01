@@ -91,6 +91,7 @@ class CustomRequest<T> extends Request<T> {
         Log.e(TAG, "message: " + resp.get("message").toString().replace("\"", ""));
 
         if (mClass == null && resp.get("message").toString().replace("\"", "").equals("OK")) {
+
             return Response.success((T) response, HttpHeaderParser.parseCacheHeaders(response));
         } else if (!resp.get("message").toString().replace("\"", "").equals("OK")) {
             return Response.error(new JsonRpcRemoteException(resp.get("message").toString()));
