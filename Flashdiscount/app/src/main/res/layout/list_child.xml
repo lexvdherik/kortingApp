@@ -24,28 +24,30 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:layout_marginStart="12dp"
-        android:layout_marginEnd="15dp"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/list_icon"
-        android:layout_centerInParent="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Description"
         android:id="@+id/description"
         android:ellipsize="end"
         android:maxLines="1"
-        />
+        android:layout_below="@+id/time_remaining"
+        android:layout_alignStart="@+id/list_icon"
+        android:layout_marginStart="80dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="10 min"
         android:id="@+id/time_remaining"
-        android:layout_alignParentEnd="true"
         android:ellipsize="end"
-        android:maxLines="1"/>
+        android:maxLines="1"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="23dp"/>
 
 </RelativeLayout>
