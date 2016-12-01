@@ -48,17 +48,15 @@ public class APIRequest {
     private static final String METHOD_POST_USER = "auth/login";
     private static final String METHOD_SET_SETTINGS = "favoriteestablishment/setnotifications";
 
-    private static APIRequest sInstance;
     private final RequestQueue mQueue;
-    private Context mContext;
-    private String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
-    GoogleApiClient mGoogleApiClient;
+    private static Context mContext;
+    private static APIRequest sInstance;
 
     private GoogleSignInAccount acct;
 
     private APIRequest(Context context) {
-        this.mContext = context;
-        this.mQueue = Volley.newRequestQueue(context);
+        mContext = context;
+        mQueue = Volley.newRequestQueue(context);
     }
 
     public static APIRequest getInstance(Context context) {
@@ -173,14 +171,15 @@ public class APIRequest {
         return currentDate.compareTo(expireDate) == -1;
     }
 
-    public String refreshToken() {
+    private String refreshToken() {
 
+        String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(token)
                 .requestEmail()
                 .build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(mContext)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
