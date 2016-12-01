@@ -52,7 +52,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private Location location;
     private GpsService gpsService;
     private BottomSheetBehavior mBottomSheetBehavior1;
-    private BottomSheetBehavior mBottomSheetBehavior2;
     private ListView listView;
     private TextView bottomSheettitle;
     private TextView bottomSheetdescription;
@@ -65,8 +64,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
 
         gpsService = new GpsService(getActivity());
         context = getActivity();
@@ -178,9 +175,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
         listView = (ListView) rootView.findViewById(R.id.discount_list_view);
     }
-
-
-
 
 
     @Override

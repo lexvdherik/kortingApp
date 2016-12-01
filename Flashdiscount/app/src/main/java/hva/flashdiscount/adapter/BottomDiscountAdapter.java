@@ -57,8 +57,6 @@ public class BottomDiscountAdapter extends ArrayAdapter<Discount> {
         description.setText(discount.getDescription());
 
 
-
-
         return view;
     }
 //
