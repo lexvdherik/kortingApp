@@ -20,7 +20,6 @@ import com.google.zxing.Result;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.R;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
@@ -86,7 +85,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));
         arguments.putInt("discountPostion", discountPostion);
-        arguments.putBoolean("dialog",true);
+        arguments.putBoolean("dialog", true);
         arguments.putBoolean("success", success);
         arguments.putString("message", message);
         DetailFragment detailFragment = new DetailFragment();
@@ -111,7 +110,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         @Override
         public void onResponse(Object response) {
             NetworkResponse response1 = (NetworkResponse) response;
-            Log.e(TAG,"blah = " + response1.headers);
+            Log.e(TAG, "blah = " + response1.headers);
             goToDetailView(establishment, dicountPosition, true, "SUCCESS");
         }
 
