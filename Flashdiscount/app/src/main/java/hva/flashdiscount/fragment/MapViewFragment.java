@@ -133,27 +133,9 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
                     @Override
                     public boolean onMarkerClick(Marker marker) {
-                        final Establishment establishment = (Establishment) marker.getTag();
-                        final ListView listView = (ListView) rootView.findViewById(R.id.discount_list_view);
+                        Establishment establishment = (Establishment) marker.getTag();
+                        ListView listView = (ListView) rootView.findViewById(R.id.discount_list_view);
                         BottomDiscountAdapter adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
-
-                        if (mBottomSheetBehavior1.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                            TextView title = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
-                            title.setText(establishment.getCompany().getName());
-
-                        } else if (mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                            mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
-
-                            TextView title = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
-                            TextView description = (TextView) rootView.findViewById(R.id.description);
-
-
-                            title.setText(establishment.getCompany().getName());
-                            description.setText(String.valueOf(establishment.getDiscounts().size()));
-
-                        } else {
-                            mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        }
 
                         if (establishment.getDiscounts().size() > 1) {
 
@@ -174,7 +156,30 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                             listView.setAdapter(adapter);
                         }
 
-                        return true;
+                        if (mBottomSheetBehavior1.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                            mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            TextView title = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
+                            title.setText(establishment.getCompany().getName());
+  //                          TextView description = (TextView) rootView.findViewById(R.id.description_bottom_sheet);
+//                            description.setText(establishment.getDiscounts().get(0).getDescription());
+                            mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
+                            return true;
+
+                        } else if (mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+                            mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+                            TextView title = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
+                            TextView description = (TextView) rootView.findViewById(R.id.description);
+
+                            title.setText(establishment.getCompany().getName());
+                            description.setText(String.valueOf(establishment.getDiscounts().size()));
+                            return true;
+                        } else {
+                            mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            return false;
+                        }
+
+                     //   return true;
                     }
                 });
 
