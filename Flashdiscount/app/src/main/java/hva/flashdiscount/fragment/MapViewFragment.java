@@ -54,6 +54,8 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private BottomSheetBehavior mBottomSheetBehavior1;
     private BottomSheetBehavior mBottomSheetBehavior2;
     private ListView listView;
+    private TextView bottomSheettitle;
+    private TextView bottomSheetdescription;
 
 
     @Override
@@ -133,12 +135,15 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
                     @Override
                     public boolean onMarkerClick(Marker marker) {
+
+                        Log.e(TAG, "onMarkerClickListener");
+
                         Establishment establishment = (Establishment) marker.getTag();
                         ListView listView = (ListView) rootView.findViewById(R.id.discount_list_view);
                         BottomDiscountAdapter adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
-
+                        mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         if (establishment.getDiscounts().size() > 1) {
-
+                            Log.e(TAG, "Discount Size > 1");
                             listView.setNestedScrollingEnabled(true);
                             listView.setAdapter(adapter);
 
@@ -152,34 +157,28 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 //                            });
 
                         } else {
+                            Log.e(TAG, "Discount Size only 1");
                             adapter.clear();
                             listView.setAdapter(adapter);
                         }
 
+                        if (bottomSheettitle == null) {
+                            bottomSheettitle = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
+                            bottomSheetdescription = (TextView) rootView.findViewById(R.id.description);
+                        }
+                        
                         if (mBottomSheetBehavior1.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                            mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                            TextView title = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
-                            title.setText(establishment.getCompany().getName());
-  //                          TextView description = (TextView) rootView.findViewById(R.id.description_bottom_sheet);
-//                            description.setText(establishment.getDiscounts().get(0).getDescription());
                             mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
-                            return true;
-
+                            bottomSheettitle.setText(establishment.getCompany().getName());
                         } else if (mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
                             mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
-
-                            TextView title = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
-                            TextView description = (TextView) rootView.findViewById(R.id.description);
-
-                            title.setText(establishment.getCompany().getName());
-                            description.setText(String.valueOf(establishment.getDiscounts().size()));
-                            return true;
+                            bottomSheettitle.setText(establishment.getCompany().getName());
+                            bottomSheetdescription.setText(String.valueOf(establishment.getDiscounts().size()));
                         } else {
                             mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                            return false;
                         }
 
-                     //   return true;
+                        return true;
                     }
                 });
 
@@ -187,6 +186,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(LatLng latLng) {
+                        Log.e(TAG, "onMapClick");
                         mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     }
                 });
@@ -255,6 +255,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     @Override
     public boolean onMarkerClick(Marker marker) {
+        Log.e(TAG, "OnMarkerClick");
         return false;
     }
 
