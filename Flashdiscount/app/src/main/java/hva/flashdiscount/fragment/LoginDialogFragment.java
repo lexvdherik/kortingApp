@@ -23,7 +23,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.R;
@@ -94,8 +93,6 @@ public class LoginDialogFragment extends DialogFragment {
             acct = result.getSignInAccount();
             if (acct != null) {
                 postUser(acct.getIdToken());
-                Log.e(TAG, "google id: " + acct.getIdToken().toString());
-                Log.e(TAG, "firebase id: " + FirebaseInstanceId.getInstance().getToken());
             }
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());

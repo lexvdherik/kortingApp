@@ -47,11 +47,11 @@ public class APIRequest {
     private static final String METHOD_CLAIM_DISCOUNT = "discount/claim";
     private static final String METHOD_POST_USER = "auth/login";
     private static final String METHOD_SET_SETTINGS = "favoriteestablishment/setnotifications";
-    private static final String METHOD_POST_FIID = "device/token";//TODO: finish METHOD_POST_FIID
+    private static final String METHOD_POST_FIID = "device/token";
+
     private static APIRequest sInstance;
     private final RequestQueue mQueue;
-    private static Context mContext;
-    private static APIRequest sInstance;
+    private Context mContext;
 
     private GoogleSignInAccount acct;
 
@@ -92,9 +92,10 @@ public class APIRequest {
         return true;
     }
 
-    public boolean postFirebaseIID(Response.Listener<String> responseListener, Response.ErrorListener errorListener, String fiidToken) {
+    public boolean postDeviceToken(Response.Listener<String> responseListener, Response.ErrorListener errorListener, String idToken, String deviceToken) {
         Map<String, Object> params = new HashMap<>();
-        params.put("fiidToken", fiidToken);
+        params.put("deviceToken", deviceToken);
+        params.put("idToken", idToken);
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_FIID, params,
                 responseListener, errorListener, Token.class).setTag(METHOD_POST_FIID));
