@@ -22,6 +22,7 @@ import hva.flashdiscount.R;
 
 public class FcmService extends FirebaseMessagingService {
     private static final String TAG = "FcmService";
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         //Log data to Log Cat
