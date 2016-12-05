@@ -70,18 +70,18 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        FragmentManager fm = getFragmentManager();
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        if (!sharedPref.contains("idToken") && !((MainActivity) getActivity()).hasShownLogin) {
-            LoginDialogFragment dialogFragment = new LoginDialogFragment();
-            dialogFragment.show(fm, "Login Fragment");
-            ((MainActivity) getActivity()).hasShownLogin = true;
-        }
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//
+//        FragmentManager fm = getFragmentManager();
+//        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+//        if (!sharedPref.contains("idToken") && !((MainActivity) getActivity()).hasShownLogin) {
+//            LoginDialogFragment dialogFragment = new LoginDialogFragment();
+//            dialogFragment.show(fm, "Login Fragment");
+//            ((MainActivity) getActivity()).hasShownLogin = true;
+//        }
+//    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
