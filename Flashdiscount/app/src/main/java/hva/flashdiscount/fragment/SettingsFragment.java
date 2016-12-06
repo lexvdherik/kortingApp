@@ -27,6 +27,7 @@ public class SettingsFragment extends Fragment {
     public static Favorite[] companySettings;
     private SettingsAdapter settingsAdapter;
     private Switch swMain;
+    private int checked;
 
     private static final String TAG = SettingsFragment.class.getSimpleName();
 
@@ -88,10 +89,12 @@ public class SettingsFragment extends Fragment {
 
     public void setAllOptions(Boolean checkState) {
 
-        int checked = 0;
+
 
         if (checkState) {
             checked = 1;
+        } else {
+            checked = 0;
         }
 
         for (Favorite item : companySettings) {
