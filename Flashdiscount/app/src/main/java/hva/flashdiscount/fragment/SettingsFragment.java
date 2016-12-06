@@ -26,6 +26,7 @@ public class SettingsFragment extends Fragment {
 
     public static Favorite[] companySettings;
     private SettingsAdapter settingsAdapter;
+    private Switch swMain;
 
     private static final String TAG = SettingsFragment.class.getSimpleName();
 
@@ -61,7 +62,7 @@ public class SettingsFragment extends Fragment {
 
         lv.setAdapter(settingsAdapter);
 
-        final Switch swMain = (Switch) rootView.findViewById(R.id.switch_newsletter);
+        swMain = (Switch) rootView.findViewById(R.id.switch_newsletter);
         swMain.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -124,6 +125,13 @@ public class SettingsFragment extends Fragment {
 
                 final ListView lv = (ListView) getActivity().findViewById(R.id.notification_list);
                 companySettings = favorites;
+                swMain.setChecked(true);
+                for (Favorite item : companySettings) {
+                    if (item.getNotification() == 0) {
+                        swMain.setChecked(false);
+                        break;
+                    }
+                }
                 settingsAdapter = new SettingsAdapter(getActivity(), favorites);
 
                 lv.setAdapter(settingsAdapter);

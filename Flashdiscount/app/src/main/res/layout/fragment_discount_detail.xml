@@ -180,9 +180,9 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/company_name"
                         android:ellipsize="end"
-                        android:maxLines="1"
                         android:padding="@dimen/activity_horizontal_margin"
-                        android:text="long description here"
+                        android:maxLines="5"
+                        android:text="long description here sdsadasdsadsa asdasdas asdasdasd asdasdasdasd asdasdsad"
                         android:textAppearance="?android:attr/textAppearance"
                         android:textColor="@color/textColorSecondary"/>
                 </RelativeLayout>

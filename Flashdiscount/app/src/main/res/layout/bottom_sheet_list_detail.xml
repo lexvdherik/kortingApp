@@ -48,8 +48,11 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="14dp"
                 android:layout_toEndOf="@+id/list_icon"
+                android:layout_toStartOf="@+id/time_remaining"
+                android:maxLines="5"
                 android:text="Description"
                 android:textAppearance="?android:attr/textAppearance"/>
+
 
 
         </RelativeLayout>
