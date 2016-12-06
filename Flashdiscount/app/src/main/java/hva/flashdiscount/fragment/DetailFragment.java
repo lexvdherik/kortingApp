@@ -96,6 +96,7 @@ public class DetailFragment extends Fragment {
         }
 
 
+
     }
 
     private void setFavorite(String idToken, String establishmentId) {

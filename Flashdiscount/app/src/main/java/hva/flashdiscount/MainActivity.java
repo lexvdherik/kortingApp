@@ -35,6 +35,7 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 
 import net.steamcrafted.materialiconlib.MaterialMenuInflater;
 
+import hva.flashdiscount.fragment.DetailFragment;
 import hva.flashdiscount.fragment.LoginDialogFragment;
 import hva.flashdiscount.fragment.SettingsFragment;
 import hva.flashdiscount.fragment.TabFragment;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity
     public boolean hasShownLogin = false;
     private Context contextOfApplication;
     private boolean loggedIn;
+    private int tabPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,14 +165,30 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+
+        FragmentManager fm = getSupportFragmentManager();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
-            getSupportFragmentManager().popBackStack();
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TabFragment()).commit();
 
+            try {
+                DetailFragment df = (DetailFragment) fm.findFragmentByTag("detailfrag");
+
+                if (df.isVisible()) {
+                    getSupportFragmentManager().popBackStack();
+
+                    TabFragment tb = new TabFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, tb).commit();
+
+                } else {
+                    super.onBackPressed();
+                }
+
+            } catch (NullPointerException e) {
+                super.onBackPressed();
+            }
         }
     }
 

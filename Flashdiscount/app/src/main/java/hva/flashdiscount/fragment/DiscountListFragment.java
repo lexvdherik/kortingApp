@@ -1,6 +1,8 @@
 package hva.flashdiscount.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -68,6 +70,12 @@ public class DiscountListFragment extends Fragment {
     }
 
     private void goToDetailView(Establishment establishment, int discountPostion) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("tab_position", 1);
+        editor.apply();
+
+
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));
         arguments.putInt("discountPostion", discountPostion);
@@ -78,7 +86,7 @@ public class DiscountListFragment extends Fragment {
         detailFragment.setArguments(arguments);
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, detailFragment)
+                .replace(R.id.fragment_container, detailFragment, "detailfrag")
                 .addToBackStack(null)
                 .commit();
     }

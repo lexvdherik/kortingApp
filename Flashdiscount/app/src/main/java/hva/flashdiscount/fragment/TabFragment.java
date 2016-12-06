@@ -1,6 +1,8 @@
 package hva.flashdiscount.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 
 import android.support.v4.app.Fragment;
@@ -16,13 +18,18 @@ import hva.flashdiscount.adapter.TabPagerAdapter;
 public class TabFragment extends Fragment {
 
     private static final String TAG = TabFragment.class.getSimpleName();
-
+    private int tabPosition;
     public TabFragment() {
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        tabPosition = sharedPref.getInt("tab_position", 0);
+
     }
 
     @Override
@@ -40,6 +47,7 @@ public class TabFragment extends Fragment {
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.clearOnTabSelectedListeners();
+        viewPager.setCurrentItem(tabPosition);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
