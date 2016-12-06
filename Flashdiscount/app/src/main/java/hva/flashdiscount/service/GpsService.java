@@ -1,150 +1,171 @@
 package hva.flashdiscount.service;
 
 import android.Manifest;
-import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Build;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.IBinder;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.widget.Toast;
+import android.support.v4.app.ActivityCompat;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderApi;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
+public class GpsService extends Service implements LocationListener {
 
-import hva.flashdiscount.MainActivity;
-import hva.flashdiscount.R;
+    private final Context mContext;
+    boolean isGPSEnabled = false;
+    boolean isNetworkEnabled = false;
+    boolean canGetLocation = false;
+    Location location;
+    double latitude;
+    double longitude;
 
-import static android.os.Binder.getCallingPid;
-import static android.os.Binder.getCallingUid;
+    private static final int REQUEST_CODE_PERMISSION = 1;
+    private String mPermissionFine = Manifest.permission.ACCESS_FINE_LOCATION;
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
 
-/**
- * Class to simplify GPS interactions.
- */
-public class GpsService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+    protected LocationManager locationManager;
 
-    private static final String TAG = GpsService.class.getSimpleName();
-
-    private final FragmentActivity activity;
-    private GoogleApiClient googleApiClient;
-    private Location location;
-
-
-    private static final long TIME_BW_UPDATES = 1000 * 30; // 0,5 minute
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60; // 1 minute
-
-    private FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
-    private LocationRequest mLocationRequest;
-
-
-    /**
-     * Constructor.
-     *
-     * @param fragmentActivity {@link Context} application context
-     */
-    public GpsService(FragmentActivity fragmentActivity) {
-        this.activity = fragmentActivity;
+    public GpsService(Context context) {
+        this.mContext = context;
+        getLocation();
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        googleApiClient.disconnect();
+    public boolean checkWriteExternalPermission() {
+        int res = mContext.checkCallingOrSelfPermission(mPermissionFine);
+        return (res == PackageManager.PERMISSION_GRANTED);
     }
 
-    private void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setFastestInterval(MIN_TIME_BW_UPDATES);
-        mLocationRequest.setInterval(TIME_BW_UPDATES);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-    }
-
-    public boolean checkPermission() {
-        int fine;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            fine = activity.getApplicationContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-        } else {
-            fine = activity.getApplicationContext().checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, getCallingPid(), getCallingUid());
-        }
-        return (fine == PackageManager.PERMISSION_GRANTED);
-    }
-
-    /**
-     * Request permission for location.
-     */
-    @TargetApi(Build.VERSION_CODES.M)
     public void askLocationPermission() {
-        if (activity.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            Toast.makeText(activity.getApplicationContext().getApplicationContext(), R.string.location_explanation, Toast.LENGTH_LONG).show();
-            activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MainActivity.REQUEST_LOCATION_PERMISSION);
-        } else {
-            activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MainActivity.REQUEST_LOCATION_PERMISSION);
+        if (!ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, mPermissionFine)) {
+            ActivityCompat.requestPermissions((Activity) mContext, new String[]{mPermissionFine}, REQUEST_CODE_PERMISSION);
         }
     }
 
-
-    /**
-     * Get the users location.
-     *
-     * @return null|{@link Location} Location to use or null in case of failure
-     */
-    @Nullable
     public Location getLocation() {
-        if (!checkPermission()) {
-            Log.e(TAG, "No location permission when requesting location");
-            return null;
+        try {
+            if (checkWriteExternalPermission()) {
+                locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+                isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+                if (isGPSEnabled && isNetworkEnabled) {
+                    this.canGetLocation = true;
+
+                    locationManager.requestLocationUpdates(
+                            LocationManager.NETWORK_PROVIDER,
+                            MIN_TIME_BW_UPDATES,
+                            MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                    if (locationManager != null) {
+                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        if (location != null) {
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                        }
+                    }
+
+                    if (location == null) {
+                        locationManager.requestLocationUpdates(
+                                LocationManager.GPS_PROVIDER,
+                                MIN_TIME_BW_UPDATES,
+                                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                        if (locationManager != null) {
+                            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            if (location != null) {
+                                latitude = location.getLatitude();
+                                longitude = location.getLongitude();
+                            }
+                        }
+                    }
+                } else {
+                    showSettingsAlert();
+                }
+            } else {
+                askLocationPermission();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        createLocationRequest();
-
-        if (googleApiClient == null) {
-            googleApiClient = new GoogleApiClient.Builder(activity)
-                    .addApi(LocationServices.API)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .build();
-
-            googleApiClient.connect();
-        }
-
-        location = fusedLocationProviderApi.getLastLocation(googleApiClient);
 
         return location;
     }
 
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        if (!checkPermission()) {
-            //Permissions still valid
+    public double getLatitude() {
+        if (location != null) {
+            latitude = location.getLatitude();
         }
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                googleApiClient, mLocationRequest, this);
-        LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        return latitude;
     }
 
-    @Override
-    public void onConnectionSuspended(int i) {
+    public double getLongitude() {
+        if (location != null) {
+            longitude = location.getLongitude();
+        }
 
+        return longitude;
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    public boolean canGetLocation() {
+        return this.canGetLocation;
+    }
 
+    public void showSettingsAlert() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        alertDialog.setTitle("Turn on GPS in the settings menu?");
+        alertDialog.setMessage("GPS required to show discounts in the neighbourhood");
+        //alertDialog.setIcon(R.drawable.delete);
+
+        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                mContext.startActivity(intent);
+            }
+        });
+
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        this.location = location;
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
     }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
 }

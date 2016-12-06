@@ -47,10 +47,11 @@ public class APIRequest {
     private static final String METHOD_CLAIM_DISCOUNT = "discount/claim";
     private static final String METHOD_POST_USER = "auth/login";
     private static final String METHOD_SET_SETTINGS = "favoriteestablishment/setnotifications";
+    private static final String METHOD_POST_FIID = "device/token";
 
-    private final RequestQueue mQueue;
-    private static Context mContext;
     private static APIRequest sInstance;
+    private final RequestQueue mQueue;
+    private Context mContext;
 
     private GoogleSignInAccount acct;
 
@@ -87,6 +88,17 @@ public class APIRequest {
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_USER, params,
                 responseListener, errorListener, Token.class).setTag(METHOD_POST_USER));
+
+        return true;
+    }
+
+    public boolean postDeviceToken(Response.Listener<String> responseListener, Response.ErrorListener errorListener, String idToken, String deviceToken) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("deviceToken", deviceToken);
+        params.put("idToken", idToken);
+
+        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_FIID, params,
+                responseListener, errorListener, Token.class).setTag(METHOD_POST_FIID));
 
         return true;
     }
@@ -199,6 +211,4 @@ public class APIRequest {
 
         return acct.getIdToken();
     }
-
-
 }

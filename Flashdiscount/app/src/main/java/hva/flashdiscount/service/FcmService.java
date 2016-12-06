@@ -8,6 +8,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+//import android.app.Service;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -21,6 +22,7 @@ import hva.flashdiscount.R;
 
 public class FcmService extends FirebaseMessagingService {
     private static final String TAG = "FcmService";
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         //Log data to Log Cat

@@ -123,6 +123,8 @@ public class LoginDialogFragment extends DialogFragment {
             Token t = new Token(getContext());
             t.setExpireDate(token.getExpireDate());
 
+            Log.e(TAG, "expireeeee = " + token.getExpireDate());
+
             User user = new User(acct);
             ((MainActivity) getActivity()).user = user;
 
