@@ -47,8 +47,10 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/flextitel"
                 android:layout_toEndOf="@+id/list_icon"
+                android:layout_toStartOf="@+id/claims_remaining"
                 android:layout_below="@+id/company_name"
                 android:text="Aanbieding"
+                android:maxLines="5"
                 />
 
 

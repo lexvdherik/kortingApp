@@ -11,6 +11,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,19 +81,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//
-//        FragmentManager fm = getFragmentManager();
-//        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-//        if (!sharedPref.contains("idToken") && !((MainActivity) getActivity()).hasShownLogin) {
-//            LoginDialogFragment dialogFragment = new LoginDialogFragment();
-//            dialogFragment.show(fm, "Login Fragment");
-//            ((MainActivity) getActivity()).hasShownLogin = true;
-//        }
-//    }
-
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
@@ -141,10 +129,17 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                         establishment = (Establishment) marker.getTag();
                         adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
                         mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        if (establishment.getDiscounts().size() > 0) {
+                        CardView detailLayout = (CardView) rootView.findViewById(R.id.card_view_discount_detail);
+                        if (establishment.getDiscounts().size() > 1) {
+                            detailLayout.setVisibility(View.GONE);
+                            listView.setNestedScrollingEnabled(true);
+                            listView.setAdapter(adapter);
+                        } else if (establishment.getDiscounts().size() == 1) {
+                            detailLayout.setVisibility(View.VISIBLE);
                             listView.setNestedScrollingEnabled(true);
                             listView.setAdapter(adapter);
                         } else {
+                            detailLayout.setVisibility(View.GONE);
                             adapter.clear();
                             listView.setAdapter(adapter);
                         }

@@ -3,7 +3,7 @@
                                             xmlns:app="http://schemas.android.com/apk/res-auto"
                                             android:id="@+id/bottom_sheet"
                                             android:layout_width="match_parent"
-                                            android:layout_height="300dp"
+                                            android:layout_height="wrap_content"
                                             android:layout_gravity="bottom"
                                             android:background="@color/wallet_bright_foreground_holo_dark"
                                             android:orientation="vertical"
@@ -13,7 +13,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -178,8 +178,9 @@
         <ListView
             android:id="@+id/discount_list_view"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:layout_below="@+id/bottom_sheet_card"/>
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bottom_sheet_card"
+            />
 
 
     </RelativeLayout>

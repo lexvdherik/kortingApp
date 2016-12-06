@@ -46,9 +46,11 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/description"
                 android:textAppearance="?android:attr/textAppearance"
-                android:text="Description"
+                android:text="Description dsfdsf sdfsdf sdfsdf sdfsdfds dsfsdf sdfsdf dsfsdf sdfsdfds sdfsdf"
+                android:maxLines="5"
                 android:layout_alignParentTop="true"
                 android:layout_toEndOf="@+id/list_icon"
+                android:layout_toStartOf="@+id/time_remaining"
                 android:layout_marginStart="14dp"/>
 
 
