@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,10 +36,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
 import hva.flashdiscount.MainActivity;
-import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.BottomDiscountAdapter;
 import hva.flashdiscount.model.Establishment;
+import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.service.GpsService;
 
 
@@ -144,6 +145,13 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                         if (establishment.getDiscounts().size() > 0) {
                             listView.setNestedScrollingEnabled(true);
                             listView.setAdapter(adapter);
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    goToDetailView(establishment, i);
+                                }
+                            });
+
                         } else {
                             adapter.clear();
                             listView.setAdapter(adapter);
@@ -247,10 +255,11 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
 
 
-    private void goToDetailView(Establishment establishment) {
+    private void goToDetailView(Establishment establishment, int discountPosition) {
 
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));
+        arguments.putInt("discountPosition", discountPosition);
 
         DetailFragment detailFragment = new DetailFragment();
 
