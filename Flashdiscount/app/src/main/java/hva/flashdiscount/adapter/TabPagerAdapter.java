@@ -8,7 +8,7 @@ import hva.flashdiscount.fragment.DiscountListFragment;
 import hva.flashdiscount.fragment.MapViewFragment;
 
 /**
- * Return tabs to display
+ * Return tabs to display.
  *
  * @author Laptop_Ezra
  * @since 12-10-2016

@@ -1,5 +1,6 @@
 package hva.flashdiscount.model;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.text.DateFormat;
@@ -7,6 +8,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import hva.flashdiscount.R;
 
 class DateTime {
     private Calendar endTime;
@@ -37,21 +40,26 @@ class DateTime {
         return currentTime.get(Calendar.DATE);
     }
 
-    String minutesBetween() {
+    String minutesBetween(Context context) {
         Long end = this.currentTime.getTimeInMillis();
         Long start = this.endTime.getTimeInMillis();
         Long minutesBetween = (start - end) / 60000;
-        Long hours;
-        Long minutes;
-        String mins = "";
+        Long hours, minutes;
+        if (minutesBetween > 1440) {
+            return "24+ " + context.getString(R.string.hour_plural);
+        }
+
         if (minutesBetween >= 60) {
             hours = minutesBetween / 60;
             minutes = minutesBetween % 60;
-            mins = hours.toString() + " uur " + minutes.toString() + " min";
-        } else {
-            mins = minutesBetween.toString() + " min";
+            return hours.toString()
+                    + " " + ((hours > 1) ? context.getString(R.string.hour_plural) : context.getString(R.string.hour))
+                    + " " + minutes.toString()
+                    + " " + ((minutes > 1) ? context.getString(R.string.minutes_plural) : context.getString(R.string.minutes));
         }
-        return mins;
+        return minutesBetween.toString()
+                + " " + ((minutesBetween > 1) ? context.getString(R.string.minutes_plural) : context.getString(R.string.minutes));
+
     }
 
 }

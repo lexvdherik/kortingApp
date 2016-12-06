@@ -25,13 +25,12 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
 
-
 import hva.flashdiscount.MainActivity;
-import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.R;
-import hva.flashdiscount.utils.VolleySingleton;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
+import hva.flashdiscount.network.APIRequest;
+import hva.flashdiscount.utils.VolleySingleton;
 
 
 public class DetailFragment extends Fragment {
@@ -74,56 +73,35 @@ public class DetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FragmentManager fm = getFragmentManager();
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
         if (getArguments() != null) {
-            if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-            }
-
-            if (getArguments() != null) {
-                String gson = getArguments().getString("establishment");
-                discountPostion = getArguments().getInt("discountPosition");
-                establishment = new Gson().fromJson(gson, Establishment.class);
-                discount = establishment.getDiscounts().get(getArguments().getInt("discountPosition"));
-                success = getArguments().getBoolean("success");
-                dialog = getArguments().getBoolean("dialog");
-            }
-            if (dialog) {
-                MessageDialogFragment dialogFragment = newInstance(getArguments().getString("message"));
+            String gson = getArguments().getString("establishment");
+            discountPostion = getArguments().getInt("discountPosition");
+            establishment = new Gson().fromJson(gson, Establishment.class);
+            discount = establishment.getDiscounts().get(getArguments().getInt("discountPosition"));
+            success = getArguments().getBoolean("success");
+            dialog = getArguments().getBoolean("dialog");
+        }
+        if (dialog) {
+            MessageDialogFragment dialogFragment = newInstance(getArguments().getString("message"));
 
 //                Bundle args = new Bundle();
 //                args.putString("message", getArguments().getString("message"));
 //
 //                dialogFragment.setArguments(args);
-                dialogFragment.show(fm, "");
-            }
-
-
+            dialogFragment.show(fm, "");
         }
+
+
     }
 
     private void setFavorite(String idToken, String establishmentId) {
         System.gc();
         DetailFragment.SetFavoriteResponseListener listener = new DetailFragment.SetFavoriteResponseListener();
         APIRequest.getInstance(getActivity()).setFavorite(listener, listener, idToken, establishmentId);
-    }
-
-
-    public class SetFavoriteResponseListener implements Response.Listener, Response.ErrorListener {
-
-        @Override
-        public void onResponse(Object response) {
-
-        }
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.e(TAG + " content", " joil" + error.getMessage());
-            if (error instanceof NoConnectionError) {
-                Log.w(TAG, "No connection!");
-            }
-        }
-
     }
 
     @Override
@@ -145,9 +123,7 @@ public class DetailFragment extends Fragment {
             public void onClick(View v) {
 
 
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(
-                        ((MainActivity) getActivity()).getContextOfApplication()
-                );
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
                 String idToken = sharedPref.getString("idToken", "");
                 setFavorite(idToken, String.valueOf(establishment.getEstablishmentId()));
             }
@@ -209,13 +185,8 @@ public class DetailFragment extends Fragment {
     public void setDiscountText() {
         Log.i(TAG, discount.toString());
         claimsLeft.setText(Integer.toString(discount.getUserLimit()));
-        timeLeft.setText(discount.getTimeRemaining());
+        timeLeft.setText(discount.getTimeRemaining(getContext()));
         discountDescription.setText(discount.getDescription());
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
     private void goToScanner(Establishment establishment, int discountPostion) {
@@ -232,5 +203,27 @@ public class DetailFragment extends Fragment {
                 .replace(R.id.fragment_container, scannerFragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
+
+    public class SetFavoriteResponseListener implements Response.Listener, Response.ErrorListener {
+
+        @Override
+        public void onResponse(Object response) {
+
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.e(TAG + " content", " joil" + error.getMessage());
+            if (error instanceof NoConnectionError) {
+                Log.w(TAG, "No connection!");
+            }
+        }
+
     }
 }

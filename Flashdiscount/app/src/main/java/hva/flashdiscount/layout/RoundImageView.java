@@ -23,9 +23,7 @@ public class RoundImageView extends ImageView {
     public RoundImageView(Context context) {
         super(context);
         drawable = getDrawable();
-        if (drawable instanceof BitmapDrawable) {
-
-        } else {
+        if (!(drawable instanceof BitmapDrawable)) {
             bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
                     drawable.getIntrinsicHeight(), Config.ARGB_8888);
             c = new Canvas(bitmap);
@@ -35,9 +33,7 @@ public class RoundImageView extends ImageView {
     public RoundImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         drawable = getDrawable();
-        if (drawable instanceof BitmapDrawable) {
-
-        } else {
+        if (!(drawable instanceof BitmapDrawable)) {
             bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
                     drawable.getIntrinsicHeight(), Config.ARGB_8888);
             c = new Canvas(bitmap);
@@ -47,9 +43,7 @@ public class RoundImageView extends ImageView {
     public RoundImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         drawable = getDrawable();
-        if (drawable instanceof BitmapDrawable) {
-
-        } else {
+        if (!(drawable instanceof BitmapDrawable)) {
             bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
                     drawable.getIntrinsicHeight(), Config.ARGB_8888);
             c = new Canvas(bitmap);

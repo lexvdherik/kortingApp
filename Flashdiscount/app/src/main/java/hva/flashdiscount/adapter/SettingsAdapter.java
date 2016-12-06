@@ -1,6 +1,8 @@
 package hva.flashdiscount.adapter;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +23,10 @@ import hva.flashdiscount.model.Favorite;
 
 
 /**
- * Created by Laptop_Ezra on 17-11-2016.
+ * TODO: Write description.
+ *
+ * @author Laptop_Ezra
+ * @since 17-11-2016
  */
 
 public class SettingsAdapter extends BaseAdapter {
@@ -59,7 +64,7 @@ public class SettingsAdapter extends BaseAdapter {
     }
 
 
-    public class Holder {
+    private class Holder {
         Switch tv;
     }
 
@@ -94,7 +99,7 @@ public class SettingsAdapter extends BaseAdapter {
 
         Company company = companySettings[position].getCompany();
         if (company == null) {
-            holder.tv.setText("No company data available");
+            holder.tv.setText(R.string.no_company_data);
             return rowView;
         }
         holder.tv.setText(company.getName());
@@ -102,14 +107,15 @@ public class SettingsAdapter extends BaseAdapter {
         return rowView;
     }
 
-    public void saveSettings() {
-        String idToken = "TEST";
+    private void saveSettings() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(inflater.getContext());
+        String idToken = sharedPref.getString("idToken", "");
         System.gc();
         SetSettingsResponseListener listener = new SetSettingsResponseListener();
         APIRequest.getInstance(inflater.getContext()).setSettings(listener, listener, idToken, companySettings);
     }
 
-    public class SetSettingsResponseListener implements Response.Listener, Response.ErrorListener {
+    private class SetSettingsResponseListener implements Response.Listener, Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error instanceof NoConnectionError) {

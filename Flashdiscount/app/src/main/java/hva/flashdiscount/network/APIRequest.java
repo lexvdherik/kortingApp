@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import hva.flashdiscount.R;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.model.Favorite;
 import hva.flashdiscount.model.Token;
@@ -185,7 +186,7 @@ public class APIRequest {
 
     private String refreshToken() {
 
-        String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
+        String token = mContext.getString(R.string.token);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(token)
                 .requestEmail()

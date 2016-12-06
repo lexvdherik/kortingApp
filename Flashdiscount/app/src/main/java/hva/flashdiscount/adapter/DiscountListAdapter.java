@@ -20,6 +20,7 @@ import hva.flashdiscount.model.Establishment;
 public class DiscountListAdapter extends BaseExpandableListAdapter {
 
     private static final String TAG = DiscountListAdapter.class.getSimpleName();
+
     private final LayoutInflater inf;
     private ArrayList<Establishment> groups;
     private ArrayList<ArrayList<Discount>> children;
@@ -94,7 +95,7 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
         Discount discount = getChild(groupPosition, childPosition);
         ((TextView) convertView.findViewById(R.id.description)).setText(discount.getDescription());
 //        ((TextView) convertView.findViewById(R.id.company_name)).setText(getGroup(groupPosition).getCompany().getName());
-        ((TextView) convertView.findViewById(R.id.time_remaining)).setText(discount.getTimeRemaining());
+        ((TextView) convertView.findViewById(R.id.time_remaining)).setText(discount.getTimeRemaining(convertView.getContext()));
         ((ImageView) convertView.findViewById(R.id.list_icon)).setImageResource(discount.getCategoryImage(getGroup(groupPosition).getCompany().getCategoryId()));
 
         return convertView;
@@ -122,10 +123,10 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
         if (cCount == 0) {
             ((TextView) convertView.findViewById(R.id.flextitel)).setText(establishment.getDiscounts().get(0).getDescription());
             ((TextView) convertView.findViewById(R.id.company_name)).setText(establishment.getCompany().getName());
-            ((TextView) convertView.findViewById(R.id.time_remaining)).setText(establishment.getDiscounts().get(0).getTimeRemaining());
+            ((TextView) convertView.findViewById(R.id.time_remaining)).setText(establishment.getDiscounts().get(0).getTimeRemaining(convertView.getContext()));
         } else {
-            ((TextView) convertView.findViewById(R.id.flextitel)).setText(String.valueOf(cCount + convertView.getResources().getString(R.string.discount_plural)));
-            ((TextView) convertView.findViewById(R.id.company_name)).setText(e.getCompany().getName());
+            ((TextView) convertView.findViewById(R.id.flextitel)).setText(String.valueOf(cCount + " " + convertView.getResources().getString(R.string.discount_plural)));
+            ((TextView) convertView.findViewById(R.id.company_name)).setText(establishment.getCompany().getName());
         }
 
         return convertView;

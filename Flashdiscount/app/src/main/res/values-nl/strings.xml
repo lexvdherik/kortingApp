@@ -32,6 +32,12 @@
     <string name="claim_fab_desc">Claim</string>
     <string name="camera_success">Klik nogmaals op \"Claim\" om de aanbieding te claimen</string>
     <string name="camera_explanation">Toegang tot de camera is nodig om aanbiedingen te claimen</string>
-    <string name="discount_plural">" Aanbiedingen"</string>
+    <string name="discount_plural">Aanbiedingen</string>
     <string name="close">Sluiten</string>
+    <string name="notification_title">FlashDiscount Info</string>
+    <string name="no_company_data">No company data available</string>
+    <string name="hour">uur</string>
+    <string name="hour_plural">uur</string>
+    <string name="minutes">min</string>
+    <string name="minutes_plural">min</string>
 </resources>

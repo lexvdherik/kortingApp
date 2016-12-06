@@ -9,8 +9,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -26,13 +24,11 @@ import java.util.Map;
 class CustomRequest<T> extends Request<T> {
 
     private static final String TAG = CustomRequest.class.getSimpleName();
-    private static final int RC_SIGN_IN = 1;
-    GoogleApiClient mGoogleApiClient;
+
     private Map<String, String> params;
     private Gson mGson = new GsonBuilder().serializeNulls()
             .setDateFormat("yyyy-MM-dd HH:mm:ss")
             .create();
-    private GoogleSignInAccount acct;
     private Class<?> mClass;
     private Response.Listener<T> listener;
 

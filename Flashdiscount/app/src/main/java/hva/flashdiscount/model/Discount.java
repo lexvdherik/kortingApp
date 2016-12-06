@@ -1,5 +1,7 @@
 package hva.flashdiscount.model;
 
+import android.content.Context;
+
 import hva.flashdiscount.R;
 
 public class Discount {
@@ -56,12 +58,10 @@ public class Discount {
         return picture;
     }
 
-    public String getTimeRemaining() {
+    public String getTimeRemaining(Context context) {
 
         DateTime d = new DateTime(this.endTime);
-
-
-        return d.minutesBetween();
+        return d.minutesBetween(context);
     }
 
     public int getCategoryImage(int categoryId) {

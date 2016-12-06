@@ -1,10 +1,10 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@+id/toolbar"
-    tools:context="hva.flashdiscount.fragment.DetailFragment">
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 android:layout_below="@+id/toolbar"
+                                                 tools:context="hva.flashdiscount.fragment.DetailFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -19,61 +19,59 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 >
-            <com.android.volley.toolbox.NetworkImageView
-                android:id="@+id/company_detail_image"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_gravity="top"
-                android:layout_marginBottom="4dp"
-                android:minHeight="50dp"
-                android:maxHeight="20dp"
 
-                android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax"
-                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-                app:srcCompat="@drawable/cast_album_art_placeholder" />
+                <com.android.volley.toolbox.NetworkImageView
+                    android:id="@+id/company_detail_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_gravity="top"
+                    android:layout_marginBottom="4dp"
+                    android:maxHeight="20dp"
+                    android:minHeight="50dp"
 
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#90757575"
-    android:layout_alignBaseline="@+id/company_detail_image"
-    ></RelativeLayout>
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/cast_album_art_placeholder_large"
+                    app:layout_collapseMode="parallax"
+                    app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+                    app:srcCompat="@drawable/cast_album_art_placeholder_large"/>
 
-    <TextView
-        android:id="@+id/discount_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:maxLines="1"
-        android:text="3 beers for 2 euros"
-        android:textColor="@color/colorWhite"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+                <TextView
+                    android:id="@+id/discount_description"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:text="3 beers for 2 euros"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/colorWhite"/>
 
-    <Button
-        android:id="@+id/claim_button"
-        style="?android:attr/borderlessButtonStyle"
-        android:background="@drawable/oval_shape"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/company_detail_image"
-        android:layout_alignParentBottom="true"
-        android:textAlignment="center"
-        android:text="@string/claim"
-        android:layout_toEndOf="@+id/discount_description"
-        android:textColor="@color/colorWhite"
-        android:layout_width="80dp"
-        android:maxWidth="80dp"
-        android:layout_gravity="right"/>
+                <Button
+                    android:id="@+id/claim_button"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/discount_description"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="end"
+                    android:layout_margin="@dimen/half_margin"
+                    android:background="@drawable/oval_shape"
+                    android:maxWidth="80dp"
+                    android:minWidth="80dp"
+                    android:text="@string/claim"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"/>
 
             </RelativeLayout>
 
+
             <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/card_view_discount"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp">
+                                                android:id="@+id/card_view_discount"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_margin="5dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -85,7 +83,7 @@
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:layout_centerHorizontal="true"
-                        android:background="@color/textColorSecondary" />
+                        android:background="@color/textColorSecondary"/>
 
                     <LinearLayout
                         android:id="@+id/discount_info"
@@ -94,10 +92,10 @@
                         android:layout_marginBottom="@dimen/activity_horizontal_margin">
 
                         <LinearLayout
-                            android:layout_toRightOf="@+id/separator"
+                            android:id="@+id/claim_info_window"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:id="@+id/claim_info_window"
+                            android:layout_toRightOf="@+id/separator"
                             android:layout_weight="0.50"
                             android:gravity="center"
                             android:orientation="vertical">
@@ -105,22 +103,22 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textStyle="bold"
-                                android:text="@string/claims_left" />
+                                android:text="@string/claims_left"
+                                android:textStyle="bold"/>
 
                             <TextView
                                 android:id="@+id/claims_left"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/colorAccent"
-                                android:text="200" />
+                                android:text="200"
+                                android:textColor="@color/colorAccent"/>
                         </LinearLayout>
 
 
                         <LinearLayout
-                            android:layout_toLeftOf="@+id/separator"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_toLeftOf="@+id/separator"
                             android:layout_weight=".50"
                             android:gravity="center"
                             android:orientation="vertical">
@@ -129,15 +127,15 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textStyle="bold"
-                                android:text="@string/time_left" />
+                                android:text="@string/time_left"
+                                android:textStyle="bold"/>
 
                             <TextView
                                 android:id="@+id/time_left"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/colorAccent"
-                                android:text="53 min" />
+                                android:text="53 min"
+                                android:textColor="@color/colorAccent"/>
                         </LinearLayout>
                     </LinearLayout>
                 </RelativeLayout>
@@ -145,11 +143,10 @@
 
 
             <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/card_view_company"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp">
+                                                android:id="@+id/card_view_company"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_margin="5dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -163,30 +160,31 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentTop="true"
-                        android:textAlignment="textEnd"
                         android:text="@string/favorite"
-                        android:textColor="@color/colorAccent" />
+                        android:textAlignment="textEnd"
+                        android:textColor="@color/colorAccent"/>
+
                     <TextView
                         android:id="@+id/company_name"
-                        android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
                         android:padding="@dimen/activity_horizontal_margin"
                         android:text="Company 101"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textStyle="bold"/>
 
                     <TextView
                         android:id="@+id/company_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/company_name"
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:padding="@dimen/activity_horizontal_margin"
-                        android:layout_below="@+id/company_name"
                         android:text="long description here"
                         android:textAppearance="?android:attr/textAppearance"
-                        android:textColor="@color/textColorSecondary" />
+                        android:textColor="@color/textColorSecondary"/>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
         </LinearLayout>

@@ -48,12 +48,11 @@ public class MainActivity extends AppCompatActivity
 
     public static final int REQUEST_CAMERA_PERMISSION = 100;
     public static final int REQUEST_LOCATION_PERMISSION = 101;
+
     private static final String TAG = MainActivity.class.getSimpleName();
     public User user;
     public boolean hasShownLogin = false;
     private Context contextOfApplication;
-    private GoogleSignInAccount acct;
-    private LinearLayout layout;
     private boolean loggedIn;
 
     @Override
@@ -128,11 +127,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void silentLogin() {
-        layout = (LinearLayout) findViewById(R.id.nav_header);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.nav_header);
 
-        String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(token)
+                .requestIdToken(getResources().getString(R.string.token))
                 .requestEmail()
                 .build();
 
@@ -143,7 +141,7 @@ public class MainActivity extends AppCompatActivity
         OptionalPendingResult<GoogleSignInResult> pendingResult =
                 Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         if (pendingResult.isDone()) {
-            acct = pendingResult.get().getSignInAccount();
+            GoogleSignInAccount acct = pendingResult.get().getSignInAccount();
             User user = new User(acct);
             ImageLoader mImageLoader = VolleySingleton.getInstance(this).getImageLoader();
             RoundNetworkImageView image = (RoundNetworkImageView) layout.findViewById(R.id.profile_picture);
@@ -229,7 +227,8 @@ public class MainActivity extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (permissions.length == 0) {
+        if (permissions.length != 1) {
+            Log.e(TAG, permissions.toString());
             Log.i(TAG, "Permissions denied");
             return;
         }

@@ -17,17 +17,20 @@ import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.R;
 
 /**
- * Created by Dr.Chruc on 1-12-2016.
+ * TODO: Write description.
+ *
+ * @author Dr.Chruc
+ * @since 1-12-2016
  */
 
 public class FcmService extends FirebaseMessagingService {
-    private static final String TAG = "FcmService";
+    private static final String TAG = FcmService.class.getSimpleName();
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         //Log data to Log Cat
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
-        Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
+        Log.i(TAG, "From: " + remoteMessage.getFrom());
+        Log.i(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
         //create notification
         createNotification(remoteMessage.getNotification().getBody());
     }
@@ -41,7 +44,7 @@ public class FcmService extends FirebaseMessagingService {
         Uri notificationSoundURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mNotificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Android Tutorial Point FCM Tutorial")
+                .setContentTitle(getString(R.string.notification_title))
                 .setContentText(messageBody)
                 .setAutoCancel(true)
                 .setSound(notificationSoundURI)

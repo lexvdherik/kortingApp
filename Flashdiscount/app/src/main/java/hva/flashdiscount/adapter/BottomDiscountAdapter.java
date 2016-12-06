@@ -1,6 +1,7 @@
 package hva.flashdiscount.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,19 +15,21 @@ import hva.flashdiscount.R;
 import hva.flashdiscount.model.Discount;
 
 /**
- * Created by chrisvanderheijden on 24/11/2016.
+ * TODO: Write description.
+ *
+ * @author chrisvanderheijden
+ * @since 24/11/2016
  */
 
 public class BottomDiscountAdapter extends ArrayAdapter<Discount> {
 
-    private LayoutInflater inflater;
     private static final String TAG = BottomDiscountAdapter.class.getSimpleName();
+
+    private LayoutInflater inflater;
     private ArrayList<Discount> discountArrayList;
-    private Context context;
 
     public BottomDiscountAdapter(ArrayList<Discount> discountArrayList, Context context) {
         super(context, R.layout.bottom_sheet_list_detail, discountArrayList);
-        this.context = context;
         this.discountArrayList = discountArrayList;
         this.inflater = LayoutInflater.from(context);
     }
@@ -47,13 +50,16 @@ public class BottomDiscountAdapter extends ArrayAdapter<Discount> {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View view, @NonNull ViewGroup viewGroup) {
 
 
         Discount discount = getItem(i);
 
         view = inflater.inflate(R.layout.bottom_sheet_list_detail, viewGroup, false);
         TextView description = (TextView) view.findViewById(R.id.description_bottom_sheet);
+        if (discount == null) {
+            return view;
+        }
         description.setText(discount.getDescription());
 
 

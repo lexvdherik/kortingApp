@@ -40,13 +40,14 @@ public class FirebaseIIDService extends FirebaseInstanceIdService {
 
         @Override
         public void onResponse(String token) {
+
             Log.e(TAG, token);
         }
 
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error instanceof NoConnectionError) {
-                Log.e(FirebaseIIDService.TAG, "No connection!");
+                Log.e(TAG, "No connection!");
             }
         }
 

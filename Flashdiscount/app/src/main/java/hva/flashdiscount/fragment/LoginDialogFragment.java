@@ -53,7 +53,7 @@ public class LoginDialogFragment extends DialogFragment {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(new Scope(Scopes.PLUS_LOGIN))
                 .requestScopes(new Scope(Scopes.PLUS_ME))
-                .requestIdToken(token)
+                .requestIdToken(getResources().getString(R.string.token))
                 .requestEmail()
                 .build();
 

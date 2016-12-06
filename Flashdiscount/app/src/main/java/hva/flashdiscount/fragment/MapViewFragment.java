@@ -57,7 +57,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private TextView bottomSheetdescription;
     private BottomDiscountAdapter adapter;
     private Establishment establishment;
-    private View bottomSheet;
     private FragmentManager fm;
 
 
@@ -181,7 +180,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private void initAttributes(View rootView) {
         fm = getFragmentManager();
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
-        bottomSheet = rootView.findViewById(R.id.bottom_sheet);
+        View bottomSheet = rootView.findViewById(R.id.bottom_sheet);
         bottomSheettitle = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
         bottomSheetdescription = (TextView) rootView.findViewById(R.id.description);
         mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);

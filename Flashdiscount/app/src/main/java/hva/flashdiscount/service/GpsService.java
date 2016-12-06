@@ -17,6 +17,8 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 
+import hva.flashdiscount.MainActivity;
+
 public class GpsService extends Service implements LocationListener {
 
     private final Context mContext;
@@ -27,10 +29,9 @@ public class GpsService extends Service implements LocationListener {
     double latitude;
     double longitude;
 
-    private static final int REQUEST_CODE_PERMISSION = 1;
     private String mPermissionFine = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60; // 1 minute
 
     protected LocationManager locationManager;
 
@@ -46,7 +47,7 @@ public class GpsService extends Service implements LocationListener {
 
     public void askLocationPermission() {
         if (!ActivityCompat.shouldShowRequestPermissionRationale((Activity) mContext, mPermissionFine)) {
-            ActivityCompat.requestPermissions((Activity) mContext, new String[]{mPermissionFine}, REQUEST_CODE_PERMISSION);
+            ActivityCompat.requestPermissions((Activity) mContext, new String[]{mPermissionFine}, MainActivity.REQUEST_LOCATION_PERMISSION);
         }
     }
 
