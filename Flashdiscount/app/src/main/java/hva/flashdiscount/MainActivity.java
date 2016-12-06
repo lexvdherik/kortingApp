@@ -35,19 +35,10 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 
 import net.steamcrafted.materialiconlib.MaterialMenuInflater;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-
 import hva.flashdiscount.fragment.LoginDialogFragment;
 import hva.flashdiscount.fragment.SettingsFragment;
 import hva.flashdiscount.fragment.TabFragment;
 import hva.flashdiscount.layout.RoundNetworkImageView;
-import hva.flashdiscount.model.Token;
 import hva.flashdiscount.model.User;
 import hva.flashdiscount.utils.VolleySingleton;
 import io.fabric.sdk.android.Fabric;

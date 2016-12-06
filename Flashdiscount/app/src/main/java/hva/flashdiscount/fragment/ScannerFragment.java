@@ -64,7 +64,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         String establishmentId = rawResult.toString().substring(rawResult.toString().lastIndexOf("/") + 1);
         try {
             Integer.parseInt(establishmentId);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
 
             goToDetailView(establishment, dicountPosition, true, "WRONG QR");
         }
