@@ -129,6 +129,7 @@ public class SettingsFragment extends Fragment {
                 for (Favorite item : companySettings) {
                     if (item.getNotification() == 0) {
                         swMain.setChecked(false);
+                        break;
                     }
                 }
                 settingsAdapter = new SettingsAdapter(getActivity(), favorites);
