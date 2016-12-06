@@ -28,17 +28,17 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class ScannerFragment extends Fragment implements ZXingScannerView.ResultHandler {
     private static final String TAG = ScannerFragment.class.getSimpleName();
-
     private ZXingScannerView mScannerView;
     private Establishment establishment;
     private int dicountPosition;
     private Discount discount;
     private String idToken;
+    private boolean wrongQr;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mScannerView = new ZXingScannerView(getActivity());
-
+        wrongQr = false;
         if (getArguments() != null) {
             String gson = getArguments().getString("establishment");
             dicountPosition = getArguments().getInt("discountPosition");
@@ -65,7 +65,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         try {
             Integer.parseInt(establishmentId);
         } catch (NumberFormatException e) {
-
+            wrongQr = true;
             goToDetailView(establishment, dicountPosition, true, "WRONG QR");
         }
 
@@ -76,8 +76,12 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
                 mScannerView.resumeCameraPreview(ScannerFragment.this);
             }
         }, 2000);
+
         Log.i(TAG, establishmentId);
-        claimDiscount(idToken, establishmentId, String.valueOf(discount.getDiscountId()));
+
+        if (!wrongQr) {
+            claimDiscount(idToken, establishmentId, String.valueOf(discount.getDiscountId()));
+        }
     }
 
     @Override
