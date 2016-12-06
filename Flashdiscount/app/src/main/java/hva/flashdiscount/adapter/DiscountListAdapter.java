@@ -124,8 +124,8 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
             ((TextView) convertView.findViewById(R.id.company_name)).setText(establishment.getCompany().getName());
             ((TextView) convertView.findViewById(R.id.time_remaining)).setText(establishment.getDiscounts().get(0).getTimeRemaining());
         } else {
-            ((TextView) convertView.findViewById(R.id.flextitel)).setText(String.valueOf(cCount + " Aanbiedingen"));
-            ((TextView) convertView.findViewById(R.id.company_name)).setText(establishment.getCompany().getName());
+            ((TextView) convertView.findViewById(R.id.flextitel)).setText(String.valueOf(cCount + convertView.getResources().getString(R.string.discount_plural)));
+            ((TextView) convertView.findViewById(R.id.company_name)).setText(e.getCompany().getName());
         }
 
         return convertView;

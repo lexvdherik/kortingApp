@@ -19,9 +19,14 @@
         android:id="@+id/dismiss_button"
         style="?attr/borderlessButtonStyle"
         android:layout_below="@id/message_text"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/oval_shape"
+        android:maxWidth="70dp"
+
         android:layout_width="match_parent"
+        android:textColor="@color/colorWhite"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="Sluiten" />
+        android:text="@string/close" />
 
 </LinearLayout>

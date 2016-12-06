@@ -5,7 +5,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">About</string>
-
     <string name="nav_kortingen">Discounts</string>
     <string name="nav_my_discounts">My active discounts</string>
     <string name="nav_favorites">Favorites</string>
@@ -25,8 +24,15 @@
     <string name="camera_explanation">Camera permission is needed to scan the QR code.</string>
     <string name="camera_success">Click \"Claim\" again to claim your discount</string>
     <string name="location_explanation">You want the discounts arround you, don\'t you?</string>
-    <string name="gps_usage_explanation">GPS required to show discounts in the neighbourhood</string>
-    <string name="gps_settings_title">Turn on GPS in the settings menu?</string>
     <string name="no_permission_camera">We need the camera to scan a QR code :(</string>
     <string name="no_permission_location">oh noes, now we\'ll just show you Amsterdam :(</string>
+    <string name="to_many_claims">You claimed this discount to many times</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="wrong_qr_code">This is not a QR code we support</string>
+    <string name="server_internal_error">Server couldn\'t proccess your discount</string>
+    <string name="not_logged_in">You are not logged in</string>
+    <string name="couldnt_claim_discount">Couldn\'t claim discount</string>
+    <string name="discount_not_found">Discount could not be found</string>
+    <string name="discount_plural">" Aanbiedingen"</string>
+    <string name="close">Sluiten</string>
 </resources>

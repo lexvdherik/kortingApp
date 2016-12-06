@@ -19,4 +19,19 @@
     <string name="temp_name_menu">Log in om</string>
     <string name="temp_email_nav">jouw info hier te zien</string>
     <string name="all_notifications">Alle notificaties</string>
+    <string name="couldnt_claim_discount">Kon de korting niet claimen</string>
+    <string name="not_logged_in">U bent niet ingelogd</string>
+    <string name="discount_not_found">De aanbieding kon niet worden gevonden</string>
+    <string name="to_many_claims">U heeft deze aanbieding al te vaak geclaimd</string>
+    <string name="server_internal_error">Server buiten gebruik</string>
+    <string name="wrong_qr_code">Verkeerde QR code gescant</string>
+    <string name="unknown_error">Onbekende error</string>
+    <string name="no_permission_location">Helaas, nu kunnen we alleen amsterdam laten zien</string>
+    <string name="no_permission_camera">We hebben toegang nodig tot de camera om aanbiedingen te claimen</string>
+    <string name="location_explanation">Dit is nodig om in te kunnen schatten wat er in de buurt zit</string>
+    <string name="claim_fab_desc">Claim</string>
+    <string name="camera_success">Klik nogmaals op \"Claim\" om de aanbieding te claimen</string>
+    <string name="camera_explanation">Toegang tot de camera is nodig om aanbiedingen te claimen</string>
+    <string name="discount_plural">" Aanbiedingen"</string>
+    <string name="close">Sluiten</string>
 </resources>

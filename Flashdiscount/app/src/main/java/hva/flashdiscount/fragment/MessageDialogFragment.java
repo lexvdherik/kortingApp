@@ -23,19 +23,19 @@ private String message;
     private String errorCodeToMessage(String errorCode) {
         String msg;
         switch (errorCode) {
-            case "NETWORK 400": msg = "Kon de korting niet claimen";
+            case "NETWORK 400": msg = getString(R.string.couldnt_claim_discount);
                 break;
-            case "NETWORK 401": msg = "U bent niet ingelogd";
+            case "NETWORK 401": msg = getString(R.string.not_logged_in);
                 break;
-            case "NETWORK 404": msg = "De aanbieding kon niet worden gevonden";
+            case "NETWORK 404": msg = getString(R.string.discount_not_found);
                 break;
-            case "NETWORK 409": msg = "U heeft deze aanbieding al te vaak geclaimd";
+            case "NETWORK 409": msg = getString(R.string.to_many_claims);
                 break;
-            case "NETWORK 500": msg = "Server buiten gebruik";
+            case "NETWORK 500": msg = getString(R.string.server_internal_error);
                 break;
-            case "WRONG QR":  msg = "Verkeerde QR code gescant";
+            case "WRONG QR":  msg = getString(R.string.wrong_qr_code);
                 break;
-            default: msg = "Onbekende error";
+            default: msg = getString(R.string.unknown_error);
                 break;
         }
         return msg;

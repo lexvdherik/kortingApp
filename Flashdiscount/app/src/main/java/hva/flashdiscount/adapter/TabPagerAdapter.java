@@ -7,6 +7,13 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import hva.flashdiscount.fragment.DiscountListFragment;
 import hva.flashdiscount.fragment.MapViewFragment;
 
+/**
+ * Return tabs to display
+ *
+ * @author Laptop_Ezra
+ * @since 12-10-2016
+ */
+
 public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
     private static final String TAG = TabPagerAdapter.class.getSimpleName();
