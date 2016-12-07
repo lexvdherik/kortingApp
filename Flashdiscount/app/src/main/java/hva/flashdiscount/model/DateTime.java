@@ -13,11 +13,9 @@ import hva.flashdiscount.R;
 
 class DateTime {
     private Calendar endTime;
-    private Calendar currentTime;
 
     DateTime(String endTimeString) {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        this.currentTime = Calendar.getInstance();
         this.endTime = Calendar.getInstance();
 
         Date endDate;
@@ -37,14 +35,19 @@ class DateTime {
     }
 
     public int getCurrentTime() {
-        return currentTime.get(Calendar.DATE);
+        return Calendar.getInstance().get(Calendar.DATE);
     }
 
     String minutesBetween(Context context) {
-        Long end = this.currentTime.getTimeInMillis();
-        Long start = this.endTime.getTimeInMillis();
+        Long end = Calendar.getInstance().getTimeInMillis();
+        Long start = endTime.getTimeInMillis();
         Long minutesBetween = (start - end) / 60000;
         Long hours, minutes;
+
+        if (minutesBetween < 1) {
+            return context.getString(R.string.expired_time);
+        }
+
         if (minutesBetween > 1440) {
             return "24+ " + context.getString(R.string.hour_plural);
         }
@@ -57,6 +60,7 @@ class DateTime {
                     + " " + minutes.toString()
                     + " " + ((minutes > 1) ? context.getString(R.string.minutes_plural) : context.getString(R.string.minutes));
         }
+
         return minutesBetween.toString()
                 + " " + ((minutesBetween > 1) ? context.getString(R.string.minutes_plural) : context.getString(R.string.minutes));
 

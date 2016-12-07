@@ -40,4 +40,5 @@
     <string name="hour_plural">uur</string>
     <string name="minutes">min</string>
     <string name="minutes_plural">min</string>
+    <string name="expired_time">EXPIRED</string>
 </resources>

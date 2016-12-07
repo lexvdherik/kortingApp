@@ -3,77 +3,92 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:paddingBottom="5dp"
-              android:background="#11ffffff"
-    >
+              android:layout_marginBottom="4dp">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/card_view_discount_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/card_view_discount_parent"
-        app:cardElevation="15dp"
-        >
+        android:padding="@dimen/activity_horizontal_margin"
+        app:cardElevation="1dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            >
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
 
             <hva.flashdiscount.layout.RoundImageView
                 android:id="@+id/list_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
                 android:adjustViewBounds="true"
                 android:maxWidth="40dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginStart="4dp"
-                android:src="@drawable/ic_coffee" />
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:src="@drawable/ic_coffee"/>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/company_name"
-                android:layout_toEndOf="@+id/list_icon"
-                android:layout_alignParentTop="true"
-                android:textAppearance="?android:attr/textAppearance"
-                android:text="Company Name"
-                />
+                android:layout_marginBottom="@dimen/half_margin"
+                android:layout_marginTop="@dimen/half_margin"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/company_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|top"
+                    android:gravity="start|top"
+                    android:ellipsize="end"
+                    android:text="Company Name"
+                    android:textAppearance="?android:attr/textAppearance"
+                    />
+
+                <TextView
+                    android:id="@+id/flextitel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|top"
+                    android:ellipsize="end"
+                    android:gravity="start|top"
+                    android:text="Aanbieding"
+                    />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/remaining_items"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/flextitel"
-                android:layout_toEndOf="@+id/list_icon"
-                android:layout_below="@+id/company_name"
-                android:text="Aanbieding"
-                />
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginBottom="@dimen/half_margin"
+                android:layout_marginTop="@dimen/half_margin"
+                android:gravity="end|center_vertical"
+                android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/time_remaining"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end|top"
+                    android:maxLines="1"
+                    android:text="12 min"
+                    android:textAlignment="textEnd"/>
 
-            <TextView
-                android:id="@+id/time_remaining"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="12 min"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"/>
-
-            <TextView
-                android:id="@+id/claims_remaining"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="21/100"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:layout_below="@+id/time_remaining"
-                android:layout_alignParentEnd="true"/>
-
-        </RelativeLayout>
-
+                <TextView
+                    android:id="@+id/claims_remaining"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end|bottom"
+                    android:maxLines="1"
+                    android:text="21/100"
+                    android:textAlignment="textEnd"
+                    android:textAppearance="?android:attr/textAppearanceSmall"/>
+            </LinearLayout>
+        </LinearLayout>
     </android.support.v7.widget.CardView>
 
 </LinearLayout>
