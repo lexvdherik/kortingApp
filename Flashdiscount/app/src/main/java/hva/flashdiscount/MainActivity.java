@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.media.Image;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +43,7 @@ import hva.flashdiscount.fragment.SettingsFragment;
 import hva.flashdiscount.fragment.TabFragment;
 import hva.flashdiscount.layout.RoundNetworkImageView;
 import hva.flashdiscount.model.User;
+import hva.flashdiscount.utils.LoginSingleton;
 import hva.flashdiscount.utils.VolleySingleton;
 import io.fabric.sdk.android.Fabric;
 
@@ -52,27 +55,14 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public User user;
-    public boolean hasShownLogin = false;
     private Context contextOfApplication;
-    private boolean loggedIn;
-    private int tabPosition;
-    private SharedPreferences sharedPref;
-
-    if (sharedPref.contains("")) {
-        sharedPref.contains("");
-        LoginDialogFragment dialogFragment = new LoginDialogFragment();
-        dialogFragment.show(fm, "Login Fragment");
-        ((MainActivity) getActivity()).hasShownLogin = true;
-    }
+    private LoginSingleton loginSingleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         contextOfApplication = getApplicationContext();
-        loggedIn = false;
-
-        PreferenceManager.getDefaultSharedPreferences(this);
-        Log.e(TAG, "expire date = " + sharedPref.getString("expire_date", "er is geen expire date hahaha"));
+        loginSingleton = LoginSingleton.getInstance(this);
 
         Fabric.with(this, new Crashlytics());
 
@@ -97,9 +87,34 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                if (!loggedIn) {
-                    Log.e(TAG, "ik ben niet ingelogd, ps maiko is homo");
-                    silentLogin();
+                if (loginSingleton.loggedIn() && loginSingleton.loginExpired()) {
+                    Log.e(TAG, "login expiredddd");
+                    User user = loginSingleton.silentLogin();
+                    if (user != null) {
+                        LinearLayout layout = (LinearLayout) findViewById(R.id.nav_header);
+
+                        ImageLoader mImageLoader = VolleySingleton.getInstance(contextOfApplication).getImageLoader();
+                        RoundNetworkImageView image = (RoundNetworkImageView) layout.findViewById(R.id.profile_picture);
+                        if (image != null) {
+                            image.setImageUrl(user.getPicture().toString(), mImageLoader);
+                        }
+
+                        ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
+                        ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
+                    }
+                } else if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
+                    Log.e(TAG, "load everything from sharedpref");
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(contextOfApplication);
+                    LinearLayout layout = (LinearLayout) findViewById(R.id.nav_header);
+
+                    ImageLoader mImageLoader = VolleySingleton.getInstance(contextOfApplication).getImageLoader();
+                    ((RoundNetworkImageView) layout.findViewById(R.id.profile_picture)).setImageUrl(sharedPref.getString("picture", ""), mImageLoader);
+                    ((TextView) layout.findViewById(R.id.naam)).setText(sharedPref.getString("name", ""));
+                    ((TextView) layout.findViewById(R.id.email)).setText(sharedPref.getString("email", ""));
+
+                } else {
+                    Log.e(TAG, "show the dialoggg");
+                    loginSingleton.showLoginDialog();
                 }
             }
 
@@ -128,41 +143,6 @@ public class MainActivity extends AppCompatActivity
     public Context getContextOfApplication() {
         return contextOfApplication;
     }
-
-    public void silentLogin() {
-        LinearLayout layout = (LinearLayout) findViewById(R.id.nav_header);
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getResources().getString(R.string.token))
-                .requestEmail()
-                .build();
-
-        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-        OptionalPendingResult<GoogleSignInResult> pendingResult =
-                Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (pendingResult.isDone()) {
-            GoogleSignInAccount acct = pendingResult.get().getSignInAccount();
-            User user = new User(acct);
-            ImageLoader mImageLoader = VolleySingleton.getInstance(this).getImageLoader();
-            RoundNetworkImageView image = (RoundNetworkImageView) layout.findViewById(R.id.profile_picture);
-            if (image != null) {
-                image.setImageUrl(user.getPicture().toString(), mImageLoader);
-            }
-
-            ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
-            ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
-            loggedIn = true;
-        } else {
-            FragmentManager fm = getSupportFragmentManager();
-            LoginDialogFragment dialogFragment = new LoginDialogFragment();
-            dialogFragment.show(fm, "Login Fragment");
-        }
-
-    }
-
 
     @Override
     public void onBackPressed() {

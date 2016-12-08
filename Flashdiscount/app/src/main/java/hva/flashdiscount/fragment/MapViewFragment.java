@@ -44,7 +44,6 @@ import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.service.GpsService;
 
-
 public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerClickListener {
 
@@ -60,7 +59,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private TextView bottomSheetdescription;
     private BottomDiscountAdapter adapter;
     private Establishment establishment;
-    private FragmentManager fm;
 
 
     @Override
@@ -171,9 +169,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         return rootView;
     }
 
-
     private void initAttributes(View rootView) {
-        fm = getFragmentManager();
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         View bottomSheet = rootView.findViewById(R.id.bottom_sheet);
         bottomSheettitle = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
@@ -240,8 +236,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         return false;
     }
 
-
-
     private void goToDetailView(Establishment establishment, int discountPosition) {
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -262,7 +256,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 .addToBackStack(null)
                 .commit();
     }
-
 
     public class GetEstablishmentResponseListener implements Response.Listener<Establishment[]>, Response.ErrorListener {
 

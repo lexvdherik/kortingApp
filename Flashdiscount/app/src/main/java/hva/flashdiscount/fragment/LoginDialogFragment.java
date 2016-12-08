@@ -97,7 +97,13 @@ public class LoginDialogFragment extends DialogFragment {
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("idToken", acct.getIdToken());
+
+            User user = new User(acct);
+
+            editor.putString("idToken", user.getGoogleId());
+            editor.putString("name", user.getName());
+            editor.putString("email", user.getEmail());
+            editor.putString("picture", user.getPicture().toString());
 
             editor.apply();
 

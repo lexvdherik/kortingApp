@@ -35,6 +35,7 @@ import hva.flashdiscount.R;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.model.Favorite;
 import hva.flashdiscount.model.Token;
+import hva.flashdiscount.utils.LoginSingleton;
 
 public class APIRequest {
     private static final String TAG = APIRequest.class.getSimpleName();
@@ -53,12 +54,12 @@ public class APIRequest {
     private static APIRequest sInstance;
     private final RequestQueue mQueue;
     private Context mContext;
-
-    private GoogleSignInAccount acct;
+    private LoginSingleton loginSingleton;
 
     private APIRequest(Context context) {
         mContext = context;
         mQueue = Volley.newRequestQueue(context);
+        loginSingleton = LoginSingleton.getInstance(mContext);
     }
 
     public static APIRequest getInstance(Context context) {
@@ -105,8 +106,8 @@ public class APIRequest {
     }
 
     public boolean setFavorite(Response.Listener responseListener, Response.ErrorListener errorListener, String idToken, String establishmentId) {
-        if (loginExpired()) {
-            idToken = refreshToken();
+        if (loginSingleton.loginExpired()) {
+            idToken = loginSingleton.refreshToken();
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -149,8 +150,8 @@ public class APIRequest {
     }
 
     public boolean claimDiscount(Response.Listener responseListener, Response.ErrorListener errorListener, String idToken, String establishmentId, String discountId) {
-        if (loginExpired()) {
-            idToken = refreshToken();
+        if (loginSingleton.loginExpired()) {
+            idToken = loginSingleton.refreshToken();
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -161,55 +162,5 @@ public class APIRequest {
                 responseListener, errorListener, null).setTag(METHOD_CLAIM_DISCOUNT));
 
         return true;
-    }
-
-    private Boolean loginExpired() {
-
-        DateTimeZone london = DateTimeZone.forID("Europe/London");
-        DateTime current = DateTime.now(london);
-        Calendar currentDate;
-        currentDate = current.toCalendar(Locale.ENGLISH);
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-
-        Calendar expireDate = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-
-        try {
-            expireDate.setTime(sdf.parse(sharedPref.getString("expire_date", "")));
-        } catch (ParseException e) {
-            Log.e(TAG, e.getMessage());
-        }
-
-        return currentDate.compareTo(expireDate) == -1;
-    }
-
-    private String refreshToken() {
-
-        String token = mContext.getString(R.string.token);
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(token)
-                .requestEmail()
-                .build();
-
-        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(mContext)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-        OptionalPendingResult<GoogleSignInResult> pendingResult =
-                Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (pendingResult.isDone()) {
-
-            acct = pendingResult.get().getSignInAccount();
-
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("idToken", acct.getIdToken());
-
-            editor.apply();
-
-        }
-
-        return acct.getIdToken();
     }
 }

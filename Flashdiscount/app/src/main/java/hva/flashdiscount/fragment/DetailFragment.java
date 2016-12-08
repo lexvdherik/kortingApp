@@ -30,6 +30,7 @@ import hva.flashdiscount.R;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.network.APIRequest;
+import hva.flashdiscount.utils.LoginSingleton;
 import hva.flashdiscount.utils.VolleySingleton;
 
 
@@ -122,8 +123,6 @@ public class DetailFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-
-
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
                 String idToken = sharedPref.getString("idToken", "");
                 setFavorite(idToken, String.valueOf(establishment.getEstablishmentId()));
@@ -135,15 +134,17 @@ public class DetailFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                int cameraPermission = ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.CAMERA);
-                if (cameraPermission == PackageManager.PERMISSION_GRANTED) {
-
-                    goToScanner(establishment, discountPostion);
+                if(LoginSingleton.getInstance(getContext()).loggedIn()) {
+                    int cameraPermission = ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.CAMERA);
+                    if (cameraPermission == PackageManager.PERMISSION_GRANTED) {
+                        goToScanner(establishment, discountPostion);
+                    } else {
+                        requestCameraPermissions();
+                    }
                 } else {
-                    requestCameraPermissions();
+                    LoginSingleton.getInstance(getContext()).showLoginDialog();
                 }
-
             }
         });
 
