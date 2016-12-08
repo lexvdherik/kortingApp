@@ -56,6 +56,14 @@ public class MainActivity extends AppCompatActivity
     private Context contextOfApplication;
     private boolean loggedIn;
     private int tabPosition;
+    private SharedPreferences sharedPref;
+
+    if (sharedPref.contains("")) {
+        sharedPref.contains("");
+        LoginDialogFragment dialogFragment = new LoginDialogFragment();
+        dialogFragment.show(fm, "Login Fragment");
+        ((MainActivity) getActivity()).hasShownLogin = true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +71,7 @@ public class MainActivity extends AppCompatActivity
         contextOfApplication = getApplicationContext();
         loggedIn = false;
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        PreferenceManager.getDefaultSharedPreferences(this);
         Log.e(TAG, "expire date = " + sharedPref.getString("expire_date", "er is geen expire date hahaha"));
 
         Fabric.with(this, new Crashlytics());
@@ -116,13 +124,6 @@ public class MainActivity extends AppCompatActivity
         ft.add(R.id.fragment_container, tabFragment);
         ft.commit();
     }
-
-
-//    @Override
-//    protected void onPause() {
-//        super.onResume();
-////        silentLogin();
-//    }
 
     public Context getContextOfApplication() {
         return contextOfApplication;

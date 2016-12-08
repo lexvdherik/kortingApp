@@ -87,16 +87,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
-
-
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         initAttributes(rootView);
-
-        if (!sharedPref.contains("idToken") && !((MainActivity) getActivity()).hasShownLogin) {
-            LoginDialogFragment dialogFragment = new LoginDialogFragment();
-            dialogFragment.show(fm, "Login Fragment");
-            ((MainActivity) getActivity()).hasShownLogin = true;
-        }
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
