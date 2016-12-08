@@ -9,6 +9,8 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -76,6 +78,7 @@ public class DetailFragment extends Fragment {
         if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_directions);
         }
         if (getArguments() != null) {
             String gson = getArguments().getString("establishment");
@@ -184,6 +187,8 @@ public class DetailFragment extends Fragment {
         timeLeft.setText(discount.getTimeRemaining(getContext()));
         discountDescription.setText(discount.getDescription());
     }
+
+
 
     private void goToScanner(Establishment establishment, int discountPostion) {
 

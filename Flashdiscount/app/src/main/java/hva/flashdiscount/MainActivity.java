@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity
     private Context contextOfApplication;
     private boolean loggedIn;
     private int tabPosition;
+    ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +78,10 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
 
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -181,6 +183,8 @@ public class MainActivity extends AppCompatActivity
 
                     TabFragment tb = new TabFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, tb).commit();
+                    toggle.syncState();
+
 
                 } else {
                     super.onBackPressed();
