@@ -123,10 +123,12 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
         if (cCount == 0) {
             ((TextView) convertView.findViewById(R.id.flextitel)).setText(establishment.getDiscounts().get(0).getDescription());
             ((TextView) convertView.findViewById(R.id.company_name)).setText(establishment.getCompany().getName());
+            ((TextView) convertView.findViewById(R.id.company_street)).setText(establishment.getStreet() + " " + establishment.getStreetNumber());
             ((TextView) convertView.findViewById(R.id.time_remaining)).setText(establishment.getDiscounts().get(0).getTimeRemaining(convertView.getContext()));
         } else {
             ((TextView) convertView.findViewById(R.id.flextitel)).setText(String.valueOf(cCount + " " + convertView.getResources().getString(R.string.discount_plural)));
             ((TextView) convertView.findViewById(R.id.company_name)).setText(establishment.getCompany().getName());
+            ((TextView) convertView.findViewById(R.id.company_street)).setText(establishment.getStreet() + " " + establishment.getStreetNumber());
         }
 
         return convertView;
