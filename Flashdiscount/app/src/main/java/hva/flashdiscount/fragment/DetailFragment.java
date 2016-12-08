@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -124,7 +125,7 @@ public class DetailFragment extends Fragment {
                 setFavorite(idToken, String.valueOf(establishment.getEstablishmentId()));
             }
         });
-        Button claimButton = (Button) mRootView.findViewById(R.id.claim_button);
+        FloatingActionButton claimButton = (FloatingActionButton) mRootView.findViewById(R.id.claim_button);
 
         claimButton.setOnClickListener(new View.OnClickListener() {
 

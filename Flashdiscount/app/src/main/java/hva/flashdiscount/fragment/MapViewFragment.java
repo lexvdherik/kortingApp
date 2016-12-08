@@ -53,7 +53,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private GoogleMap googleMap;
     private Context context;
     private Location location;
-    private GpsService gpsService;
+    private GpsService mGpsService;
     private BottomSheetBehavior mBottomSheetBehavior1;
     private ListView listView;
     private TextView bottomSheettitle;
@@ -67,18 +67,17 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        gpsService = new GpsService(getActivity());
+        mGpsService = new GpsService(getActivity());
         context = getActivity();
 
-        if (gpsService.canGetLocation()) {
-            location = new Location(gpsService.getLocation());
+        mGpsService = new GpsService(getActivity());
 
-            location.setLatitude(gpsService.getLatitude());
-            location.setLongitude(gpsService.getLongitude());
-        } else {
-            location = new Location("");
-            location.setLatitude(52.375368);
-            location.setLongitude(4.894486);
+        location = new Location("");
+        location.setLatitude(52.375368);
+        location.setLongitude(4.894486);
+
+        if (!mGpsService.checkPermission()) {
+            mGpsService.askLocationPermission();
         }
 
     }
@@ -87,10 +86,11 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
-
-
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         initAttributes(rootView);
+
+
+        mMapView.onCreate(savedInstanceState);
 
         if (!sharedPref.contains("idToken") && !((MainActivity) getActivity()).hasShownLogin) {
             LoginDialogFragment dialogFragment = new LoginDialogFragment();
@@ -104,25 +104,17 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             e.printStackTrace();
         }
 
-
-
-        mMapView.onCreate(savedInstanceState);
-        mMapView.onResume();
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onMapReady(GoogleMap mMap) {
                 googleMap = mMap;
 
-                if (gpsService.checkWriteExternalPermission()) {
+                if (mGpsService.checkPermission()) {
                     googleMap.setMyLocationEnabled(true);
-                } else {
-                    Log.w(TAG, "No checkWriteExternalPermission()");
                 }
 
-                LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                zoomToLocation(null);
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 
                     @Override
@@ -131,7 +123,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                         establishment = (Establishment) marker.getTag();
                         adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
                         mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        CardView detailLayout = (CardView) rootView.findViewById(R.id.card_view_discount_detail);
+                        CardView detailLayout = (CardView) rootView.findViewById(R.id.card_view_discount);
                         if (establishment.getDiscounts().size() > 1) {
                             detailLayout.setVisibility(View.GONE);
                             listView.setNestedScrollingEnabled(true);
@@ -191,13 +183,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         listView = (ListView) rootView.findViewById(R.id.discount_list_view);
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mMapView.onResume();
-    }
-
     @Override
     public void onPause() {
         super.onPause();
@@ -249,7 +234,32 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         return false;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        MapView mapView = (MapView) getView().findViewById(R.id.mapView);
+        mapView.onResume();
 
+        updateLocation();
+        if (location != null && googleMap != null) {
+            LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+    }
+
+    private void updateLocation() {
+        location = (mGpsService.getLocation() == null) ? location : mGpsService.getLocation();
+    }
+
+    public void zoomToLocation(@Nullable Location location) {
+        LatLng current = new LatLng(this.location.getLatitude(), this.location.getLongitude());
+        if (location != null) {
+            current = new LatLng(location.getLatitude(), location.getLongitude());
+        }
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(current).zoom(12).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
 
     private void goToDetailView(Establishment establishment, int discountPosition) {
 
@@ -272,6 +282,12 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 .replace(R.id.fragment_container, detailFragment, "detailfrag")
                 .addToBackStack(null)
                 .commit();
+    }
+
+    public void isGoogleMapsLocationTracking() {
+        if (mGpsService.checkPermission()) {
+            googleMap.setMyLocationEnabled(true);
+        }
     }
 
 

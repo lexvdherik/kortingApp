@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -37,6 +38,7 @@ import net.steamcrafted.materialiconlib.MaterialMenuInflater;
 
 import hva.flashdiscount.fragment.DetailFragment;
 import hva.flashdiscount.fragment.LoginDialogFragment;
+import hva.flashdiscount.fragment.MapViewFragment;
 import hva.flashdiscount.fragment.SettingsFragment;
 import hva.flashdiscount.fragment.TabFragment;
 import hva.flashdiscount.layout.RoundNetworkImageView;
@@ -229,11 +231,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_account_settings) {
             Log.i(TAG, "nav_account_settings");
 
-
             getSupportFragmentManager().popBackStack();
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SettingsFragment()).commit();
-
-            return false;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -254,17 +253,25 @@ public class MainActivity extends AppCompatActivity
         switch (permissions[0]) {
             case Manifest.permission.CAMERA:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getContextOfApplication(), R.string.camera_success, Toast.LENGTH_LONG).show();
+                    DetailFragment fragment = (DetailFragment) getSupportFragmentManager().findFragmentByTag("detailfrag");
+                    FloatingActionButton button = (FloatingActionButton) fragment.getView().findViewById(R.id.claim_button);
+                    button.callOnClick();
+                    return;
                 } else {
                     Toast.makeText(getContextOfApplication(), R.string.no_permission_camera, Toast.LENGTH_LONG).show();
+                    return;
                 }
-
-                break;
             case Manifest.permission.ACCESS_FINE_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getContextOfApplication(), "Location permission granted", Toast.LENGTH_LONG).show();
+                    MapViewFragment mapViewFragment = (MapViewFragment) getSupportFragmentManager().findFragmentById(R.id.map_view_fragment);
+                    if (mapViewFragment != null) {
+                        mapViewFragment.isGoogleMapsLocationTracking();
+                        mapViewFragment.zoomToLocation(null);
+                    }
+                    return;
                 } else {
                     Toast.makeText(getContextOfApplication(), R.string.no_permission_location, Toast.LENGTH_LONG).show();
+                    return;
                 }
             default:
                 Log.e(TAG, "onRequestPermissionsResult: " + grantResults[0]);
