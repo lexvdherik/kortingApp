@@ -37,6 +37,7 @@ import net.steamcrafted.materialiconlib.MaterialMenuInflater;
 
 import hva.flashdiscount.fragment.DetailFragment;
 import hva.flashdiscount.fragment.LoginDialogFragment;
+import hva.flashdiscount.fragment.ScannerFragment;
 import hva.flashdiscount.fragment.SettingsFragment;
 import hva.flashdiscount.fragment.TabFragment;
 import hva.flashdiscount.layout.RoundNetworkImageView;
@@ -109,8 +110,9 @@ public class MainActivity extends AppCompatActivity
                 if (newState == drawer.STATE_SETTLING) {
                     try {
                         DetailFragment df = (DetailFragment) fm.findFragmentByTag("detailfrag");
+                        ScannerFragment sf = (ScannerFragment) fm.findFragmentByTag("scannerfrag");
 
-                        if (df.isVisible()) {
+                        if (df.isVisible() || sf.isVisible()) {
                             onBackPressed();
                             drawer.closeDrawer(GravityCompat.START);
                         }
