@@ -29,6 +29,7 @@ import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.R;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
+import hva.flashdiscount.model.User;
 import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.utils.LoginSingleton;
 import hva.flashdiscount.utils.VolleySingleton;
@@ -50,6 +51,7 @@ public class DetailFragment extends Fragment {
     private int discountPostion;
     private boolean dialog;
     private boolean success;
+    private LoginSingleton loginSingleton;
 
 
     public static DetailFragment newInstance() {
@@ -74,6 +76,8 @@ public class DetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FragmentManager fm = getFragmentManager();
+        loginSingleton = LoginSingleton.getInstance(getContext());
+
         if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -134,7 +138,20 @@ public class DetailFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if(LoginSingleton.getInstance(getContext()).loggedIn()) {
+                if (loginSingleton.loggedIn() && loginSingleton.loginExpired()) {
+                    User user = loginSingleton.silentLogin();
+                    if(user != null) {
+                        int cameraPermission = ContextCompat.checkSelfPermission(getActivity(),
+                                Manifest.permission.CAMERA);
+                        if (cameraPermission == PackageManager.PERMISSION_GRANTED) {
+                            goToScanner(establishment, discountPostion);
+                        } else {
+                            requestCameraPermissions();
+                        }
+                    } else {
+                        LoginSingleton.getInstance(getContext()).showLoginDialog();
+                    }
+                } else if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
                     int cameraPermission = ContextCompat.checkSelfPermission(getActivity(),
                             Manifest.permission.CAMERA);
                     if (cameraPermission == PackageManager.PERMISSION_GRANTED) {
@@ -143,8 +160,9 @@ public class DetailFragment extends Fragment {
                         requestCameraPermissions();
                     }
                 } else {
-                    LoginSingleton.getInstance(getContext()).showLoginDialog();
+                    loginSingleton.showLoginDialog();
                 }
+
             }
         });
 
