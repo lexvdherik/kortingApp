@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity
     private boolean loggedIn;
     private int tabPosition;
     ActionBarDrawerToggle toggle;
+    FragmentManager fm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity
                 .inflate(R.menu.activity_main_drawer, toolbar.getMenu());
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -104,7 +105,21 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onDrawerStateChanged(int newState) {
+                Log.e(TAG, " " + String.valueOf(newState));
+                if (newState == drawer.STATE_SETTLING) {
+                    try {
+                        DetailFragment df = (DetailFragment) fm.findFragmentByTag("detailfrag");
 
+                        if (df.isVisible()) {
+                            onBackPressed();
+                            drawer.closeDrawer(GravityCompat.START);
+                        }
+
+                    } catch (NullPointerException e) {
+
+                    }
+
+                }
             }
         });
 
@@ -113,7 +128,7 @@ public class MainActivity extends AppCompatActivity
 
         TabFragment tabFragment = new TabFragment();
 
-        FragmentManager fm = getSupportFragmentManager();
+        fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.add(R.id.fragment_container, tabFragment);
         ft.commit();
@@ -157,7 +172,7 @@ public class MainActivity extends AppCompatActivity
             ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
             loggedIn = true;
         } else {
-            FragmentManager fm = getSupportFragmentManager();
+            fm = getSupportFragmentManager();
             LoginDialogFragment dialogFragment = new LoginDialogFragment();
             dialogFragment.show(fm, "Login Fragment");
         }
@@ -168,7 +183,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
 
-        FragmentManager fm = getSupportFragmentManager();
+        fm = getSupportFragmentManager();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -202,21 +217,21 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(TAG, "BACK THROUGH NAV");
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-//            case R.id.action_settings:
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        Log.i(TAG, "BACK THROUGH NAV");
+//        switch (item.getItemId()) {
+//            // Respond to the action bar's Up/Home button
+////            case R.id.action_settings:
+////                return true;
+//            case android.R.id.home:
+//                NavUtils.navigateUpFromSameTask(this);
 //                return true;
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-    }
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//
+//    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

@@ -78,7 +78,7 @@ public class DetailFragment extends Fragment {
         if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_directions);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_media_previous);
         }
         if (getArguments() != null) {
             String gson = getArguments().getString("establishment");
@@ -93,9 +93,8 @@ public class DetailFragment extends Fragment {
             dialogFragment.show(fm, "");
         }
 
-
-
     }
+
 
     private void setFavorite(String idToken, String establishmentId) {
         System.gc();
@@ -115,6 +114,7 @@ public class DetailFragment extends Fragment {
             setDiscountText();
         }
         Button favoriteButton = (Button) mRootView.findViewById(R.id.favorite_button);
+
 
         favoriteButton.setOnClickListener(new View.OnClickListener() {
 
