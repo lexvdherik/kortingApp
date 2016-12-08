@@ -4,7 +4,7 @@
                                                  android:layout_width="match_parent"
                                                  android:layout_height="match_parent"
                                                  android:layout_below="@+id/toolbar"
-                                                 tools:context="hva.flashdiscount.fragment.DetailFragment">
+                                                 tools:mContext="hva.flashdiscount.fragment.DetailFragment">
 
     <ScrollView
         android:layout_width="match_parent"

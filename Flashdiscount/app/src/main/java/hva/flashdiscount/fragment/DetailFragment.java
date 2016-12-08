@@ -31,7 +31,9 @@ import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.R;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
+import hva.flashdiscount.model.User;
 import hva.flashdiscount.network.APIRequest;
+import hva.flashdiscount.utils.LoginSingleton;
 import hva.flashdiscount.utils.VolleySingleton;
 
 
@@ -51,6 +53,7 @@ public class DetailFragment extends Fragment {
     private int discountPostion;
     private boolean dialog;
     private boolean success;
+    private LoginSingleton loginSingleton;
 
 
     public static DetailFragment newInstance() {
@@ -76,6 +79,12 @@ public class DetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         FragmentManager fm = getFragmentManager();
 
+        loginSingleton = LoginSingleton.getInstance(getContext());
+
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
         if (getArguments() != null) {
             String gson = getArguments().getString("establishment");
             discountPostion = getArguments().getInt("discountPosition");
@@ -112,7 +121,7 @@ public class DetailFragment extends Fragment {
             setDiscountText();
         }
         Button favoriteButton = (Button) mRootView.findViewById(R.id.favorite_button);
-        
+
         if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -123,8 +132,6 @@ public class DetailFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-
-
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
                 String idToken = sharedPref.getString("idToken", "");
                 setFavorite(idToken, String.valueOf(establishment.getEstablishmentId()));
@@ -136,20 +143,35 @@ public class DetailFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                int cameraPermission = ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.CAMERA);
-                if (cameraPermission == PackageManager.PERMISSION_GRANTED) {
-
-                    goToScanner(establishment, discountPostion);
+                if (loginSingleton.loggedIn() && loginSingleton.loginExpired()) {
+                    User user = loginSingleton.silentLogin();
+                    if (user != null) {
+                        goToScannerIfGranted();
+                    } else {
+                        loginSingleton.showLoginDialog();
+                    }
+                } else if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
+                    goToScannerIfGranted();
                 } else {
-                    requestCameraPermissions();
+                    loginSingleton.showLoginDialog();
                 }
 
             }
         });
 
+
         // Inflate the layout for this fragment
         return mRootView;
+    }
+
+    private void goToScannerIfGranted() {
+        int cameraPermission = ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.CAMERA);
+        if (cameraPermission == PackageManager.PERMISSION_GRANTED) {
+            goToScanner(establishment, discountPostion);
+        } else {
+            requestCameraPermissions();
+        }
     }
 
     private void requestCameraPermissions() {
@@ -192,7 +214,6 @@ public class DetailFragment extends Fragment {
     }
 
 
-
     private void goToScanner(Establishment establishment, int discountPostion) {
 
         Bundle arguments = new Bundle();
@@ -204,7 +225,7 @@ public class DetailFragment extends Fragment {
         scannerFragment.setArguments(arguments);
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, scannerFragment,"scannerfrag")
+                .replace(R.id.fragment_container, scannerFragment, "scannerfrag")
                 .addToBackStack(null)
                 .commit();
     }

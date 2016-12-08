@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,13 +36,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
-import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.BottomDiscountAdapter;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.service.GpsService;
-
 
 public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerClickListener {
@@ -60,7 +57,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private TextView bottomSheetdescription;
     private BottomDiscountAdapter adapter;
     private Establishment establishment;
-    private FragmentManager fm;
 
 
     @Override
@@ -86,18 +82,8 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         initAttributes(rootView);
-
-
         mMapView.onCreate(savedInstanceState);
-
-        if (!sharedPref.contains("idToken") && !((MainActivity) getActivity()).hasShownLogin) {
-            LoginDialogFragment dialogFragment = new LoginDialogFragment();
-            dialogFragment.show(fm, "Login Fragment");
-            ((MainActivity) getActivity()).hasShownLogin = true;
-        }
-
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
@@ -172,9 +158,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         return rootView;
     }
 
-
     private void initAttributes(View rootView) {
-        fm = getFragmentManager();
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         View bottomSheet = rootView.findViewById(R.id.bottom_sheet);
         bottomSheettitle = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
@@ -289,7 +273,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             googleMap.setMyLocationEnabled(true);
         }
     }
-
 
     public class GetEstablishmentResponseListener implements Response.Listener<Establishment[]>, Response.ErrorListener {
 

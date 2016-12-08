@@ -9,7 +9,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,23 +25,17 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.OptionalPendingResult;
 
 import net.steamcrafted.materialiconlib.MaterialMenuInflater;
 
 import hva.flashdiscount.fragment.DetailFragment;
-import hva.flashdiscount.fragment.LoginDialogFragment;
 import hva.flashdiscount.fragment.MapViewFragment;
 import hva.flashdiscount.fragment.ScannerFragment;
 import hva.flashdiscount.fragment.SettingsFragment;
 import hva.flashdiscount.fragment.TabFragment;
 import hva.flashdiscount.layout.RoundNetworkImageView;
 import hva.flashdiscount.model.User;
+import hva.flashdiscount.utils.LoginSingleton;
 import hva.flashdiscount.utils.VolleySingleton;
 import io.fabric.sdk.android.Fabric;
 
@@ -54,21 +47,15 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public User user;
-    public boolean hasShownLogin = false;
     ActionBarDrawerToggle toggle;
-    FragmentManager fm;
     private Context contextOfApplication;
-    private boolean loggedIn;
-    private int tabPosition;
+    private LoginSingleton loginSingleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         contextOfApplication = getApplicationContext();
-        loggedIn = false;
-
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        Log.e(TAG, "expire date = " + sharedPref.getString("expire_date", "er is geen expire date hahaha"));
+        loginSingleton = LoginSingleton.getInstance(this);
 
         Fabric.with(this, new Crashlytics());
 
@@ -94,9 +81,34 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                if (!loggedIn) {
-                    Log.e(TAG, "ik ben niet ingelogd, ps maiko is homo");
-                    silentLogin();
+                if (loginSingleton.loggedIn() && loginSingleton.loginExpired()) {
+                    Log.e(TAG, "login expiredddd");
+                    User user = loginSingleton.silentLogin();
+                    if (user != null) {
+                        LinearLayout layout = (LinearLayout) findViewById(R.id.nav_header);
+
+                        ImageLoader mImageLoader = VolleySingleton.getInstance(contextOfApplication).getImageLoader();
+                        RoundNetworkImageView image = (RoundNetworkImageView) layout.findViewById(R.id.profile_picture);
+                        if (image != null) {
+                            image.setImageUrl(user.getPicture().toString(), mImageLoader);
+                        }
+
+                        ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
+                        ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
+                    }
+                } else if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
+                    Log.e(TAG, "load everything from sharedpref");
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(contextOfApplication);
+                    LinearLayout layout = (LinearLayout) findViewById(R.id.nav_header);
+
+                    ImageLoader mImageLoader = VolleySingleton.getInstance(contextOfApplication).getImageLoader();
+                    ((RoundNetworkImageView) layout.findViewById(R.id.profile_picture)).setImageUrl(sharedPref.getString("picture", ""), mImageLoader);
+                    ((TextView) layout.findViewById(R.id.naam)).setText(sharedPref.getString("name", ""));
+                    ((TextView) layout.findViewById(R.id.email)).setText(sharedPref.getString("email", ""));
+
+                } else {
+                    Log.e(TAG, "show the dialoggg");
+                    loginSingleton.showLoginDialog();
                 }
             }
 
@@ -110,8 +122,8 @@ public class MainActivity extends AppCompatActivity
                 Log.e(TAG, " " + String.valueOf(newState));
                 if (newState == drawer.STATE_SETTLING) {
                     try {
-                        DetailFragment df = (DetailFragment) fm.findFragmentByTag("detailfrag");
-                        ScannerFragment sf = (ScannerFragment) fm.findFragmentByTag("scannerfrag");
+                        DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag("detailfrag");
+                        ScannerFragment sf = (ScannerFragment) getSupportFragmentManager().findFragmentByTag("scannerfrag");
 
                         if (df.isVisible() || sf.isVisible()) {
                             onBackPressed();
@@ -131,62 +143,17 @@ public class MainActivity extends AppCompatActivity
 
         TabFragment tabFragment = new TabFragment();
 
-        fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.fragment_container, tabFragment);
         ft.commit();
     }
-
-
-//    @Override
-//    protected void onPause() {
-//        super.onResume();
-////        silentLogin();
-//    }
 
     public Context getContextOfApplication() {
         return contextOfApplication;
     }
 
-    public void silentLogin() {
-        LinearLayout layout = (LinearLayout) findViewById(R.id.nav_header);
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getResources().getString(R.string.token))
-                .requestEmail()
-                .build();
-
-        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-        OptionalPendingResult<GoogleSignInResult> pendingResult =
-                Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (pendingResult.isDone()) {
-            GoogleSignInAccount acct = pendingResult.get().getSignInAccount();
-            User user = new User(acct);
-            ImageLoader mImageLoader = VolleySingleton.getInstance(this).getImageLoader();
-            RoundNetworkImageView image = (RoundNetworkImageView) layout.findViewById(R.id.profile_picture);
-            if (image != null) {
-                image.setImageUrl(user.getPicture().toString(), mImageLoader);
-            }
-
-            ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
-            ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
-            loggedIn = true;
-        } else {
-            fm = getSupportFragmentManager();
-            LoginDialogFragment dialogFragment = new LoginDialogFragment();
-            dialogFragment.show(fm, "Login Fragment");
-        }
-
-    }
-
-
     @Override
     public void onBackPressed() {
-
-        fm = getSupportFragmentManager();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -194,7 +161,7 @@ public class MainActivity extends AppCompatActivity
         } else {
 
             try {
-                DetailFragment df = (DetailFragment) fm.findFragmentByTag("detailfrag");
+                DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag("detailfrag");
 
                 if (df.isVisible()) {
                     getSupportFragmentManager().popBackStack();
