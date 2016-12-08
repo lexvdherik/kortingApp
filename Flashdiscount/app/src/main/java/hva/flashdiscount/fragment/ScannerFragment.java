@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,11 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         Log.i(TAG, sharedPref.getString("expire_date", ""));
         idToken = sharedPref.getString("idToken", "");
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
+        }
         return mScannerView;
     }
 

@@ -75,10 +75,7 @@ public class DetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FragmentManager fm = getFragmentManager();
-        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
+
         if (getArguments() != null) {
             String gson = getArguments().getString("establishment");
             discountPostion = getArguments().getInt("discountPosition");
@@ -92,9 +89,8 @@ public class DetailFragment extends Fragment {
             dialogFragment.show(fm, "");
         }
 
-
-
     }
+
 
     private void setFavorite(String idToken, String establishmentId) {
         System.gc();
@@ -107,6 +103,7 @@ public class DetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
         if (mRootView == null) {
             mRootView = inflater.inflate(R.layout.fragment_discount_detail, container, false);
             mImageLoader = VolleySingleton.getInstance(getActivity()).getImageLoader();
@@ -115,6 +112,12 @@ public class DetailFragment extends Fragment {
             setDiscountText();
         }
         Button favoriteButton = (Button) mRootView.findViewById(R.id.favorite_button);
+        
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_media_previous);
+        }
 
         favoriteButton.setOnClickListener(new View.OnClickListener() {
 
@@ -188,6 +191,8 @@ public class DetailFragment extends Fragment {
         discountDescription.setText(discount.getDescription());
     }
 
+
+
     private void goToScanner(Establishment establishment, int discountPostion) {
 
         Bundle arguments = new Bundle();
@@ -199,7 +204,7 @@ public class DetailFragment extends Fragment {
         scannerFragment.setArguments(arguments);
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, scannerFragment)
+                .replace(R.id.fragment_container, scannerFragment,"scannerfrag")
                 .addToBackStack(null)
                 .commit();
     }

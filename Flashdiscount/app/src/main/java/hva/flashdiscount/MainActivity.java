@@ -11,7 +11,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -39,6 +38,7 @@ import net.steamcrafted.materialiconlib.MaterialMenuInflater;
 import hva.flashdiscount.fragment.DetailFragment;
 import hva.flashdiscount.fragment.LoginDialogFragment;
 import hva.flashdiscount.fragment.MapViewFragment;
+import hva.flashdiscount.fragment.ScannerFragment;
 import hva.flashdiscount.fragment.SettingsFragment;
 import hva.flashdiscount.fragment.TabFragment;
 import hva.flashdiscount.layout.RoundNetworkImageView;
@@ -55,6 +55,8 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
     public User user;
     public boolean hasShownLogin = false;
+    ActionBarDrawerToggle toggle;
+    FragmentManager fm;
     private Context contextOfApplication;
     private boolean loggedIn;
     private int tabPosition;
@@ -78,10 +80,11 @@ public class MainActivity extends AppCompatActivity
                 .inflate(R.menu.activity_main_drawer, toolbar.getMenu());
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+
 
         drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -104,7 +107,22 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onDrawerStateChanged(int newState) {
+                Log.e(TAG, " " + String.valueOf(newState));
+                if (newState == drawer.STATE_SETTLING) {
+                    try {
+                        DetailFragment df = (DetailFragment) fm.findFragmentByTag("detailfrag");
+                        ScannerFragment sf = (ScannerFragment) fm.findFragmentByTag("scannerfrag");
 
+                        if (df.isVisible() || sf.isVisible()) {
+                            onBackPressed();
+                            drawer.closeDrawer(GravityCompat.START);
+                        }
+
+                    } catch (NullPointerException e) {
+
+                    }
+
+                }
             }
         });
 
@@ -113,7 +131,7 @@ public class MainActivity extends AppCompatActivity
 
         TabFragment tabFragment = new TabFragment();
 
-        FragmentManager fm = getSupportFragmentManager();
+        fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.add(R.id.fragment_container, tabFragment);
         ft.commit();
@@ -157,7 +175,7 @@ public class MainActivity extends AppCompatActivity
             ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
             loggedIn = true;
         } else {
-            FragmentManager fm = getSupportFragmentManager();
+            fm = getSupportFragmentManager();
             LoginDialogFragment dialogFragment = new LoginDialogFragment();
             dialogFragment.show(fm, "Login Fragment");
         }
@@ -168,7 +186,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
 
-        FragmentManager fm = getSupportFragmentManager();
+        fm = getSupportFragmentManager();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -183,6 +201,8 @@ public class MainActivity extends AppCompatActivity
 
                     TabFragment tb = new TabFragment();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, tb).commit();
+                    toggle.syncState();
+
 
                 } else {
                     super.onBackPressed();
@@ -200,21 +220,21 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(TAG, "BACK THROUGH NAV");
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-//            case R.id.action_settings:
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        Log.i(TAG, "BACK THROUGH NAV");
+//        switch (item.getItemId()) {
+//            // Respond to the action bar's Up/Home button
+////            case R.id.action_settings:
+////                return true;
+//            case android.R.id.home:
+//                NavUtils.navigateUpFromSameTask(this);
 //                return true;
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-    }
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//
+//    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
