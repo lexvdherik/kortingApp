@@ -261,13 +261,15 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));
         arguments.putInt("discountPosition", discountPosition);
+        arguments.putBoolean("dialog", false);
+        arguments.putBoolean("succes", false);
 
         DetailFragment detailFragment = new DetailFragment();
 
         detailFragment.setArguments(arguments);
 
         getFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, detailFragment)
+                .replace(R.id.fragment_container, detailFragment, "detailfrag")
                 .addToBackStack(null)
                 .commit();
     }

@@ -87,11 +87,6 @@ public class DetailFragment extends Fragment {
         }
         if (dialog) {
             MessageDialogFragment dialogFragment = newInstance(getArguments().getString("message"));
-
-//                Bundle args = new Bundle();
-//                args.putString("message", getArguments().getString("message"));
-//
-//                dialogFragment.setArguments(args);
             dialogFragment.show(fm, "");
         }
 
