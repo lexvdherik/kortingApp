@@ -1,8 +1,6 @@
 package hva.flashdiscount.adapter;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,11 +13,11 @@ import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import hva.flashdiscount.model.Company;
-import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.R;
 import hva.flashdiscount.fragment.SettingsFragment;
+import hva.flashdiscount.model.Company;
 import hva.flashdiscount.model.Favorite;
+import hva.flashdiscount.network.APIRequest;
 
 
 /**
@@ -31,9 +29,9 @@ import hva.flashdiscount.model.Favorite;
 
 public class SettingsAdapter extends BaseAdapter {
 
+    private static final String TAG = SettingsAdapter.class.getSimpleName();
     private static LayoutInflater inflater = null;
     private Favorite[] companySettings;
-    private static final String TAG = SettingsAdapter.class.getSimpleName();
 
     public SettingsAdapter(Activity activity, Favorite[] companySettings) {
 
@@ -61,11 +59,6 @@ public class SettingsAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
-    }
-
-
-    private class Holder {
-        Switch tv;
     }
 
     @Override
@@ -108,11 +101,13 @@ public class SettingsAdapter extends BaseAdapter {
     }
 
     private void saveSettings() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(inflater.getContext());
-        String idToken = sharedPref.getString("idToken", "");
         System.gc();
         SetSettingsResponseListener listener = new SetSettingsResponseListener();
-        APIRequest.getInstance(inflater.getContext()).setSettings(listener, listener, idToken, companySettings);
+        APIRequest.getInstance(inflater.getContext()).setSettings(listener, listener, companySettings);
+    }
+
+    private class Holder {
+        Switch tv;
     }
 
     private class SetSettingsResponseListener implements Response.Listener, Response.ErrorListener {

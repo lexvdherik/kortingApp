@@ -12,7 +12,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,13 +36,11 @@ public class APIRequest {
 
     private static APIRequest sInstance;
     private final RequestQueue mQueue;
-    private Context mContext;
     private LoginSingleton loginSingleton;
 
     private APIRequest(Context context) {
-        mContext = context;
         mQueue = Volley.newRequestQueue(context);
-        loginSingleton = LoginSingleton.getInstance(mContext);
+        loginSingleton = LoginSingleton.getInstance(context);
     }
 
     public static APIRequest getInstance(Context context) {
@@ -66,9 +63,8 @@ public class APIRequest {
         return true;
     }
 
-    public boolean postUser(Response.Listener<Token> responseListener, Response.ErrorListener errorListener, String idToken) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("idToken", idToken);
+    public boolean postUser(Response.Listener<Token> responseListener, Response.ErrorListener errorListener) {
+        Map<String, Object> params = loginSingleton.authorizedRequestParameters();
 
         Log.i(TAG, "start post");
 
@@ -78,10 +74,9 @@ public class APIRequest {
         return true;
     }
 
-    public boolean postDeviceToken(Response.Listener<String> responseListener, Response.ErrorListener errorListener, String idToken, String deviceToken) {
-        Map<String, Object> params = new HashMap<>();
+    public boolean postDeviceToken(Response.Listener<String> responseListener, Response.ErrorListener errorListener, String deviceToken) {
+        Map<String, Object> params = loginSingleton.authorizedRequestParameters();
         params.put("deviceToken", deviceToken);
-        params.put("idToken", idToken);
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_FIID, params,
                 responseListener, errorListener, Token.class).setTag(METHOD_POST_FIID));
@@ -89,13 +84,8 @@ public class APIRequest {
         return true;
     }
 
-    public boolean setFavorite(Response.Listener responseListener, Response.ErrorListener errorListener, String idToken, String establishmentId) {
-        if (loginSingleton.loginExpired()) {
-            idToken = loginSingleton.refreshToken();
-        }
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("idToken", idToken);
+    public boolean setFavorite(Response.Listener responseListener, Response.ErrorListener errorListener, String establishmentId) {
+        Map<String, Object> params = loginSingleton.authorizedRequestParameters();
         params.put("establishmentId", establishmentId);
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_SET_FAVORITE, params,
                 responseListener, errorListener, null).setTag(METHOD_SET_FAVORITE));
@@ -103,10 +93,8 @@ public class APIRequest {
         return true;
     }
 
-    public boolean getFavorites(Response.Listener<Favorite[]> responseListener, Response.ErrorListener errorListener, String idToken) {
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("idToken", idToken);
+    public boolean getFavorites(Response.Listener<Favorite[]> responseListener, Response.ErrorListener errorListener) {
+        Map<String, Object> params = loginSingleton.authorizedRequestParameters();
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_FAVORITES, params,
                 responseListener, errorListener, Favorite[].class).setTag(METHOD_GET_FAVORITES).setShouldCache(true));
@@ -114,16 +102,14 @@ public class APIRequest {
         return true;
     }
 
-    public boolean setSettings(Response.Listener responseListener, Response.ErrorListener errorListener, String idToken, Favorite[] favorites) {
-
+    public boolean setSettings(Response.Listener responseListener, Response.ErrorListener errorListener, Favorite[] favorites) {
         List<Favorite> test = Arrays.asList(favorites);
-//        JSONArray favoritesJson = new JSONArray();
 
         Gson gson = new GsonBuilder().create();
         JsonArray favoritesJson = gson.toJsonTree(test).getAsJsonArray();
         Log.i(TAG, favoritesJson.toString());
-        Map<String, Object> params = new HashMap<>();
-        params.put("idToken", idToken);
+
+        Map<String, Object> params = loginSingleton.authorizedRequestParameters();
         params.put("settings", favoritesJson.toString());
 
 
@@ -133,13 +119,9 @@ public class APIRequest {
         return true;
     }
 
-    public boolean claimDiscount(Response.Listener responseListener, Response.ErrorListener errorListener, String idToken, String establishmentId, String discountId) {
-        if (loginSingleton.loginExpired()) {
-            idToken = loginSingleton.refreshToken();
-        }
+    public boolean claimDiscount(Response.Listener responseListener, Response.ErrorListener errorListener, String establishmentId, String discountId) {
+        Map<String, Object> params = loginSingleton.authorizedRequestParameters();
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("idToken", idToken);
         params.put("establishmentId", establishmentId);
         params.put("discountId", discountId);
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_CLAIM_DISCOUNT, params,

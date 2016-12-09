@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDrawerStateChanged(int newState) {
                 Log.e(TAG, " " + String.valueOf(newState));
-                if (newState == drawer.STATE_SETTLING) {
+                if (newState == DrawerLayout.STATE_SETTLING) {
                     try {
                         DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag("detailfrag");
                         ScannerFragment sf = (ScannerFragment) getSupportFragmentManager().findFragmentByTag("scannerfrag");
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity
                         }
 
                     } catch (NullPointerException e) {
-
+                        Log.e(TAG, e.getMessage());
                     }
 
                 }

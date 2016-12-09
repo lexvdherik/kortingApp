@@ -1,7 +1,5 @@
 package hva.flashdiscount.service;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.android.volley.NoConnectionError;
@@ -30,10 +28,7 @@ public class FirebaseIIDService extends FirebaseInstanceIdService {
 
         FirebaseIIDService.PostFirebaseIIDResponseListener listener = new FirebaseIIDService.PostFirebaseIIDResponseListener();
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String idToken = sharedPref.getString("idToken", "");
-
-        APIRequest.getInstance(getApplicationContext()).postDeviceToken(listener, listener, idToken, refreshedToken);
+        APIRequest.getInstance(getApplicationContext()).postDeviceToken(listener, listener, refreshedToken);
     }
 
     public class PostFirebaseIIDResponseListener implements Response.Listener<String>, Response.ErrorListener {

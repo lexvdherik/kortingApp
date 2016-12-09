@@ -20,7 +20,9 @@ import org.joda.time.DateTimeZone;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import hva.flashdiscount.R;
 import hva.flashdiscount.fragment.LoginDialogFragment;
@@ -70,7 +72,7 @@ public class LoginSingleton {
         return currentDate.compareTo(expireDate) == -1;
     }
 
-    public String refreshToken() {
+    private String refreshToken() {
         String token = mContext.getString(R.string.token);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(token)
@@ -104,6 +106,18 @@ public class LoginSingleton {
         LoginDialogFragment dialogFragment = new LoginDialogFragment();
         FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
         dialogFragment.show(fm, "Login Fragment");
+    }
+
+    public Map<String, Object> authorizedRequestParameters()
+    {
+        String idToken = "";
+        if (this.loginExpired()) {
+            idToken = this.refreshToken();
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("idToken", idToken);
+
+        return params;
     }
 
     public User silentLogin() {

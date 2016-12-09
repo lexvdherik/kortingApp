@@ -92,7 +92,7 @@ public class LoginDialogFragment extends DialogFragment {
             // Signed in successfully, show authenticated UI.
             acct = result.getSignInAccount();
             if (acct != null) {
-                postUser(acct.getIdToken());
+                postUser();
             }
 
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -116,10 +116,10 @@ public class LoginDialogFragment extends DialogFragment {
         }
     }
 
-    private void postUser(String idToken) {
+    private void postUser() {
         System.gc();
         LoginDialogFragment.PostUserResponseListener listener = new LoginDialogFragment.PostUserResponseListener();
-        APIRequest.getInstance(getActivity().getApplicationContext()).postUser(listener, listener, idToken);
+        APIRequest.getInstance(getActivity().getApplicationContext()).postUser(listener, listener);
     }
 
     public class PostUserResponseListener implements Response.Listener<Token>, Response.ErrorListener {
@@ -135,9 +135,7 @@ public class LoginDialogFragment extends DialogFragment {
             ((MainActivity) getActivity()).user = user;
 
             if (layout == null) {
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                String id = sharedPref.getString("idToken", null);
-                postUser(id);
+                postUser();
                 getDialog().dismiss();
             }
 

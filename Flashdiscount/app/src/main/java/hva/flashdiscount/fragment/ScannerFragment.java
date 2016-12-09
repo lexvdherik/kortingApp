@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,7 +34,6 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     private Establishment establishment;
     private int dicountPosition;
     private Discount discount;
-    private String idToken;
     private boolean wrongQr;
 
     @Override
@@ -48,11 +48,11 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         }
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         Log.i(TAG, sharedPref.getString("expire_date", ""));
-        idToken = sharedPref.getString("idToken", "");
-        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
         }
         return mScannerView;
     }
@@ -86,7 +86,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         Log.i(TAG, establishmentId);
 
         if (!wrongQr) {
-            claimDiscount(idToken, establishmentId, String.valueOf(discount.getDiscountId()));
+            claimDiscount(establishmentId, String.valueOf(discount.getDiscountId()));
         }
     }
 
@@ -114,10 +114,10 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
                 .commit();
     }
 
-    private void claimDiscount(String idToken, String establishmentId, String discountId) {
+    private void claimDiscount(String establishmentId, String discountId) {
         System.gc();
         ClaimDiscountResponseListener listener = new ClaimDiscountResponseListener();
-        APIRequest.getInstance(getActivity()).claimDiscount(listener, listener, idToken, establishmentId, discountId);
+        APIRequest.getInstance(getActivity()).claimDiscount(listener, listener, establishmentId, discountId);
     }
 
 

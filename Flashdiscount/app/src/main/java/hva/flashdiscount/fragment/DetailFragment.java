@@ -1,11 +1,9 @@
 package hva.flashdiscount.fragment;
 
 import android.Manifest;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -100,10 +98,10 @@ public class DetailFragment extends Fragment {
     }
 
 
-    private void setFavorite(String idToken, String establishmentId) {
+    private void setFavorite(String establishmentId) {
         System.gc();
         DetailFragment.SetFavoriteResponseListener listener = new DetailFragment.SetFavoriteResponseListener();
-        APIRequest.getInstance(getActivity()).setFavorite(listener, listener, idToken, establishmentId);
+        APIRequest.getInstance(getActivity()).setFavorite(listener, listener, establishmentId);
     }
 
     @Override
@@ -130,9 +128,7 @@ public class DetailFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-                String idToken = sharedPref.getString("idToken", "");
-                setFavorite(idToken, String.valueOf(establishment.getEstablishmentId()));
+                setFavorite(String.valueOf(establishment.getEstablishmentId()));
             }
         });
         FloatingActionButton claimButton = (FloatingActionButton) mRootView.findViewById(R.id.claim_button);

@@ -1,9 +1,7 @@
 package hva.flashdiscount.fragment;
 
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,7 +34,7 @@ public class SettingsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static SettingsFragment newInstance(String param1, String param2) {
+    public static SettingsFragment newInstance() {
         SettingsFragment fragment = new SettingsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -76,31 +74,35 @@ public class SettingsFragment extends Fragment {
                 settingsAdapter.updateResults(companySettings);
             }
         });
-
-        getFavorites();
-
+        if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
+            getFavorites();
+        }
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (loginSingleton.loggedIn() && loginSingleton.loginExpired()) {
-            User user = loginSingleton.silentLogin();
-            if (user != null) {
-                getFavorites();
-            } else {
-                loginSingleton.showLoginDialog();
-            }
-        } else if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
+
+        if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
             getFavorites();
-        } else {
-            loginSingleton.showLoginDialog();
+            return;
         }
+
+        User user = null;
+        if (loginSingleton.loggedIn() && loginSingleton.loginExpired()) {
+            user = loginSingleton.silentLogin();
+        }
+        if (user != null) {
+            getFavorites();
+            return;
+        }
+        loginSingleton.showLoginDialog();
     }
 
     /**
      * Set all toggles to the provided state.
+     *
      * @param checkState Boolean
      */
     public void setAllOptionsTo(Boolean checkState) {
@@ -113,18 +115,14 @@ public class SettingsFragment extends Fragment {
 
     private void getFavorites() {
         System.gc();
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String idToken = sharedPref.getString("idToken", "");
         SettingsFragment.GetFavoritesResponseListener listener = new GetFavoritesResponseListener();
-        APIRequest.getInstance(getActivity()).getFavorites(listener, listener, idToken);
+        APIRequest.getInstance(getActivity()).getFavorites(listener, listener);
     }
 
     public void saveSettings() {
         System.gc();
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String idToken = sharedPref.getString("idToken", "");
         SetSettingsResponseListener listener = new SetSettingsResponseListener();
-        APIRequest.getInstance(getActivity()).setSettings(listener, listener, idToken, companySettings);
+        APIRequest.getInstance(getActivity()).setSettings(listener, listener, companySettings);
     }
 
 
