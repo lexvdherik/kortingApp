@@ -19,17 +19,18 @@ import com.android.volley.VolleyError;
 import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.SettingsAdapter;
 import hva.flashdiscount.model.Favorite;
+import hva.flashdiscount.model.User;
 import hva.flashdiscount.network.APIRequest;
+import hva.flashdiscount.utils.LoginSingleton;
 
 public class SettingsFragment extends Fragment {
 
 
+    private static final String TAG = SettingsFragment.class.getSimpleName();
     public static Favorite[] companySettings;
     private SettingsAdapter settingsAdapter;
     private Switch swMain;
-    private int checked;
-
-    private static final String TAG = SettingsFragment.class.getSimpleName();
+    private LoginSingleton loginSingleton;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -45,7 +46,9 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loginSingleton = LoginSingleton.getInstance(getContext());
         if (getArguments() != null) {
+            Log.i(TAG, getArguments().toString());
         }
 
 
@@ -68,7 +71,7 @@ public class SettingsFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                setAllOptions(swMain.isChecked());
+                setAllOptionsTo(swMain.isChecked());
                 saveSettings();
                 settingsAdapter.updateResults(companySettings);
             }
@@ -82,20 +85,26 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        getFavorites();
+        if (loginSingleton.loggedIn() && loginSingleton.loginExpired()) {
+            User user = loginSingleton.silentLogin();
+            if (user != null) {
+                getFavorites();
+            } else {
+                loginSingleton.showLoginDialog();
+            }
+        } else if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
+            getFavorites();
+        } else {
+            loginSingleton.showLoginDialog();
+        }
     }
 
-
-    public void setAllOptions(Boolean checkState) {
-
-
-
-        if (checkState) {
-            checked = 1;
-        } else {
-            checked = 0;
-        }
+    /**
+     * Set all toggles to the provided state.
+     * @param checkState Boolean
+     */
+    public void setAllOptionsTo(Boolean checkState) {
+        int checked = (checkState) ? 1 : 0;
 
         for (Favorite item : companySettings) {
             item.setNotification(checked);

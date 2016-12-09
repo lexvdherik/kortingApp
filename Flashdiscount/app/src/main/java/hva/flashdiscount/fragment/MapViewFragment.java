@@ -58,6 +58,28 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private BottomDiscountAdapter adapter;
     private Establishment establishment;
 
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int nrOfDiscounts = listAdapter.getCount();
+        if (nrOfDiscounts > 2) {
+            nrOfDiscounts = 2;
+        }
+        int totalHeight = 0;
+        for (int i = 0; i < nrOfDiscounts; i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,8 +104,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
-
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         initAttributes(rootView);
         mMapView.onCreate(savedInstanceState);
         try {
@@ -251,7 +271,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         location = (mGpsService.getLocation() == null) ? location : mGpsService.getLocation();
     }
 
-
     public void zoomToLocation(@Nullable Location location) {
         LatLng current = new LatLng(this.location.getLatitude(), this.location.getLongitude());
         if (location != null) {
@@ -303,29 +322,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             }
         }
 
-    }
-
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            return;
-        }
-
-        int nrOfDiscounts = listAdapter.getCount();
-        if (nrOfDiscounts > 2) {
-            nrOfDiscounts = 2;
-        }
-        int totalHeight = 0;
-        for (int i = 0; i < nrOfDiscounts; i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
     }
 
 

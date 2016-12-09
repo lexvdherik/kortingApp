@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity
     ActionBarDrawerToggle toggle;
     private Context contextOfApplication;
     private LoginSingleton loginSingleton;
+    private boolean hasShownLogin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +109,10 @@ public class MainActivity extends AppCompatActivity
 
                 } else {
                     Log.e(TAG, "show the dialoggg");
-                    loginSingleton.showLoginDialog();
+                    if (!hasShownLogin) {
+                        loginSingleton.showLoginDialog();
+                    }
+                    hasShownLogin = true;
                 }
             }
 
