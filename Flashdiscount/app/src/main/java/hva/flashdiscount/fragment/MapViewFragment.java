@@ -1,11 +1,9 @@
 package hva.flashdiscount.fragment;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -247,10 +245,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     private void goToDetailView(Establishment establishment, int discountPosition) {
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putInt("tab_position", 0);
-        editor.apply();
 
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));

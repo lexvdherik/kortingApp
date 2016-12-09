@@ -24,7 +24,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 
 import hva.flashdiscount.MainActivity;
@@ -103,7 +102,6 @@ public class DetailFragment extends Fragment {
 
     private void setFavorite(String idToken, String establishmentId) {
         System.gc();
-        FirebaseMessaging.getInstance().subscribeToTopic(companyName.getText().toString());
         DetailFragment.SetFavoriteResponseListener listener = new DetailFragment.SetFavoriteResponseListener();
         APIRequest.getInstance(getActivity()).setFavorite(listener, listener, idToken, establishmentId);
     }

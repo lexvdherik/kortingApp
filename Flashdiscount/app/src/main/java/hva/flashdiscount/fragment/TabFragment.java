@@ -19,6 +19,8 @@ public class TabFragment extends Fragment {
 
     private static final String TAG = TabFragment.class.getSimpleName();
     private int tabPosition;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
     public TabFragment() {
 
     }
@@ -27,7 +29,9 @@ public class TabFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        editor = sharedPref.edit();
+
         tabPosition = sharedPref.getInt("tab_position", 0);
 
     }
@@ -52,6 +56,9 @@ public class TabFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+
+                editor.putInt("tab_position", tab.getPosition());
+                editor.apply();
             }
 
             @Override
