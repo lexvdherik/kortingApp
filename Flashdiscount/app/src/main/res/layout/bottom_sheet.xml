@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<android.widget.ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:background="@color/wallet_bright_foreground_holo_dark"
     android:orientation="vertical"
+    android:nestedScrollingEnabled="true"
     app:behavior_hideable="true"
     app:behavior_peekHeight="0dp"
     app:layout_behavior="@string/bottom_sheet_behavior"
@@ -20,9 +21,9 @@
         android:id="@+id/bottom_sheet_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#11ffffff"
         android:orientation="vertical"
-        android:paddingBottom="5dp">
+        android:layout_gravity="start"
+        android:nestedScrollingEnabled="true">
 
         <android.support.v7.widget.CardView
             android:id="@+id/card_view_discount_parent"
@@ -101,10 +102,10 @@
         <ListView
             android:id="@+id/discount_list_view"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:nestedScrollingEnabled="true"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/bottom_sheet_card"
             />
     </LinearLayout>
 
 
-</android.support.v4.widget.NestedScrollView>
+</android.widget.ScrollView>

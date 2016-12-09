@@ -12,9 +12,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -80,6 +82,8 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
+
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         initAttributes(rootView);
         mMapView.onCreate(savedInstanceState);
         try {
@@ -88,6 +92,8 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             e.printStackTrace();
         }
 
+        mMapView.onCreate(savedInstanceState);
+        mMapView.onResume();
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -108,26 +114,37 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                         adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
                         mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         CardView detailLayout = (CardView) rootView.findViewById(R.id.card_view_discount);
+
+
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                goToDetailView(establishment, i);
+                            }
+                        });
+
+                        listView.setOnTouchListener(new View.OnTouchListener() {
+                            @Override
+                            public boolean onTouch(View view, MotionEvent motionEvent) {
+                                view.getParent().requestDisallowInterceptTouchEvent(true);
+                                return false;
+                            }
+                        });
+
                         if (establishment.getDiscounts().size() > 1) {
                             detailLayout.setVisibility(View.GONE);
                             listView.setNestedScrollingEnabled(true);
                             listView.setAdapter(adapter);
                         } else if (establishment.getDiscounts().size() == 1) {
                             detailLayout.setVisibility(View.VISIBLE);
-                            listView.setNestedScrollingEnabled(true);
                             listView.setAdapter(adapter);
-                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                    goToDetailView(establishment, i);
-                                }
-                            });
-
                         } else {
                             detailLayout.setVisibility(View.GONE);
                             adapter.clear();
                             listView.setAdapter(adapter);
                         }
+
+                        setListViewHeightBasedOnChildren(listView);
 
                         if (mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
                             mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -234,6 +251,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         location = (mGpsService.getLocation() == null) ? location : mGpsService.getLocation();
     }
 
+
     public void zoomToLocation(@Nullable Location location) {
         LatLng current = new LatLng(this.location.getLatitude(), this.location.getLongitude());
         if (location != null) {
@@ -286,4 +304,30 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         }
 
     }
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int nrOfDiscounts = listAdapter.getCount();
+        if (nrOfDiscounts > 2) {
+            nrOfDiscounts = 2;
+        }
+        int totalHeight = 0;
+        for (int i = 0; i < nrOfDiscounts; i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
+
 }
+
