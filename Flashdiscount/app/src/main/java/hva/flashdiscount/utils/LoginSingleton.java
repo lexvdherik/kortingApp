@@ -3,13 +3,13 @@ package hva.flashdiscount.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import hva.flashdiscount.R;
 import hva.flashdiscount.fragment.LoginDialogFragment;
 import hva.flashdiscount.model.User;
 
@@ -32,12 +31,10 @@ public class LoginSingleton {
     private static final String TAG = LoginSingleton.class.getSimpleName();
     private static LoginSingleton mInstance = null;
     private Context mContext;
-    private SharedPreferences sharedPref;
-    private GoogleSignInAccount acct;
+    private GoogleSignInAccount acct = null;
 
     private LoginSingleton(final Context context) {
         mContext = context;
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
     }
 
     public static LoginSingleton getInstance(final Context context) {
@@ -48,7 +45,7 @@ public class LoginSingleton {
     }
 
     public boolean loggedIn() {
-        return sharedPref.contains("idToken");
+        return (acct != null);
     }
 
     public Boolean loginExpired() {
@@ -72,32 +69,24 @@ public class LoginSingleton {
         return currentDate.compareTo(expireDate) == -1;
     }
 
-    private String refreshToken() {
-        String token = mContext.getString(R.string.token);
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(token)
-                .requestEmail()
-                .build();
+    @Nullable
+    public String refreshToken() {
+        GoogleApiClient mGoogleApiClient = GoogleApiFactory.getClient(mContext);
 
-        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(mContext)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-        OptionalPendingResult<GoogleSignInResult> pendingResult =
-                Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (pendingResult.isDone()) {
-            acct = pendingResult.get().getSignInAccount();
-            User user = new User(acct);
-
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("idToken", user.getGoogleId());
-            editor.putString("name", user.getName());
-            editor.putString("email", user.getEmail());
-            editor.putString("picture", user.getPicture().toString());
-
-            editor.apply();
+        OptionalPendingResult<GoogleSignInResult> pendingResult = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+        if (!pendingResult.isDone()) {
+            return null;
         }
+        acct = pendingResult.get().getSignInAccount();
+        User user = new User(acct);
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("name", user.getName());
+        editor.putString("email", user.getEmail());
+        editor.putString("picture", user.getPicture().toString());
+
+        editor.apply();
 
         return acct.getIdToken();
     }
@@ -108,11 +97,15 @@ public class LoginSingleton {
         dialogFragment.show(fm, "Login Fragment");
     }
 
-    public Map<String, Object> authorizedRequestParameters()
-    {
-        String idToken = "";
-        if (this.loginExpired()) {
-            idToken = this.refreshToken();
+    public Map<String, Object> authorizedRequestParameters() {
+        String idToken = null;
+        if (!loginExpired()) {
+            idToken = refreshToken();
+        }
+
+        if (idToken == null) {
+            silentLogin();
+            return authorizedRequestParameters();
         }
         Map<String, Object> params = new HashMap<>();
         params.put("idToken", idToken);
@@ -121,27 +114,20 @@ public class LoginSingleton {
     }
 
     public User silentLogin() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(mContext.getResources().getString(R.string.token))
-                .requestEmail()
-                .build();
 
-        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(mContext)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+        GoogleApiClient mGoogleApiClient = GoogleApiFactory.getClient(mContext);
 
         OptionalPendingResult<GoogleSignInResult> pendingResult =
                 Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-        if (pendingResult.isDone()) {
-            GoogleSignInAccount acct = pendingResult.get().getSignInAccount();
-
-            return new User(acct);
-        } else {
+        if (!pendingResult.isDone()) {
             FragmentManager fm = ((FragmentActivity) mContext).getSupportFragmentManager();
             LoginDialogFragment dialogFragment = new LoginDialogFragment();
             dialogFragment.show(fm, "Login Fragment");
 
             return null;
         }
+        acct = pendingResult.get().getSignInAccount();
+
+        return new User(acct);
     }
 }

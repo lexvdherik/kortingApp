@@ -110,7 +110,7 @@ public class APIRequest {
         Log.i(TAG, favoritesJson.toString());
 
         Map<String, Object> params = loginSingleton.authorizedRequestParameters();
-        params.put("settings", favoritesJson.toString());
+        params.put("favorites", favoritesJson.toString());
 
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_SET_SETTINGS, params,

@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -125,8 +124,6 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
 
         @Override
         public void onResponse(Object response) {
-            NetworkResponse response1 = (NetworkResponse) response;
-            Log.e(TAG, "blah = " + response1.headers);
             goToDetailView(establishment, dicountPosition, true, "SUCCESS");
         }
 

@@ -88,8 +88,6 @@ class CustomRequest<T> extends Request<T> {
             return Response.error(new JsonRpcRemoteException(resp.get("message").toString()));
         } else if (resp.get("message").toString().replace("\"", "").equals("OK") && result.toString().equals("[]") && mClass.getSimpleName().equals("Boolean")) {
             return Response.success((T) mGson.fromJson("true", mClass), HttpHeaderParser.parseCacheHeaders(response));
-        } else if (resp.get("message").toString().replace("\"", "").equals("OK") && result.toString().contains("house_id") && mClass.getSimpleName().equals("Boolean")) {
-            return Response.success((T) mGson.fromJson("true", mClass), HttpHeaderParser.parseCacheHeaders(response));
         }
 
         return Response.success((T) mGson.fromJson(result.toString(), mClass), HttpHeaderParser.parseCacheHeaders(response));

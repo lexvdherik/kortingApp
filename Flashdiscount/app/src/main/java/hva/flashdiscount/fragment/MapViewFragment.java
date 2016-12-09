@@ -249,7 +249,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Log.e(TAG, "OnMarkerClick");
+        Log.i(TAG, "OnMarkerClick");
         return false;
     }
 

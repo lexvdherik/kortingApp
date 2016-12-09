@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 if (loginSingleton.loggedIn() && loginSingleton.loginExpired()) {
-                    Log.e(TAG, "login expiredddd");
+                    Log.w(TAG, "login expired");
                     User user = loginSingleton.silentLogin();
                     if (user != null) {
                         LinearLayout layout = (LinearLayout) findViewById(R.id.nav_header);
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity
                         ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
                     }
                 } else if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
-                    Log.e(TAG, "load everything from sharedpref");
+                    Log.w(TAG, "load everything from sharedpref");
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(contextOfApplication);
                     LinearLayout layout = (LinearLayout) findViewById(R.id.nav_header);
 
@@ -152,10 +152,6 @@ public class MainActivity extends AppCompatActivity
         ft.commit();
     }
 
-    public Context getContextOfApplication() {
-        return contextOfApplication;
-    }
-
     @Override
     public void onBackPressed() {
 
@@ -191,22 +187,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        Log.i(TAG, "BACK THROUGH NAV");
-//        switch (item.getItemId()) {
-//            // Respond to the action bar's Up/Home button
-////            case R.id.action_settings:
-////                return true;
-//            case android.R.id.home:
-//                NavUtils.navigateUpFromSameTask(this);
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//
-//    }
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -236,8 +216,8 @@ public class MainActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (permissions.length != 1) {
-            Log.e(TAG, permissions.toString());
-            Log.i(TAG, "Permissions denied");
+            Log.i(TAG, permissions.toString());
+            Log.e(TAG, "Permissions denied");
             return;
         }
 
@@ -248,10 +228,11 @@ public class MainActivity extends AppCompatActivity
                     FloatingActionButton button = (FloatingActionButton) fragment.getView().findViewById(R.id.claim_button);
                     button.callOnClick();
                     return;
-                } else {
-                    Toast.makeText(getContextOfApplication(), R.string.no_permission_camera, Toast.LENGTH_LONG).show();
-                    return;
                 }
+
+                Toast.makeText(getApplicationContext(), R.string.no_permission_camera, Toast.LENGTH_LONG).show();
+                return;
+
             case Manifest.permission.ACCESS_FINE_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     MapViewFragment mapViewFragment = (MapViewFragment) getSupportFragmentManager().findFragmentById(R.id.map_view_fragment);
@@ -260,14 +241,15 @@ public class MainActivity extends AppCompatActivity
                         mapViewFragment.zoomToLocation(null);
                     }
                     return;
-                } else {
-                    Toast.makeText(getContextOfApplication(), R.string.no_permission_location, Toast.LENGTH_LONG).show();
-                    return;
                 }
+
+                Toast.makeText(getApplicationContext(), R.string.no_permission_location, Toast.LENGTH_LONG).show();
+                return;
+
             default:
-                Log.e(TAG, "onRequestPermissionsResult: " + grantResults[0]);
-                Log.e(TAG, "onRequestPermissionsResult: " + permissions[0]);
-                Toast.makeText(getContextOfApplication(), "Permission " + grantResults[0] + " for " + permissions[0], Toast.LENGTH_LONG).show();
+                Log.i(TAG, "onRequestPermissionsResult: " + grantResults[0]);
+                Log.i(TAG, "onRequestPermissionsResult: " + permissions[0]);
+                Toast.makeText(getApplicationContext(), "Permission " + grantResults[0] + " for " + permissions[0], Toast.LENGTH_LONG).show();
         }
     }
 }

@@ -11,7 +11,9 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 import hva.flashdiscount.network.APIRequest;
 
 /**
- * Created by Dr.Chruc on 1-12-2016.
+ * TODO: Description.
+ * @author Dr.Chruc
+ * @since 1-12-2016
  */
 
 public class FirebaseIIDService extends FirebaseInstanceIdService {
@@ -36,7 +38,7 @@ public class FirebaseIIDService extends FirebaseInstanceIdService {
         @Override
         public void onResponse(String token) {
 
-            Log.e(TAG, token);
+            Log.i(TAG, token);
         }
 
         @Override

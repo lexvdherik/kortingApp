@@ -1,9 +1,7 @@
 package hva.flashdiscount.fragment;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,11 +16,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
 
 import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.R;
@@ -30,13 +25,14 @@ import hva.flashdiscount.layout.RoundNetworkImageView;
 import hva.flashdiscount.model.Token;
 import hva.flashdiscount.model.User;
 import hva.flashdiscount.network.APIRequest;
+import hva.flashdiscount.utils.GoogleApiFactory;
+import hva.flashdiscount.utils.LoginSingleton;
 import hva.flashdiscount.utils.VolleySingleton;
 
 public class LoginDialogFragment extends DialogFragment {
 
     private static final String TAG = LoginDialogFragment.class.getSimpleName();
     private static final int RC_SIGN_IN = 1;
-    GoogleApiClient mGoogleApiClient;
     private LinearLayout layout;
     private GoogleSignInAccount acct;
 
@@ -48,18 +44,6 @@ public class LoginDialogFragment extends DialogFragment {
 
         getDialog().setTitle(R.string.login_popup_title);
         getDialog().setCanceledOnTouchOutside(true);
-        String token = "444953407805-n5m9qitvfcnrm8k3muc73sqv5g91dmmi.apps.googleusercontent.com";
-
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestScopes(new Scope(Scopes.PLUS_LOGIN))
-                .requestScopes(new Scope(Scopes.PLUS_ME))
-                .requestIdToken(getResources().getString(R.string.token))
-                .requestEmail()
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this.getActivity())
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
 
         rootView.findViewById(R.id.google_sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +56,7 @@ public class LoginDialogFragment extends DialogFragment {
     }
 
     private void signIn() {
+        GoogleApiClient mGoogleApiClient = GoogleApiFactory.getClient(getContext());
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -91,28 +76,15 @@ public class LoginDialogFragment extends DialogFragment {
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             acct = result.getSignInAccount();
-            if (acct != null) {
-                postUser();
+            if (acct == null) {
+                return;
             }
+            LoginSingleton loginSingleton = LoginSingleton.getInstance(getContext());
+            loginSingleton.refreshToken();
+            postUser();
 
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            SharedPreferences.Editor editor = sharedPref.edit();
-
-            User user = new User(acct);
-
-            editor.putString("idToken", user.getGoogleId());
-            editor.putString("name", user.getName());
-            editor.putString("email", user.getEmail());
-            editor.putString("picture", user.getPicture().toString());
-
-            editor.apply();
-
-            // mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
-            // updateUI(true);
         } else {
             Log.i(TAG, "Something went wrong... You signed out");
-            // Signed out, show unauthenticated UI.
-            // updateUI(false);
         }
     }
 

@@ -1,20 +1,20 @@
 package hva.flashdiscount.network;
 
 
-public final class JsonRpcRemoteException extends JsonRpcException {
+final class JsonRpcRemoteException extends JsonRpcException {
 
     private final Integer code;
     private final String msg;
     private final String data;
 
-    public JsonRpcRemoteException(String msg) {
+    JsonRpcRemoteException(String msg) {
         super(msg);
         this.code = null;
         this.msg = msg;
         this.data = null;
     }
 
-    public JsonRpcRemoteException(Integer code, String msg, String data) {
+    JsonRpcRemoteException(Integer code, String msg, String data) {
         super(format(code, msg, data));
         this.code = code;
         this.msg = msg;
