@@ -74,12 +74,19 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             listItem.measure(0, 0);
             totalHeight += listItem.getMeasuredHeight();
         }
+        if (nrOfDiscounts == 1) {
+            totalHeight += 30;
+        }
+
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)) - 100;
         listView.setLayoutParams(params);
         listView.requestLayout();
+
+
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
