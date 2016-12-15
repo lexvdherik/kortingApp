@@ -8,8 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,11 +77,6 @@ public class DetailFragment extends Fragment {
         FragmentManager fm = getFragmentManager();
 
         loginSingleton = LoginSingleton.getInstance(getContext());
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        }
         if (getArguments() != null) {
             String gson = getArguments().getString("establishment");
             discountPosition = getArguments().getInt("discountPosition");
@@ -125,13 +118,6 @@ public class DetailFragment extends Fragment {
 
         ImageButton favoriteButton = (ImageButton) mRootView.findViewById(R.id.favorite_button);
         favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24px);
-
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24px);
-        }
 
         favoriteButton.setOnClickListener(new View.OnClickListener() {
 

@@ -9,6 +9,7 @@
         <!--<item name="android:fontFamily"></item>-->
         <!--<item name="textColorPrimary">@color/textColorPrimary</item>-->
         <!--<item name="textColorSecondary">@color/textColorSecondary</item>-->
+
         <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="lollipop">true</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@android:color/transparent</item>
     </style>

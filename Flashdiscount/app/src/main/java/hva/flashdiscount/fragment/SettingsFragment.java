@@ -20,10 +20,12 @@ import hva.flashdiscount.model.Favorite;
 import hva.flashdiscount.model.User;
 import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.utils.LoginSingleton;
+import hva.flashdiscount.utils.TransactionHandler;
 
 public class SettingsFragment extends Fragment {
 
 
+    TransactionHandler.FragmentTransactionHandler mTransactionHandler;
     private static final String TAG = SettingsFragment.class.getSimpleName();
     public static Favorite[] companySettings;
     private SettingsAdapter settingsAdapter;
@@ -97,7 +99,7 @@ public class SettingsFragment extends Fragment {
             getFavorites();
             return;
         }
-        loginSingleton.showLoginDialog();
+//        loginSingleton.showLoginDialog();
     }
 
     /**
