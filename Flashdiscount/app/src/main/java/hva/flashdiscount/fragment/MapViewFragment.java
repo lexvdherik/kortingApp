@@ -410,6 +410,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     }
 
     protected void createCategory(Category category){
+
         categories.add(category);
     }
 
@@ -517,6 +518,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         @Override
         public void onResponse(Category[] categories) {
             for(Category category : categories){
+                Log.i(TAG, category.toString());
                 createCategory(category);
             }
         }

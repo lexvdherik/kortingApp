@@ -67,6 +67,7 @@ public class APIRequest {
 
     public boolean getCategories(Response.Listener<Category[]> responseListener, Response.ErrorListener errorListener) {
 
+
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_CATEGORIES, null,
                 responseListener, errorListener, Category[].class).setTag(METHOD_GET_CATEGORIES).setShouldCache(true));
         return true;

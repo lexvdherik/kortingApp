@@ -29,6 +29,7 @@ public class CategoryAdapter extends BaseAdapter implements View.OnClickListener
     private final LayoutInflater inf;
     private Context thisContext;
     private MapViewFragment mapViewFragment;
+    private Category category;
 
     public CategoryAdapter(Context context, int resource, ArrayList<Category> categoryArrayList, MapViewFragment mapViewFragment) {
         //super(context, resource, categoryArrayList);
@@ -46,9 +47,9 @@ public class CategoryAdapter extends BaseAdapter implements View.OnClickListener
 
         ArrayList<Category> categoryList = categoryArrayList;
         for(int i=0;i < categoryList.size();i++){
-            Category category = categoryList.get(i);
+            category = categoryList.get(i);
             if(category.isSelected()){
-                Log.i("CAT", category.getCategoryName());
+                Log.i("CAT", category.getName());
             }
         }
     }
@@ -65,13 +66,14 @@ public class CategoryAdapter extends BaseAdapter implements View.OnClickListener
 
         if (convertView == null) {
 
-
+            category = categoryArrayList.get(position);
             LayoutInflater vi = (LayoutInflater) thisContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = vi.inflate(R.layout.category_list_child, null);
 
             holder = new ViewHolder();
             holder.code = (TextView) convertView.findViewById(R.id.category_name);
             holder.name = (CheckBox) convertView.findViewById(R.id.checkBox1);
+            holder.code.setText(category.getName());
 
             convertView.setTag(holder);
 
@@ -79,18 +81,15 @@ public class CategoryAdapter extends BaseAdapter implements View.OnClickListener
                 public void onClick(View v) {
                     CheckBox checkBox = (CheckBox) v ;
 
-                    Category category = (Category) checkBox.getTag();
+                    category = (Category) checkBox.getTag();
 
                     category.setSelected(checkBox.isChecked());
                     if(checkBox.isChecked()){
-                        Log.i("CHECKED_CLICKED", "Checked clicked");
                         mapViewFragment.displaySelectedMarkers();
 
                     } else {
-                        //KAK
                         mapViewFragment.displaySelectedMarkers();
                     }
-                    //country.setSelected(cb.isChecked());
                 }
             });
         }
@@ -98,9 +97,10 @@ public class CategoryAdapter extends BaseAdapter implements View.OnClickListener
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Category category = categoryArrayList.get(position);
+        category = categoryArrayList.get(position);
         //holder.code.setText(category.getCategoryName());
-        holder.code.setText(category.getCategoryName());
+        holder.code.setText(category.getName());
+
         holder.name.setChecked(category.isSelected());
         holder.name.setTag(category);
 
@@ -125,53 +125,6 @@ public class CategoryAdapter extends BaseAdapter implements View.OnClickListener
     public boolean getItemChecked(int i){
         return categoryArrayList.get(i).isSelected();
     }
-
-
-    public void checkButtonClick(){
-
-    }
-
-    public int[] getCheckedCategoryIDs(){
-        int j =0;
-        int[] result = new int[categoryArrayList.size()];
-        for(int i =0; i < categoryArrayList.size(); i++){
-
-            if(categoryArrayList.get(i).isSelected()){
-
-                result[j] = categoryArrayList.get(i).getCategoryId();
-                j++;
-            }
-
-        }
-        return  result;
-    }
-
-
-//    private void checkButtonClick() {
-//
-//        Button button = (Button) findViewById(R.id.findSelected);
-//
-//        button.findViewById(R.id.cast_notification_id);
-//
-//        button.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//
-//                StringBuffer responseText = new StringBuffer();
-//                responseText.append("The following were selected...\n");
-//
-//                ArrayList<Category> categoryList = categoryArrayList;
-//                for(int i=0;i<categoryList.size();i++){
-//                    Category category = categoryList.get(i);
-//                    if(category.isSelected()){
-//                        responseText.append("\n" + category.getCategoryName());
-//                    }
-//                }
-//
-//            }
-//        });
-//    }
 
 
 }

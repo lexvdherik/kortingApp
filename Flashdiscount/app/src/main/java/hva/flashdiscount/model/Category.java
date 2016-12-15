@@ -7,25 +7,25 @@ package hva.flashdiscount.model;
 public class Category {
 
     private int categoryId;
-    private String categoryName;
-    private String logoUrl;
+    private String name;
+    private String logo;
     private String description;
     private boolean selected;
 
     public Category() {
     }
 
-    public Category(int categoryId, String categoryName, String logoUrl, String description) {
+    public Category(int categoryId, String name, String logo, String description) {
         this.categoryId = categoryId;
-        this.categoryName = categoryName;
-        this.logoUrl = logoUrl;
+        this.name = name;
+        this.logo = logo;
         this.description = description;
     }
 
-    public Category(int categoryId, String categoryName, String logoUrl, String description, boolean selected) {
+    public Category(int categoryId, String name, String logo, String description, boolean selected) {
         this.categoryId = categoryId;
-        this.categoryName = categoryName;
-        this.logoUrl = logoUrl;
+        this.name = name;
+        this.logo = logo;
         this.description = description;
         this.selected = selected;
     }
@@ -46,20 +46,20 @@ public class Category {
         this.categoryId = categoryId;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getName() {
+        return name;
     }
 
     public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+        this.name = categoryName;
     }
 
     public String getLogoUrl() {
-        return logoUrl;
+        return logo;
     }
 
     public void setLogoUrl(String logoUrl) {
-        this.logoUrl = logoUrl;
+        this.logo = logoUrl;
     }
 
     public String getDescription() {
@@ -68,5 +68,16 @@ public class Category {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "categoryId=" + categoryId +
+                ", categoryName='" + name + '\'' +
+                ", logoUrl='" + logo + '\'' +
+                ", description='" + description + '\'' +
+                ", selected=" + selected +
+                '}';
     }
 }
