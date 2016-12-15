@@ -98,7 +98,10 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
         ((TextView) convertView.findViewById(R.id.description)).setText(discount.getDescription());
         ((TextView) convertView.findViewById(R.id.time_remaining)).setText(discount.getTimeRemaining(convertView.getContext()));
         ((ImageView) convertView.findViewById(R.id.list_icon)).setImageResource(discount.getCategoryImage(getGroup(groupPosition).getCompany().getCategoryId()));
-        ((TextView) convertView.findViewById(R.id.claims_remaining)).setText(String.valueOf(discount.getAmountLimit()- discount.getAmount())+ " " + convertView.getResources().getString(R.string.left));
+        ((TextView) convertView.findViewById(R.id.claims_remaining)).setText(
+                String.valueOf(discount.getAmountLimit() - discount.getAmount())
+                        + " "
+                        + convertView.getResources().getString(R.string.left));
 
 
         return convertView;
@@ -114,7 +117,7 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
         int cCount = getChildrenCount(groupPosition);
         ImageView img = ((ImageView) convertView.findViewById(R.id.list_arrow_image));
 //        Log.e(TAG, String.valueOf(parent.getChildCount()));
-        if(cCount > 0) {
+        if (cCount > 0) {
             if (isExpanded) {
                 img.setImageResource(R.drawable.ic_arrow_drop_up_black_24px);
             } else {
@@ -140,7 +143,10 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
             ((TextView) convertView.findViewById(R.id.company_name)).setText(establishment.getCompany().getName());
             ((TextView) convertView.findViewById(R.id.company_street)).setText(establishment.getStreet() + " " + establishment.getStreetnumber());
             ((TextView) convertView.findViewById(R.id.time_remaining)).setText(establishment.getDiscounts().get(0).getTimeRemaining(convertView.getContext()));
-            ((TextView) convertView.findViewById(R.id.claims_remaining)).setText(String.valueOf(establishment.getDiscounts().get(0).getAmountLimit()- establishment.getDiscounts().get(0).getAmount())+ " " + convertView.getResources().getString(R.string.left));
+            ((TextView) convertView.findViewById(R.id.claims_remaining)).setText(String.valueOf(
+                    establishment.getDiscounts().get(0).getAmountLimit() - establishment.getDiscounts().get(0).getAmount())
+                    + " "
+                    + convertView.getResources().getString(R.string.left));
         } else {
             ((TextView) convertView.findViewById(R.id.flextitel)).setText(String.valueOf(cCount + " " + convertView.getResources().getString(R.string.discount_plural)));
             ((TextView) convertView.findViewById(R.id.company_name)).setText(establishment.getCompany().getName());

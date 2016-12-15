@@ -82,7 +82,7 @@ class CustomRequest<T> extends Request<T> {
         }
         if (mClass == null && (response.statusCode < 300 && response.statusCode >= 200)) {
             return Response.success((T) response, HttpHeaderParser.parseCacheHeaders(response));
-        } else if (response.statusCode > 300 && response.statusCode < 200){
+        } else if (response.statusCode > 300 && response.statusCode < 200) {
             return Response.error(new JsonRpcRemoteException(resp.get("message").toString()));
         } else if ((response.statusCode < 300 && response.statusCode >= 200) && result.toString().equals("[]") && mClass.getSimpleName().equals("Boolean")) {
             return Response.success((T) mGson.fromJson("true", mClass), HttpHeaderParser.parseCacheHeaders(response));

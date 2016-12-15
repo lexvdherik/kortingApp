@@ -98,8 +98,8 @@ public class DetailFragment extends Fragment {
             dialogFragment.show(fm, "");
         }
 
-        if(loginSingleton.loggedIn()) {
-            GetFavorite(String.valueOf(establishment.getEstablishmentId()));
+        if (loginSingleton.loggedIn()) {
+            getFavorite(String.valueOf(establishment.getEstablishmentId()));
         }
 
     }
@@ -111,7 +111,7 @@ public class DetailFragment extends Fragment {
         APIRequest.getInstance(getActivity()).setFavorite(listener, listener, establishmentId);
     }
 
-    private void GetFavorite(String establishmentId) {
+    private void getFavorite(String establishmentId) {
         System.gc();
         DetailFragment.GetFavoriteResponseListener listener = new DetailFragment.GetFavoriteResponseListener();
         APIRequest.getInstance(getActivity()).getFavoriteById(listener, listener, establishmentId);
@@ -240,6 +240,17 @@ public class DetailFragment extends Fragment {
                 .commit();
     }
 
+    public void isFavorite(String response) {
+        ImageButton favoriteButton = (ImageButton) mRootView.findViewById(R.id.favorite_button);
+
+        if (response.equals("NETWORK 201")) {
+            favoriteButton.setImageResource(R.drawable.ic_favorite_red_24px);
+        } else {
+            favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24px);
+        }
+
+    }
+
     public class SetFavoriteResponseListener implements Response.Listener, Response.ErrorListener {
 
         @Override
@@ -280,16 +291,7 @@ public class DetailFragment extends Fragment {
         }
 
     }
-    public void isFavorite(String response){
-        ImageButton favoriteButton = (ImageButton) mRootView.findViewById(R.id.favorite_button);
 
-        if (response.equals("NETWORK 201")){
-            favoriteButton.setImageResource(R.drawable.ic_favorite_red_24px);
-        }else{
-            favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24px);
-        }
-
-    }
     public class GetFavoriteResponseListener implements Response.Listener, Response.ErrorListener {
 
         @Override
