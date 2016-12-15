@@ -176,7 +176,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                         if (mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
                             mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
                             bottomSheettitle.setText(establishment.getCompany().getName());
-                            bottomSheetdescription.setText(String.valueOf(establishment.getStreet() + " " + establishment.getStreetNumber() + ", " + establishment.getCity()));
+                            bottomSheetdescription.setText(String.valueOf(establishment.getStreet() + " " + establishment.getStreetnumber() + ", " + establishment.getCity()));
                         } else {
                             mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
                         }

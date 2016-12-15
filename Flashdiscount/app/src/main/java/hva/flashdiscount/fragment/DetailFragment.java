@@ -98,7 +98,9 @@ public class DetailFragment extends Fragment {
             dialogFragment.show(fm, "");
         }
 
-        GetFavorite(String.valueOf(establishment.getEstablishmentId()));
+        if(loginSingleton.loggedIn()) {
+            GetFavorite(String.valueOf(establishment.getEstablishmentId()));
+        }
 
     }
 
