@@ -1,6 +1,7 @@
 package hva.flashdiscount.network;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -12,6 +13,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,10 +66,14 @@ public class APIRequest {
         return true;
     }
 
-    public boolean postUser(Response.Listener<Token> responseListener, Response.ErrorListener errorListener) {
-        Map<String, Object> params = loginSingleton.authorizedRequestParameters();
-
-        Log.i(TAG, "start post");
+    public boolean postUser(@Nullable String idToken, Response.Listener<Token> responseListener, Response.ErrorListener errorListener) {
+        Map<String, Object> params;
+        if (idToken == null) {
+            params = loginSingleton.authorizedRequestParameters();
+        } else {
+            params = new HashMap<>();
+            params.put("idToken", idToken);
+        }
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_USER, params,
                 responseListener, errorListener, Token.class).setTag(METHOD_POST_USER));
@@ -121,7 +127,6 @@ public class APIRequest {
 
         Map<String, Object> params = loginSingleton.authorizedRequestParameters();
         params.put("favorites", favoritesJson.toString());
-
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_SET_SETTINGS, params,
                 responseListener, errorListener, Favorite[].class).setTag(METHOD_SET_SETTINGS).setShouldCache(true));

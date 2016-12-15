@@ -61,7 +61,6 @@ public class DiscountListFragment extends Fragment {
     }
 
     private void getEstablishmentsFromAPI() {
-        System.gc();
         GetEstablishmentResponseListener listener = new GetEstablishmentResponseListener();
         APIRequest.getInstance(getActivity()).getEstablishment(listener, listener);
     }

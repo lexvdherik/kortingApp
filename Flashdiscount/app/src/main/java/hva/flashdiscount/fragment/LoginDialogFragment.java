@@ -81,17 +81,16 @@ public class LoginDialogFragment extends DialogFragment {
             }
             LoginSingleton loginSingleton = LoginSingleton.getInstance(getContext());
             loginSingleton.refreshToken();
-            postUser();
+            postUser(acct.getIdToken());
 
         } else {
             Log.i(TAG, "Something went wrong... You signed out");
         }
     }
 
-    private void postUser() {
-        System.gc();
+    private void postUser(String idToken) {
         LoginDialogFragment.PostUserResponseListener listener = new LoginDialogFragment.PostUserResponseListener();
-        APIRequest.getInstance(getActivity().getApplicationContext()).postUser(listener, listener);
+        APIRequest.getInstance(getActivity().getApplicationContext()).postUser(idToken, listener, listener);
     }
 
     public class PostUserResponseListener implements Response.Listener<Token>, Response.ErrorListener {
@@ -107,7 +106,6 @@ public class LoginDialogFragment extends DialogFragment {
             ((MainActivity) getActivity()).user = user;
 
             if (layout == null) {
-                postUser();
                 getDialog().dismiss();
             }
 

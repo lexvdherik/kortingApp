@@ -1,5 +1,6 @@
 package hva.flashdiscount.network;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -7,7 +8,6 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,6 +20,7 @@ import com.google.gson.JsonSyntaxException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+import java.util.Objects;
 
 class CustomRequest<T> extends Request<T> {
 
@@ -45,10 +46,7 @@ class CustomRequest<T> extends Request<T> {
                 60000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-
     }
-
 
     protected Map<String, String> getParams() throws AuthFailureError {
         return params;
@@ -56,6 +54,44 @@ class CustomRequest<T> extends Request<T> {
 
     @Override
     public Response<T> parseNetworkResponse(NetworkResponse response) {
+        JsonObject resp = getJSONcontentOfResponse(response);
+        if (response.statusCode > 300 && response.statusCode < 200) {
+            String error = (resp == null)
+                    ? "NO ERROR MESSAGE FOUND"
+                    : resp.get("message").toString();
+
+            return Response.error(new JsonRpcRemoteException(error));
+        }
+
+        if (resp == null) {
+            return Response.success((T) response, HttpHeaderParser.parseCacheHeaders(response));
+        }
+
+        JsonElement result = resp.get("result");
+        if (result == null) {
+            result = resp;
+        }
+
+        if (mClass == null) {
+            return Response.success((T) resp, HttpHeaderParser.parseCacheHeaders(response));
+        }
+
+        if (mClass.getSimpleName().equals(Boolean.class.getSimpleName())) {
+            return Response.success((T) mGson.fromJson("true", mClass), HttpHeaderParser.parseCacheHeaders(response));
+        }
+
+        return Response.success((T) mGson.fromJson(result.toString(), mClass), HttpHeaderParser.parseCacheHeaders(response));
+    }
+
+
+    /**
+     * Parse a network response to an object.
+     *
+     * @param response {@link NetworkResponse} Networkresponse to parse
+     * @return null|{@link JsonObject} Object or null if failure
+     */
+    @Nullable
+    private JsonObject getJSONcontentOfResponse(NetworkResponse response) {
         String responseData = null;
 
         try {
@@ -64,31 +100,21 @@ class CustomRequest<T> extends Request<T> {
             e.printStackTrace();
         }
 
+        if (responseData == null || Objects.equals(responseData, "")) {
+            return null;
+        }
+
         JsonParser parser = new JsonParser();
         JsonObject resp;
 
         try {
-            assert responseData != null;
             Log.i(TAG, responseData);
             resp = (JsonObject) parser.parse(new StringReader(responseData));
         } catch (JsonIOException | JsonSyntaxException e) {
             e.printStackTrace();
-            return Response.error(new VolleyError(e));
+            return null;
         }
-
-        JsonElement result = resp.get("result");
-        if (result == null) {
-            result = resp;
-        }
-        if (mClass == null && (response.statusCode < 300 && response.statusCode >= 200)) {
-            return Response.success((T) response, HttpHeaderParser.parseCacheHeaders(response));
-        } else if (response.statusCode > 300 && response.statusCode < 200) {
-            return Response.error(new JsonRpcRemoteException(resp.get("message").toString()));
-        } else if ((response.statusCode < 300 && response.statusCode >= 200) && result.toString().equals("[]") && mClass.getSimpleName().equals("Boolean")) {
-            return Response.success((T) mGson.fromJson("true", mClass), HttpHeaderParser.parseCacheHeaders(response));
-        }
-
-        return Response.success((T) mGson.fromJson(result.toString(), mClass), HttpHeaderParser.parseCacheHeaders(response));
+        return resp;
     }
 
     @Override

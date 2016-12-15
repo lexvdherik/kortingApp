@@ -3,7 +3,6 @@ package hva.flashdiscount.adapter;
 import android.app.Activity;
 import android.graphics.PorterDuff;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,7 +115,6 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
         }
         int cCount = getChildrenCount(groupPosition);
         ImageView img = ((ImageView) convertView.findViewById(R.id.list_arrow_image));
-//        Log.e(TAG, String.valueOf(parent.getChildCount()));
         if (cCount > 0) {
             if (isExpanded) {
                 img.setImageResource(R.drawable.ic_arrow_drop_up_black_24px);
@@ -137,7 +135,6 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
         lineColorCode.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
 
         Establishment establishment = getGroup(groupPosition);
-        Log.e(TAG, "hoi " + establishment.getStreetnumber());
         if (cCount == 0) {
             ((TextView) convertView.findViewById(R.id.flextitel)).setText(establishment.getDiscounts().get(0).getDescription());
             ((TextView) convertView.findViewById(R.id.company_name)).setText(establishment.getCompany().getName());

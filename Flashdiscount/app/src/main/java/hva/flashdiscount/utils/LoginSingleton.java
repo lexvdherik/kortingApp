@@ -23,6 +23,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import hva.flashdiscount.fragment.LoginDialogFragment;
 import hva.flashdiscount.model.User;
@@ -50,8 +51,8 @@ public class LoginSingleton {
 
     public Boolean loginExpired() {
 
-        DateTimeZone london = DateTimeZone.forID("Europe/London");
-        DateTime current = DateTime.now(london);
+        DateTimeZone utc = DateTimeZone.forID("UTC");
+        DateTime current = DateTime.now(utc);
         Calendar currentDate;
         currentDate = current.toCalendar(Locale.ENGLISH);
 
@@ -60,10 +61,16 @@ public class LoginSingleton {
         Calendar expireDate = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
 
+        String date = sharedPref.getString("expire_date", null);
+        if (date == null) {
+            Log.i(TAG, "No Expiry date known");
+            return true;
+        }
         try {
-            expireDate.setTime(sdf.parse(sharedPref.getString("expire_date", "")));
+            expireDate.setTime(sdf.parse(date));
         } catch (ParseException e) {
             Log.e(TAG, e.getMessage());
+            return true;
         }
 
         return currentDate.compareTo(expireDate) == -1;
@@ -78,6 +85,7 @@ public class LoginSingleton {
             return null;
         }
         acct = pendingResult.get().getSignInAccount();
+
         User user = new User(acct);
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -98,15 +106,16 @@ public class LoginSingleton {
     }
 
     public Map<String, Object> authorizedRequestParameters() {
-        String idToken = null;
-        if (!loginExpired()) {
+        String idToken = "";
+        if (loggedIn()) {
             idToken = refreshToken();
         }
 
-        if (idToken == null) {
+        if (Objects.equals(idToken, "")) {
             silentLogin();
             return authorizedRequestParameters();
         }
+
         Map<String, Object> params = new HashMap<>();
         params.put("idToken", idToken);
 

@@ -114,7 +114,6 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     }
 
     private void claimDiscount(String establishmentId, String discountId) {
-        System.gc();
         ClaimDiscountResponseListener listener = new ClaimDiscountResponseListener();
         APIRequest.getInstance(getActivity()).claimDiscount(listener, listener, establishmentId, discountId);
     }

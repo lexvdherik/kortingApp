@@ -11,7 +11,6 @@ public class Token {
 
     public Token(Context context) {
         this.mContext = context;
-        this.setExpireDate(expireDate);
     }
 
     public String getExpireDate() {

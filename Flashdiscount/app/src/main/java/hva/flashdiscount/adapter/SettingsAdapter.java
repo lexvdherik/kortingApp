@@ -101,7 +101,6 @@ public class SettingsAdapter extends BaseAdapter {
     }
 
     private void saveSettings() {
-        System.gc();
         SetSettingsResponseListener listener = new SetSettingsResponseListener();
         APIRequest.getInstance(inflater.getContext()).setSettings(listener, listener, companySettings);
     }

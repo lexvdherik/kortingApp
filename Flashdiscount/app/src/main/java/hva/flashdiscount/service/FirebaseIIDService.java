@@ -22,7 +22,6 @@ public class FirebaseIIDService extends FirebaseInstanceIdService {
 
     @Override
     public void onTokenRefresh() {
-        System.gc();
         //Get hold of the registration token
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         //Log the token

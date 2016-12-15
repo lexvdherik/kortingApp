@@ -23,9 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.JsonObject;
 
 import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.R;
@@ -98,21 +96,15 @@ public class DetailFragment extends Fragment {
             dialogFragment.show(fm, "");
         }
 
-        if (loginSingleton.loggedIn()) {
-            getFavorite(String.valueOf(establishment.getEstablishmentId()));
-        }
-
     }
 
 
     private void setFavorite(String establishmentId) {
-        System.gc();
         DetailFragment.SetFavoriteResponseListener listener = new DetailFragment.SetFavoriteResponseListener();
         APIRequest.getInstance(getActivity()).setFavorite(listener, listener, establishmentId);
     }
 
     private void getFavorite(String establishmentId) {
-        System.gc();
         DetailFragment.GetFavoriteResponseListener listener = new DetailFragment.GetFavoriteResponseListener();
         APIRequest.getInstance(getActivity()).getFavoriteById(listener, listener, establishmentId);
     }
@@ -144,9 +136,25 @@ public class DetailFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                setFavorite(String.valueOf(establishment.getEstablishmentId()));
+                if (loginSingleton.loggedIn() && loginSingleton.loginExpired()) {
+                    User user = loginSingleton.silentLogin();
+                    if (user != null) {
+                        setFavorite(String.valueOf(establishment.getEstablishmentId()));
+                    } else {
+                        loginSingleton.showLoginDialog();
+                    }
+                } else if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
+                    setFavorite(String.valueOf(establishment.getEstablishmentId()));
+                } else {
+                    loginSingleton.showLoginDialog();
+                }
             }
         });
+
+        if (loginSingleton.loggedIn()) {
+            setFavorite(String.valueOf(establishment.getEstablishmentId()));
+        }
+
         FloatingActionButton claimButton = (FloatingActionButton) mRootView.findViewById(R.id.claim_button);
 
         claimButton.setOnClickListener(new View.OnClickListener() {
@@ -240,10 +248,10 @@ public class DetailFragment extends Fragment {
                 .commit();
     }
 
-    public void isFavorite(String response) {
+    public void isFavorite(Boolean response) {
         ImageButton favoriteButton = (ImageButton) mRootView.findViewById(R.id.favorite_button);
 
-        if (response.equals("NETWORK 201")) {
+        if (response) {
             favoriteButton.setImageResource(R.drawable.ic_favorite_red_24px);
         } else {
             favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24px);
@@ -255,39 +263,23 @@ public class DetailFragment extends Fragment {
 
         @Override
         public void onResponse(Object response) {
-            Log.e(TAG, "succes");
-            NetworkResponse networkResponse = (NetworkResponse) response;
-
-            JSONObject jsonHeaders = new JSONObject(networkResponse.headers);
-
-            try {
-                String header = jsonHeaders.get("X-Android-Response-Source").toString();
-
-                isFavorite(header);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
+            if (response instanceof NetworkResponse) {
+                NetworkResponse networkResponse = (NetworkResponse) response;
+                isFavorite((networkResponse.statusCode == 201));
+            } else {
+                JsonObject object = (JsonObject) response;
+                isFavorite(((object.get("status").getAsInt() == 201)));
             }
-
         }
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e(TAG + " content", " joil 263" + error.toString());
-
-//            JSONObject jsonHeaders = new JSONObject(error.networkResponse.headers);
-//
-//            try {
-//                String errorCode = jsonHeaders.get("X-Android-Response-Source").toString();
-//                Log.e(TAG,"Setfavorite Error: "+ errorCode);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-
 
             if (error instanceof NoConnectionError) {
                 Log.w(TAG, "No connection!");
+                return;
             }
+            error.printStackTrace();
         }
 
     }
@@ -296,32 +288,17 @@ public class DetailFragment extends Fragment {
 
         @Override
         public void onResponse(Object response) {
-            NetworkResponse networkResponse = (NetworkResponse) response;
-
-            JSONObject jsonHeaders = new JSONObject(networkResponse.headers);
-
-            try {
-                String header = jsonHeaders.get("X-Android-Response-Source").toString();
-                Log.e(TAG, " getFavorite word aangeroepen" + header);
-                isFavorite(header);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
+            if (response instanceof NetworkResponse) {
+                NetworkResponse networkResponse = (NetworkResponse) response;
+                isFavorite((networkResponse.statusCode == 200));
+            } else {
+                JsonObject object = (JsonObject) response;
+                isFavorite(((object.get("status").getAsInt() == 200)));
             }
-
         }
 
         @Override
         public void onErrorResponse(VolleyError error) {
-
-//            JSONObject jsonHeaders = new JSONObject(error.networkResponse.headers);
-//
-//            try {
-//                String errorCode = jsonHeaders.get("X-Android-Response-Source").toString();
-//                Log.e(TAG,"Setfavorite Error: "+ errorCode);
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
 
             if (error instanceof NoConnectionError) {
                 Log.w(TAG, "No connection!");

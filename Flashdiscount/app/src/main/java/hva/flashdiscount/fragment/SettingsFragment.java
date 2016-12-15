@@ -114,13 +114,11 @@ public class SettingsFragment extends Fragment {
     }
 
     private void getFavorites() {
-        System.gc();
         SettingsFragment.GetFavoritesResponseListener listener = new GetFavoritesResponseListener();
         APIRequest.getInstance(getActivity()).getFavorites(listener, listener);
     }
 
     public void saveSettings() {
-        System.gc();
         SetSettingsResponseListener listener = new SetSettingsResponseListener();
         APIRequest.getInstance(getActivity()).setSettings(listener, listener, companySettings);
     }

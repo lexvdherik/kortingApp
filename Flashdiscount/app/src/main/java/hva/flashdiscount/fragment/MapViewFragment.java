@@ -249,7 +249,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     }
 
     private void getEstablishmentsFromAPI() {
-        System.gc();
         MapViewFragment.GetEstablishmentResponseListener listener = new MapViewFragment.GetEstablishmentResponseListener();
         APIRequest.getInstance(getActivity()).getEstablishment(listener, listener);
     }
