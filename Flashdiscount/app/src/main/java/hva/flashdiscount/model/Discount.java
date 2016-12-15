@@ -12,16 +12,18 @@ public class Discount {
     private String startTime;
     private String endTime;
     private int amount;
+    private int amountLimit;
     private int userLimit;
     private String picture;
 
-    public Discount(int discountId, int active, String description, String startTime, String endTime, int amount, int userLimit, String picture, Company company) {
+    public Discount(int discountId, int active, String description, String startTime, String endTime, int amount, int amountLimit, int userLimit, String picture) {
         this.discountId = discountId;
         this.active = active;
         this.description = description;
         this.startTime = startTime;
         this.endTime = endTime;
         this.amount = amount;
+        this.amountLimit = amountLimit;
         this.userLimit = userLimit;
         this.picture = picture;
     }
@@ -56,6 +58,14 @@ public class Discount {
 
     public String getPicture() {
         return picture;
+    }
+
+    public int getAmountLimit() {
+        return amountLimit;
+    }
+
+    public void setAmountLimit(int amountLimit) {
+        this.amountLimit = amountLimit;
     }
 
     public String getTimeRemaining(Context context) {

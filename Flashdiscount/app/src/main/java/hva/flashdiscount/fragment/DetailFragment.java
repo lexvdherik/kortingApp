@@ -2,7 +2,6 @@ package hva.flashdiscount.fragment;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -13,16 +12,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.R;
@@ -51,6 +54,7 @@ public class DetailFragment extends Fragment {
     private boolean dialog;
     private boolean success;
     private LoginSingleton loginSingleton;
+    private boolean isFavorite;
 
 
     public static DetailFragment newInstance() {
@@ -77,7 +81,6 @@ public class DetailFragment extends Fragment {
         FragmentManager fm = getFragmentManager();
 
         loginSingleton = LoginSingleton.getInstance(getContext());
-
         if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -95,6 +98,10 @@ public class DetailFragment extends Fragment {
             dialogFragment.show(fm, "");
         }
 
+        if(loginSingleton.loggedIn()) {
+            GetFavorite(String.valueOf(establishment.getEstablishmentId()));
+        }
+
     }
 
 
@@ -103,6 +110,13 @@ public class DetailFragment extends Fragment {
         DetailFragment.SetFavoriteResponseListener listener = new DetailFragment.SetFavoriteResponseListener();
         APIRequest.getInstance(getActivity()).setFavorite(listener, listener, establishmentId);
     }
+
+    private void GetFavorite(String establishmentId) {
+        System.gc();
+        DetailFragment.GetFavoriteResponseListener listener = new DetailFragment.GetFavoriteResponseListener();
+        APIRequest.getInstance(getActivity()).getFavoriteById(listener, listener, establishmentId);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -116,12 +130,14 @@ public class DetailFragment extends Fragment {
             setCompanyText();
             setDiscountText();
         }
-        Button favoriteButton = (Button) mRootView.findViewById(R.id.favorite_button);
+
+        ImageButton favoriteButton = (ImageButton) mRootView.findViewById(R.id.favorite_button);
+        favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24px);
 
         if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(android.R.drawable.ic_media_previous);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24px);
         }
 
         favoriteButton.setOnClickListener(new View.OnClickListener() {
@@ -202,7 +218,7 @@ public class DetailFragment extends Fragment {
 
     public void setDiscountText() {
         Log.i(TAG, discount.toString());
-        claimsLeft.setText(Integer.toString(discount.getUserLimit()));
+        claimsLeft.setText(Integer.toString(discount.getAmountLimit() - discount.getAmount()));
         timeLeft.setText(discount.getTimeRemaining(getContext()));
         discountDescription.setText(discount.getDescription());
     }
@@ -224,25 +240,92 @@ public class DetailFragment extends Fragment {
                 .commit();
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
     public class SetFavoriteResponseListener implements Response.Listener, Response.ErrorListener {
 
         @Override
         public void onResponse(Object response) {
+            Log.e(TAG, "succes");
+            NetworkResponse networkResponse = (NetworkResponse) response;
+
+            JSONObject jsonHeaders = new JSONObject(networkResponse.headers);
+
+            try {
+                String header = jsonHeaders.get("X-Android-Response-Source").toString();
+
+                isFavorite(header);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
         }
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e(TAG + " content", " joil" + error.getMessage());
+            Log.e(TAG + " content", " joil 263" + error.toString());
+
+//            JSONObject jsonHeaders = new JSONObject(error.networkResponse.headers);
+//
+//            try {
+//                String errorCode = jsonHeaders.get("X-Android-Response-Source").toString();
+//                Log.e(TAG,"Setfavorite Error: "+ errorCode);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+
+
             if (error instanceof NoConnectionError) {
                 Log.w(TAG, "No connection!");
             }
         }
 
     }
+    public void isFavorite(String response){
+        ImageButton favoriteButton = (ImageButton) mRootView.findViewById(R.id.favorite_button);
+
+        if (response.equals("NETWORK 201")){
+            favoriteButton.setImageResource(R.drawable.ic_favorite_red_24px);
+        }else{
+            favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24px);
+        }
+
+    }
+    public class GetFavoriteResponseListener implements Response.Listener, Response.ErrorListener {
+
+        @Override
+        public void onResponse(Object response) {
+            NetworkResponse networkResponse = (NetworkResponse) response;
+
+            JSONObject jsonHeaders = new JSONObject(networkResponse.headers);
+
+            try {
+                String header = jsonHeaders.get("X-Android-Response-Source").toString();
+                Log.e(TAG, " getFavorite word aangeroepen" + header);
+                isFavorite(header);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+
+//            JSONObject jsonHeaders = new JSONObject(error.networkResponse.headers);
+//
+//            try {
+//                String errorCode = jsonHeaders.get("X-Android-Response-Source").toString();
+//                Log.e(TAG,"Setfavorite Error: "+ errorCode);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+
+            if (error instanceof NoConnectionError) {
+                Log.w(TAG, "No connection!");
+            }
+        }
+
+    }
+
 }

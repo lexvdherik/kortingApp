@@ -90,9 +90,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="end|top"
-                    android:maxLines="1"
-                    android:text="12 min"
                     android:textAlignment="textEnd"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/list_arrow_image" />
 
                 <TextView
                     android:id="@+id/claims_remaining"
@@ -100,7 +103,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="end|bottom"
                     android:maxLines="1"
-                    android:text="21/100"
                     android:textAlignment="textEnd"
                     android:textAppearance="?android:attr/textAppearanceSmall"/>
             </LinearLayout>

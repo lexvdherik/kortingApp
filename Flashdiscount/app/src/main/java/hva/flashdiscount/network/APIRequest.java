@@ -24,10 +24,11 @@ public class APIRequest {
     private static final String TAG = APIRequest.class.getSimpleName();
 
     private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
-    //private static final String HOST = "http://145.28.186.199/api/";
+    //private static final String HOST = "http://192.168.192.62/api/";
 
     private static final String METHOD_GET_FAVORITES = "favoriteestablishment/";
     private static final String METHOD_SET_FAVORITE = "favoriteestablishment/favorite";
+    private static final String METHOD_GET_FAVORITE_BY_ID = "favoriteestablishment/active";
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
     private static final String METHOD_CLAIM_DISCOUNT = "discount/claim";
     private static final String METHOD_POST_USER = "auth/login";
@@ -89,6 +90,15 @@ public class APIRequest {
         params.put("establishmentId", establishmentId);
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_SET_FAVORITE, params,
                 responseListener, errorListener, null).setTag(METHOD_SET_FAVORITE));
+
+        return true;
+    }
+
+    public boolean getFavoriteById(Response.Listener responseListener, Response.ErrorListener errorListener, String establishmentId) {
+        Map<String, Object> params = loginSingleton.authorizedRequestParameters();
+        params.put("establishmentId", establishmentId);
+        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_FAVORITE_BY_ID, params,
+                responseListener, errorListener, null).setTag(METHOD_GET_FAVORITE_BY_ID));
 
         return true;
     }
