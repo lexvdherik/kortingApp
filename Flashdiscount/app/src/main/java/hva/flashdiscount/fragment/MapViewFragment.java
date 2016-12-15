@@ -9,13 +9,19 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -36,8 +42,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.BottomDiscountAdapter;
+import hva.flashdiscount.adapter.CategoryAdapter;
+import hva.flashdiscount.model.Category;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.service.GpsService;
@@ -53,10 +66,18 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private GpsService mGpsService;
     private BottomSheetBehavior mBottomSheetBehavior1;
     private ListView listView;
+    private ListView categoryListView;
     private TextView bottomSheettitle;
     private TextView bottomSheetdescription;
+   // private ArrayList<Category> categories;
     private BottomDiscountAdapter adapter;
     private Establishment establishment;
+    private List<Marker> cafeList = new ArrayList<>();
+    private List<Marker> barList = new ArrayList<>();
+    private List<Marker> allMarkers = new ArrayList<>();
+    private ArrayList<Category> categories = new ArrayList<>();
+    private List<List<Marker>> dataList = new ArrayList<List<Marker>>();
+    private HashMap<Integer, List<Marker>> markerHashMap = new HashMap<>();
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
@@ -98,6 +119,8 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             mGpsService.askLocationPermission();
         }
 
+        getCategoriesFromAPI();
+
     }
 
     @Override
@@ -112,6 +135,20 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             e.printStackTrace();
         }
 
+        Button filterButton = (Button) rootView.findViewById(R.id.filterButton);
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //view = new View(context);
+
+
+                filterTheMarkers();
+
+                //ListView categoryListView = (ListView) rootView.findViewById(R.id.cate);
+            }
+        });
+
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
         mMapView.getMapAsync(new OnMapReadyCallback() {
@@ -123,6 +160,9 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 if (mGpsService.checkPermission()) {
                     googleMap.setMyLocationEnabled(true);
                 }
+
+
+
 
                 zoomToLocation(null);
                 googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -185,13 +225,71 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                         mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     }
                 });
-
+                getCategoriesFromAPI();
                 getEstablishmentsFromAPI();
+                filterTheMarkers();
+
+
             }
         });
 
         return rootView;
     }
+
+    AlertDialog dialog;
+    CheckBox buses, trains;
+
+    public void filterTheMarkers() {
+        if (dialog == null) {
+            AlertDialog.Builder builder;
+            builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View checkBoxView = inflater.inflate(R.layout.marker_selection, null);
+           // View list = inflater.inflate(R.layout.category_list, null);
+            CategoryAdapter categoryAdapter = new CategoryAdapter(context, R.layout.category_list_child, categories);
+            categoryListView = (ListView) checkBoxView.findViewById(R.id.listview_categories);
+
+            categoryListView.setAdapter(categoryAdapter);
+
+            builder.setView(checkBoxView);
+            buses = (CheckBox) checkBoxView.findViewById(R.id.checkBox1);
+            //trains = (CheckBox) list.findViewById(R.id.checkBox2);
+            Button okButton = (Button) checkBoxView.findViewById(R.id.okButton);
+            okButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    displaySelectedMarkers(view);
+                }
+            });
+            Button cancelButton = (Button) checkBoxView.findViewById(R.id.cancelButton);
+            cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+            dialog = builder.create();
+        }
+        dialog.show();
+    }
+
+    public void displaySelectedMarkers(View view) {
+        dialog.dismiss();
+        Log.i("TAG", "Trains Status " + trains.isChecked() + " Bus Status  " + buses.isChecked());
+        //according these check boxes status execute your code to show/hide markers
+
+        for(Marker train : markerHashMap.get(1)){
+            train.setVisible(trains.isChecked());
+        }
+
+        for(Marker buss : markerHashMap.get(2)){
+            buss.setVisible(buses.isChecked());
+        }
+
+        Log.i("HASHMAP", markerHashMap.toString());
+    }
+
+    public void doNothing(View view) { dialog.dismiss(); }
 
     private void initAttributes(View rootView) {
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
@@ -200,6 +298,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         bottomSheetdescription = (TextView) rootView.findViewById(R.id.description);
         mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
         listView = (ListView) rootView.findViewById(R.id.discount_list_view);
+        categoryListView = (ListView) rootView.findViewById(R.id.listview_categories);
     }
 
     @Override
@@ -235,16 +334,40 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     }
 
-    protected Marker createMarker(Establishment establishment) {
-        Marker marker = googleMap.addMarker(new MarkerOptions().position(establishment.getLocation()).anchor(0.5f, 0.5f));
+    protected void createMarker(Establishment establishment) {
+
+        MarkerOptions est = new MarkerOptions().position(establishment.getLocation()).anchor(0.5f, 0.5f);
+
+        Marker marker = googleMap.addMarker(est);
         marker.setTag(establishment);
-        return marker;
+
+        if(!markerHashMap.containsKey(establishment.getCompany().getCategoryId())) {
+
+            markerHashMap.put(establishment.getCompany().getCategoryId(), new ArrayList<Marker>());
+            markerHashMap.get(establishment.getCompany().getCategoryId()).add(marker);
+
+        } else {
+
+            markerHashMap.get(establishment.getCompany().getCategoryId()).add(marker);
+
+        }
+
+    }
+
+    protected void createCategory(Category category){
+        categories.add(category);
     }
 
     private void getEstablishmentsFromAPI() {
         System.gc();
         MapViewFragment.GetEstablishmentResponseListener listener = new MapViewFragment.GetEstablishmentResponseListener();
         APIRequest.getInstance(getActivity()).getEstablishment(listener, listener);
+    }
+
+    private void getCategoriesFromAPI(){
+        System.gc();
+        MapViewFragment.getCategoryResponseListener listener = new MapViewFragment.getCategoryResponseListener();
+        APIRequest.getInstance(getActivity()).getCategories(listener, listener);
     }
 
     @Override
@@ -305,11 +428,14 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         }
     }
 
+
+
     public class GetEstablishmentResponseListener implements Response.Listener<Establishment[]>, Response.ErrorListener {
 
         @Override
         public void onResponse(Establishment[] establishments) {
             for (Establishment establishment : establishments) {
+                Log.i("MARKER", (Integer.toString(establishment.getCompany().getCategoryId()) ));
                 createMarker(establishment);
             }
         }
@@ -322,6 +448,23 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             }
         }
 
+    }
+
+    public class getCategoryResponseListener implements Response.Listener<Category[]>, Response.ErrorListener {
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            if (error instanceof NoConnectionError) {
+                Log.w(TAG, "No connection!");
+            }
+        }
+
+        @Override
+        public void onResponse(Category[] categories) {
+            for(Category category : categories){
+                createCategory(category);
+            }
+        }
     }
 
 

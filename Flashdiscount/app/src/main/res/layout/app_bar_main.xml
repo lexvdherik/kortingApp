@@ -18,7 +18,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:collapseIcon="@drawable/cast_ic_expanded_controller_play"/>
+
 
     </android.support.design.widget.AppBarLayout>
 
