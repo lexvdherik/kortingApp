@@ -151,10 +151,6 @@ public class DetailFragment extends Fragment {
             }
         });
 
-        if (loginSingleton.loggedIn()) {
-            setFavorite(String.valueOf(establishment.getEstablishmentId()));
-        }
-
         FloatingActionButton claimButton = (FloatingActionButton) mRootView.findViewById(R.id.claim_button);
 
         claimButton.setOnClickListener(new View.OnClickListener() {
@@ -180,6 +176,14 @@ public class DetailFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return mRootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (loginSingleton.loggedIn()) {
+            setFavorite(String.valueOf(establishment.getEstablishmentId()));
+        }
     }
 
     private void goToScannerIfGranted() {
