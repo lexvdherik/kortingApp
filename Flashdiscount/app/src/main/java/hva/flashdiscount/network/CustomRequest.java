@@ -80,13 +80,11 @@ class CustomRequest<T> extends Request<T> {
         if (result == null) {
             result = resp;
         }
-
-        if (mClass == null && resp.get("message").toString().replace("\"", "").equals("OK")) {
-
+        if (mClass == null && (response.statusCode < 300 && response.statusCode >= 200)) {
             return Response.success((T) response, HttpHeaderParser.parseCacheHeaders(response));
-        } else if (!resp.get("message").toString().replace("\"", "").equals("OK")) {
+        } else if (response.statusCode > 300 && response.statusCode < 200){
             return Response.error(new JsonRpcRemoteException(resp.get("message").toString()));
-        } else if (resp.get("message").toString().replace("\"", "").equals("OK") && result.toString().equals("[]") && mClass.getSimpleName().equals("Boolean")) {
+        } else if ((response.statusCode < 300 && response.statusCode >= 200) && result.toString().equals("[]") && mClass.getSimpleName().equals("Boolean")) {
             return Response.success((T) mGson.fromJson("true", mClass), HttpHeaderParser.parseCacheHeaders(response));
         }
 
