@@ -14,11 +14,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -43,6 +45,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +75,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
    // private ArrayList<Category> categories;
     private BottomDiscountAdapter adapter;
     private Establishment establishment;
+    private  CategoryAdapter categoryAdapter;
     private List<Marker> cafeList = new ArrayList<>();
     private List<Marker> barList = new ArrayList<>();
     private List<Marker> allMarkers = new ArrayList<>();
@@ -246,45 +250,96 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             LayoutInflater inflater = getActivity().getLayoutInflater();
             View checkBoxView = inflater.inflate(R.layout.marker_selection, null);
            // View list = inflater.inflate(R.layout.category_list, null);
-            CategoryAdapter categoryAdapter = new CategoryAdapter(context, R.layout.category_list_child, categories);
-            categoryListView = (ListView) checkBoxView.findViewById(R.id.listview_categories);
 
+            categoryAdapter = new CategoryAdapter(context, R.layout.category_list_child, categories, this);
+
+            categoryListView = (ListView) checkBoxView.findViewById(R.id.listview_categories);
+            categoryListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
             categoryListView.setAdapter(categoryAdapter);
 
+
             builder.setView(checkBoxView);
+
+
             buses = (CheckBox) checkBoxView.findViewById(R.id.checkBox1);
             //trains = (CheckBox) list.findViewById(R.id.checkBox2);
             Button okButton = (Button) checkBoxView.findViewById(R.id.okButton);
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    displaySelectedMarkers(view);
+                    displaySelectedMarkers();
                 }
             });
-            Button cancelButton = (Button) checkBoxView.findViewById(R.id.cancelButton);
-            cancelButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialog.dismiss();
-                }
-            });
+//            Button cancelButton = (Button) checkBoxView.findViewById(R.id.cancelButton);
+//            cancelButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    dialog.dismiss();
+//                }
+//            });
             dialog = builder.create();
         }
         dialog.show();
     }
 
-    public void displaySelectedMarkers(View view) {
+    public void displaySelectedMarkers() {
         dialog.dismiss();
-        Log.i("TAG", "Trains Status " + trains.isChecked() + " Bus Status  " + buses.isChecked());
-        //according these check boxes status execute your code to show/hide markers
 
-        for(Marker train : markerHashMap.get(1)){
-            train.setVisible(trains.isChecked());
+
+        //Get List from
+        for(int i=0; i < categoryAdapter.getCount(); i++){
+
+            if(categoryAdapter.getItemChecked(i)){
+
+                for(Marker mark: markerHashMap.get(i + 1)){
+                    mark.setVisible(true);
+                }
+            } else {
+                for(Marker mark: markerHashMap.get(i + 1)){
+                    mark.setVisible(false);
+                }
+            }
+
+
         }
 
-        for(Marker buss : markerHashMap.get(2)){
-            buss.setVisible(buses.isChecked());
-        }
+
+
+        //int[] intArray = Arrays.stream(checkedItems).as
+      //  Log.i("CHECKED", String.valueOf(checkedItems.length));
+//        Log.i("CHECKED", String.valueOf(checkedCategoryIDs.length));
+//
+//        for(int i=0; i < checkedCategoryIDs.length; i++){
+//
+//            // int id = (int) array.get(i); //each selected ID
+//       //     List<Marker> markers = markerHashMap.get(id);
+////            if(markerHashMap.get(checkedCategoryIDs[i]) != null){
+//                for(Marker mark: markerHashMap.get(checkedCategoryIDs[i])){
+//                    mark.setVisible(false);
+//              //  }
+//            }
+//        }
+//
+//        for(){}
+//
+//        for(int i =0; i < markerHashMap.size() + 1; i++){
+//
+//            for(int j =0; j <markerHashMap.get(i).size(); j++){
+//                Marker mark = markerHashMap.get(i).get(j);
+//
+//                mark.setVisible(false);
+//
+//            }
+//
+//        }
+
+//        for(Marker train : markerHashMap.get(1)){
+//            train.setVisible(trains.isChecked());
+//        }
+//
+//        for(Marker buss : markerHashMap.get(2)){
+//            buss.setVisible(buses.isChecked());
+//        }
 
         Log.i("HASHMAP", markerHashMap.toString());
     }
