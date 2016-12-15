@@ -8,7 +8,7 @@ public class Establishment {
     private int establishmentId;
     private String street;
     private String postalCode;
-    private String streetNumber;
+    private String streetnumber;
     private String city;
     private String picture;
     private String phoneNumber;
@@ -18,11 +18,11 @@ public class Establishment {
     private Company company;
     private ArrayList<Discount> discounts;
 
-    public Establishment(int establishmentId, String street, String postalCode, String streetNumber, String city, String picture, String phoneNumber, String website, Company company) {
+    public Establishment(int establishmentId, String street, String postalCode, String streetnumber, String city, String picture, String phoneNumber, String website, Company company) {
         this.establishmentId = establishmentId;
         this.street = street;
         this.postalCode = postalCode;
-        this.streetNumber = streetNumber;
+        this.streetnumber = streetnumber;
         this.city = city;
         this.picture = picture;
         this.phoneNumber = phoneNumber;
@@ -42,8 +42,8 @@ public class Establishment {
         return postalCode;
     }
 
-    public String getStreetNumber() {
-        return streetNumber;
+    public String getStreetnumber() {
+        return streetnumber;
     }
 
     public String getCity() {

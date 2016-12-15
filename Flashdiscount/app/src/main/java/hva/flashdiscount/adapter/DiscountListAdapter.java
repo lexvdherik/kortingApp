@@ -3,6 +3,7 @@ package hva.flashdiscount.adapter;
 import android.app.Activity;
 import android.graphics.PorterDuff;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,19 +93,33 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
             convertView = inf.inflate(R.layout.list_child, parent, false);
         }
 
+
         Discount discount = getChild(groupPosition, childPosition);
         ((TextView) convertView.findViewById(R.id.description)).setText(discount.getDescription());
-//        ((TextView) convertView.findViewById(R.id.company_name)).setText(getGroup(groupPosition).getCompany().getName());
         ((TextView) convertView.findViewById(R.id.time_remaining)).setText(discount.getTimeRemaining(convertView.getContext()));
         ((ImageView) convertView.findViewById(R.id.list_icon)).setImageResource(discount.getCategoryImage(getGroup(groupPosition).getCompany().getCategoryId()));
+        ((TextView) convertView.findViewById(R.id.claims_remaining)).setText(String.valueOf(discount.getAmountLimit()- discount.getAmount())+ " " + convertView.getResources().getString(R.string.left));
+
 
         return convertView;
     }
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+
+
         if (convertView == null) {
             convertView = inf.inflate(R.layout.list_parent, parent, false);
+        }
+        int cCount = getChildrenCount(groupPosition);
+        ImageView img = ((ImageView) convertView.findViewById(R.id.list_arrow_image));
+//        Log.e(TAG, String.valueOf(parent.getChildCount()));
+        if(cCount > 0) {
+            if (isExpanded) {
+                img.setImageResource(R.drawable.ic_arrow_drop_up_black_24px);
+            } else {
+                img.setImageResource(R.drawable.ic_arrow_drop_down_black_24px);
+            }
         }
 
         ImageView lineColorCode = (ImageView) convertView.findViewById(R.id.list_icon);
@@ -119,16 +134,18 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
         lineColorCode.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
 
         Establishment establishment = getGroup(groupPosition);
-        int cCount = getChildrenCount(groupPosition);
+        Log.e(TAG, "hoi " + establishment.getStreetnumber());
         if (cCount == 0) {
             ((TextView) convertView.findViewById(R.id.flextitel)).setText(establishment.getDiscounts().get(0).getDescription());
             ((TextView) convertView.findViewById(R.id.company_name)).setText(establishment.getCompany().getName());
-            ((TextView) convertView.findViewById(R.id.company_street)).setText(establishment.getStreet() + " " + establishment.getStreetNumber());
+            ((TextView) convertView.findViewById(R.id.company_street)).setText(establishment.getStreet() + " " + establishment.getStreetnumber());
             ((TextView) convertView.findViewById(R.id.time_remaining)).setText(establishment.getDiscounts().get(0).getTimeRemaining(convertView.getContext()));
+            ((TextView) convertView.findViewById(R.id.claims_remaining)).setText(String.valueOf(establishment.getDiscounts().get(0).getAmountLimit()- establishment.getDiscounts().get(0).getAmount())+ " " + convertView.getResources().getString(R.string.left));
         } else {
             ((TextView) convertView.findViewById(R.id.flextitel)).setText(String.valueOf(cCount + " " + convertView.getResources().getString(R.string.discount_plural)));
             ((TextView) convertView.findViewById(R.id.company_name)).setText(establishment.getCompany().getName());
-            ((TextView) convertView.findViewById(R.id.company_street)).setText(establishment.getStreet() + " " + establishment.getStreetNumber());
+            ((TextView) convertView.findViewById(R.id.company_street)).setText(establishment.getStreet() + " " + establishment.getStreetnumber());
+
         }
 
         return convertView;
