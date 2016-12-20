@@ -26,8 +26,8 @@ import hva.flashdiscount.utils.LoginSingleton;
 public class APIRequest {
     private static final String TAG = APIRequest.class.getSimpleName();
 
-    //private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
-    private static final String HOST = "http://192.168.1.24/api/";
+    private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
+//    private static final String HOST = "http://192.168.1.24/api/";
 
     private static final String METHOD_GET_FAVORITES = "favoriteestablishment/";
     private static final String METHOD_SET_FAVORITE = "favoriteestablishment/favorite";

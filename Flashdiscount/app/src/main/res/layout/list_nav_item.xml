@@ -8,6 +8,7 @@
     android:gravity="center_vertical"
     android:paddingLeft="@dimen/general"
     android:paddingRight="@dimen/general"
+    android:textColor="@color/colorBlack"
 
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
 
