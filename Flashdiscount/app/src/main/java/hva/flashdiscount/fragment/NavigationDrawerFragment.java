@@ -145,7 +145,6 @@ public class NavigationDrawerFragment extends Fragment {
         actionBar.setHomeButtonEnabled(true);
 
 
-
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the navigation drawer and the action bar app icon.
         mDrawerToggle = new ActionBarDrawerToggle(
@@ -214,9 +213,7 @@ public class NavigationDrawerFragment extends Fragment {
                 // Reset the position change status
                 mSelectedPosChanged = false;
 
-                if (!mUserLearnedDrawer)
-
-                {
+                if (!mUserLearnedDrawer) {
                     // The user manually opened the drawer; store this flag to prevent auto-showing
                     // the navigation drawer automatically in the future.
                     mUserLearnedDrawer = true;
@@ -231,19 +228,17 @@ public class NavigationDrawerFragment extends Fragment {
 
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
         // per the navigation drawer design guidelines.
-        if (!mUserLearnedDrawer && !mFromSavedInstanceState)
-
-        {
+        if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
             mDrawerLayout.openDrawer(mFragmentContainerView);
         }
 
         // Defer code dependent on restoration of previous instance state.
         mDrawerLayout.post(new Runnable() {
-                                       @Override
-                                       public void run() {
-                                           mDrawerToggle.syncState();
-                                       }
-                                   }
+                               @Override
+                               public void run() {
+                                   mDrawerToggle.syncState();
+                               }
+                           }
 
         );
 

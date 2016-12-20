@@ -94,7 +94,7 @@ public class DetailFragment extends Fragment {
             dialogFragment.show(fm, "");
         }
 
-        if(loginSingleton.loggedIn()) {
+        if (loginSingleton.loggedIn()) {
             getFavorite(String.valueOf(establishment.getEstablishmentId()));
         }
         setUp();
@@ -124,7 +124,6 @@ public class DetailFragment extends Fragment {
             setCompanyText();
             setDiscountText();
         }
-
 
 
         ImageButton favoriteButton = (ImageButton) mRootView.findViewById(R.id.favorite_button);
@@ -177,17 +176,18 @@ public class DetailFragment extends Fragment {
 
     private void setUp() {
         // Cache the Activity as the frag handler, if necessary
-        if(mFragHandler == null)
+        if (mFragHandler == null) {
             mFragHandler = (TransactionHandler.FragmentTransactionHandler) getActivity();
+        }
         // Create the Toolbar home/close listener, if necessary
-        if(mToolbarListener == null)
+        if (mToolbarListener == null) {
             mToolbarListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     getActivity().onBackPressed();
                 }
             };
-
+        }
         // Tell the Activity to let fragments handle the menu events
         mFragHandler.fragmentHandlingMenus(true, mToolbarListener);
 

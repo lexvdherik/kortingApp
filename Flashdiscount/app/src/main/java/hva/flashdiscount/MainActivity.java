@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -98,16 +100,11 @@ public class MainActivity extends AppCompatActivity
 
                 } else {
 //
-                    if (getFragmentManager().getBackStackEntryCount() > 0)
+                    if (getFragmentManager().getBackStackEntryCount() > 0) {
                         getFragmentManager().popBackStack();
-
-                        // Else, if not on the home page, go back to the home page
-                    else if (mDrawerPosition > 0) {
+                    } else if (mDrawerPosition > 0) { // Else, if not on the home page, go back to the home page
                         forceChangeItemSelected(0);
-                    }
-
-                    // Otherwise, let the system handle this back press
-                    else {
+                    } else { // Otherwise, let the system handle this back press
                         super.onBackPressed();
                     }
 
@@ -186,7 +183,6 @@ public class MainActivity extends AppCompatActivity
             newPos = 0;
         }
 
-
         // First, update the main content by replacing fragments
         Fragment newFrag = null;
 
@@ -211,49 +207,47 @@ public class MainActivity extends AppCompatActivity
                 return;
         }
 
-        //-> Choosing which fragment to show logic
-        switch (newPos) {
-            case 0:
-                // Need to add in the Home fragment
-                newFrag = new TabFragment();
-                break;
+        //-> Choosing which animations to use logic
+        int transitionIn, transitionOut;
 
-            case 1:
-                // Settings frag
-                newFrag = new SettingsFragment();
-                break;
-            if (newPos != 0) {
-                getSupportFragmentManager().beginTransaction().
-                        setCustomAnimations(transitionIn, transitionOut)
-                        .replace(R.id.fragment_container, newFrag)
-                        .addToBackStack(null)
-                        .commit();
-            }
+        if (mDrawerPosition == -1) {
+            // If this is the first fragment being added - one way or another - use no transitions
+            transitionIn = transitionOut = R.anim.slide_in_frombottom;
+        } else if (mDrawerPosition < newPos) {
+            // The new item is entering from below, and the old is moving out to above
+            transitionIn = R.anim.slide_in_frombottom;
+            transitionOut = R.anim.slide_in_frombottom;
+        } else {
+            // Otherwise, new item is entering from above and old is moving out to below
+            transitionIn = R.anim.slide_in_frombottom;
+            transitionOut = R.anim.slide_in_frombottom;
+        }
 
+        if (newPos != 0) {
             getSupportFragmentManager().beginTransaction().
                     setCustomAnimations(transitionIn, transitionOut)
                     .replace(R.id.fragment_container, newFrag)
                     .addToBackStack(null)
                     .commit();
-
-
-            // Finally, save that this was the latest position set
-            mDrawerPosition = newPos;
         }
 
-        @Override
-        public void changeFragment(TransactionHandler.RequestType requestType, boolean addToBackstack){
-            // Simply call on changeFragment with option 0
-            changeFragment(requestType, addToBackstack, 0);
-        }
+        // Finally, save that this was the latest position set
+        mDrawerPosition = newPos;
+    }
 
-        // TODO: Delete above and below methods, or make them actually useful
-        @Override
-        public void changeFragment(TransactionHandler.RequestType requestType, boolean addToBackstack, int option){
-            if (requestType == TransactionHandler.RequestType.MAIN_DRAWER) {
-                // Simply do a force main content change [don't really care yet for backstack here yet]
-                forceChangeItemSelected(option);
-            }
+    @Override
+    public void changeFragment(TransactionHandler.RequestType requestType, boolean addToBackstack) {
+        // Simply call on changeFragment with option 0
+        changeFragment(requestType, addToBackstack, 0);
+    }
+
+    // TODO: Delete above and below methods, or make them actually useful
+    @Override
+    public void changeFragment(TransactionHandler.RequestType requestType, boolean addToBackstack, int option) {
+        if (requestType == TransactionHandler.RequestType.MAIN_DRAWER) {
+            // Simply do a force main content change [don't really care yet for backstack here yet]
+            forceChangeItemSelected(option);
+        }
 //                else if(requestType == TransactionHandler.RequestType.GOAL_ADDER) {
 //                    Toast.makeText(this, "Want the Goal Adder? Too bad", Toast.LENGTH_SHORT).show();
 //
@@ -267,19 +261,19 @@ public class MainActivity extends AppCompatActivity
 //                    fragmentTransaction.addToBackStack(null);
 //                    fragmentTransaction.commit();
 //                }
-        }
+    }
 
-        @Override
-        public void fragmentHandlingMenus ( boolean isFragmentHandlingMenus, View.OnClickListener newHomeButtonListener){
-            // Simply store the setting
-            mIsFragmentHandlingMenus = isFragmentHandlingMenus;
+    @Override
+    public void fragmentHandlingMenus(boolean isFragmentHandlingMenus,
+                                      View.OnClickListener newHomeButtonListener) {
+        // Simply store the setting
+        mIsFragmentHandlingMenus = isFragmentHandlingMenus;
 
-            // Toggle the drawer as necessary
-            mNavigationDrawerFragment.toggleDrawerUse(!isFragmentHandlingMenus, newHomeButtonListener);
-        }
+        // Toggle the drawer as necessary
+        mNavigationDrawerFragment.toggleDrawerUse(!isFragmentHandlingMenus, newHomeButtonListener);
+    }
 
-        // Changes both the drawer position as well as the content frag position
-
+    // Changes both the drawer position as well as the content frag position
     private void forceChangeItemSelected(int position) {
         mNavigationDrawerFragment.setSelectedItem(position);
         changeItemSelected(position);

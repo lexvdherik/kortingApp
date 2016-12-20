@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +24,6 @@ import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.utils.TransactionHandler;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
-import android.support.v7.app.AppCompatActivity;
 
 public class ScannerFragment extends Fragment implements ZXingScannerView.ResultHandler {
     private static final String TAG = ScannerFragment.class.getSimpleName();
@@ -59,16 +57,18 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
 
     private void setUp() {
         // Cache the Activity as the frag handler, if necessary
-        if(mFragHandler == null)
+        if (mFragHandler == null) {
             mFragHandler = (TransactionHandler.FragmentTransactionHandler) getActivity();
+        }
         // Create the Toolbar home/close listener, if necessary
-        if(mToolbarListener == null)
+        if (mToolbarListener == null) {
             mToolbarListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     getActivity().onBackPressed();
                 }
             };
+        }
 
         // Tell the Activity to let fragments handle the menu events
         mFragHandler.fragmentHandlingMenus(true, mToolbarListener);
