@@ -3,7 +3,6 @@
                 android:id="@+id/tab_relative_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
                 android:tag="tab_tag"
                 tools:mContext="hva.flashdiscount.fragment.TabFragment">
 

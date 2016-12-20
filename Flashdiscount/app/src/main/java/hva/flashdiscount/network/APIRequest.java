@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import hva.flashdiscount.model.Category;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.model.Favorite;
 import hva.flashdiscount.model.Token;
@@ -31,6 +32,7 @@ public class APIRequest {
     private static final String METHOD_GET_FAVORITES = "favoriteestablishment/";
     private static final String METHOD_SET_FAVORITE = "favoriteestablishment/favorite";
     private static final String METHOD_GET_FAVORITE_BY_ID = "favoriteestablishment/active";
+    private static final String METHOD_GET_CATEGORIES = "category/";
     private static final String METHOD_GET_ESTABLISHMENT = "establishment/";
     private static final String METHOD_CLAIM_DISCOUNT = "discount/claim";
     private static final String METHOD_POST_USER = "auth/login";
@@ -78,6 +80,14 @@ public class APIRequest {
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_USER, params,
                 responseListener, errorListener, Token.class).setTag(METHOD_POST_USER));
 
+        return true;
+    }
+
+    public boolean getCategories(Response.Listener<Category[]> responseListener, Response.ErrorListener errorListener) {
+
+
+        mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_CATEGORIES, null,
+                responseListener, errorListener, Category[].class).setTag(METHOD_GET_CATEGORIES).setShouldCache(true));
         return true;
     }
 

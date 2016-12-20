@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +19,7 @@ import hva.flashdiscount.R;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
 
-public class DiscountListAdapter extends BaseExpandableListAdapter {
+public class DiscountListAdapter extends BaseExpandableListAdapter implements Filterable {
 
     private static final String TAG = DiscountListAdapter.class.getSimpleName();
 
@@ -159,4 +161,34 @@ public class DiscountListAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                FilterResults results = new FilterResults();
+
+                if (!(charSequence == null || charSequence.length() == 0)) {
+                    ArrayList<Establishment> filteredResults = new ArrayList<>();
+                    for (Establishment e : filteredResults) {
+                        //   if(e.getCompany().getCategoryId() ) {}
+                    }
+                }
+
+
+                return null;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+
+                //List<Discount> filteredResults = ;
+
+                FilterResults results = new FilterResults();
+                //  results.values =
+
+            }
+        };
+    }
 }
