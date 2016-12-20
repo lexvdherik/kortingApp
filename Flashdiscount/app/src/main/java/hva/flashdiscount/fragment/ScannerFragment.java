@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,7 +23,9 @@ import hva.flashdiscount.R;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.network.APIRequest;
+import hva.flashdiscount.utils.TransactionHandler;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
+import android.support.v7.app.AppCompatActivity;
 
 public class ScannerFragment extends Fragment implements ZXingScannerView.ResultHandler {
     private static final String TAG = ScannerFragment.class.getSimpleName();
@@ -30,6 +33,9 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     private Establishment establishment;
     private int dicountPosition;
     private Discount discount;
+    private boolean wrongQr;
+    private TransactionHandler.FragmentTransactionHandler mFragHandler;
+    private View.OnClickListener mToolbarListener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,11 +57,51 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         return mScannerView;
     }
 
+    private void setUp() {
+        // Cache the Activity as the frag handler, if necessary
+        if(mFragHandler == null)
+            mFragHandler = (TransactionHandler.FragmentTransactionHandler) getActivity();
+        // Create the Toolbar home/close listener, if necessary
+        if(mToolbarListener == null)
+            mToolbarListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().onBackPressed();
+                }
+            };
+
+        // Tell the Activity to let fragments handle the menu events
+        mFragHandler.fragmentHandlingMenus(true, mToolbarListener);
+
+        // Get a reference to the ActionBar only once
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+
+        // Set up the toolbar
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
+    }
+
+    // Cleans up the UI changes and anything else necessary for the
+    private void cleanUp() {
+        // Tell the Activity that it can now handle menu events once again
+        // Note that this also resets the Drawer icon+functionality
+        mFragHandler.fragmentHandlingMenus(false, null);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         mScannerView.setResultHandler(this);
         mScannerView.startCamera();
+        setUp();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // Clean up the UI
+        cleanUp();
     }
 
     @Override

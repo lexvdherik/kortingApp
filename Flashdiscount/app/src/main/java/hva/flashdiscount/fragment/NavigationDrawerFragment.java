@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,10 +21,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.ImageLoader;
+
 import hva.flashdiscount.R;
+import hva.flashdiscount.layout.RoundNetworkImageView;
+import hva.flashdiscount.model.User;
+import hva.flashdiscount.utils.LoginSingleton;
+import hva.flashdiscount.utils.VolleySingleton;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -67,6 +75,7 @@ public class NavigationDrawerFragment extends Fragment {
     private CharSequence mPrevTitle = null;
     private boolean mSelectedPosChanged = false;
     private View.OnClickListener mOriginalListener;
+    private LoginSingleton loginSingleton;
 
     public NavigationDrawerFragment() {
     }
@@ -74,6 +83,8 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        loginSingleton = LoginSingleton.getInstance(getActivity());
 
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
@@ -160,10 +171,39 @@ public class NavigationDrawerFragment extends Fragment {
 
             @Override
             public void onDrawerOpened(View drawerView) {
+                Log.e(TAG, "ondraweropennn");
                 super.onDrawerOpened(drawerView);
                 if (!isAdded()) {
                     return;
                 }
+                Log.e(TAG, "dfsdfds = " + String.valueOf(loginSingleton.loggedIn()));
+                if (loginSingleton.loggedIn() && loginSingleton.loginExpired()) {
+                    Log.w(TAG, "login expired");
+                    User user = loginSingleton.silentLogin();
+                    if (user != null) {
+                        LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.nav_header);
+
+                        ImageLoader mImageLoader = VolleySingleton.getInstance(getActivity()).getImageLoader();
+                        RoundNetworkImageView image = (RoundNetworkImageView) layout.findViewById(R.id.profile_picture);
+                        if (image != null) {
+                            image.setImageUrl(user.getPicture().toString(), mImageLoader);
+                        }
+
+                        ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
+                        ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
+                    }
+                } else if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
+                    Log.w(TAG, "load everything from sharedpref");
+                    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.nav_header);
+
+                    ImageLoader mImageLoader = VolleySingleton.getInstance(getActivity()).getImageLoader();
+                    ((RoundNetworkImageView) layout.findViewById(R.id.profile_picture)).setImageUrl(sharedPref.getString("picture", ""), mImageLoader);
+                    ((TextView) layout.findViewById(R.id.naam)).setText(sharedPref.getString("name", ""));
+                    ((TextView) layout.findViewById(R.id.email)).setText(sharedPref.getString("email", ""));
+
+                }
+
 
                 // Save the title in the action bar
 //                mPrevTitle = actionBar.getTitle();
@@ -172,7 +212,9 @@ public class NavigationDrawerFragment extends Fragment {
                 // Reset the position change status
                 mSelectedPosChanged = false;
 
-                if (!mUserLearnedDrawer) {
+                if (!mUserLearnedDrawer)
+
+                {
                     // The user manually opened the drawer; store this flag to prevent auto-showing
                     // the navigation drawer automatically in the future.
                     mUserLearnedDrawer = true;
@@ -181,23 +223,35 @@ public class NavigationDrawerFragment extends Fragment {
                     sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
                 }
 
-                getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+                getActivity()
+
+                        .
+
+                                supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
-        };
+        }
+
+        ;
 
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
         // per the navigation drawer design guidelines.
-        if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
+        if (!mUserLearnedDrawer && !mFromSavedInstanceState)
+
+        {
             mDrawerLayout.openDrawer(mFragmentContainerView);
         }
 
         // Defer code dependent on restoration of previous instance state.
-        mDrawerLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mDrawerToggle.syncState();
-            }
-        });
+        mDrawerLayout.post(new
+
+                                   Runnable() {
+                                       @Override
+                                       public void run() {
+                                           mDrawerToggle.syncState();
+                                       }
+                                   }
+
+        );
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
@@ -347,7 +401,7 @@ public class NavigationDrawerFragment extends Fragment {
                         (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 row = inflater.inflate(R.layout.nav_header, parent, false);
                 TextView tx = (TextView) row.findViewById(R.id.naam);
-                tx.setText("maiko is gay");
+                tx.setText("tony is gay");
                 //holder = new ViewHolder();
                 // holder.text = (TextView) row.findViewById(R.id.naam);
 
