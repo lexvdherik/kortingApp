@@ -231,7 +231,7 @@ public class DetailFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     public void setDiscountText() {
         Log.i(TAG, discount.toString());
-        claimsLeft.setText(Integer.toString(discount.getAmountLimit() - discount.getAmount()));
+        claimsLeft.setText(discount.getAmountRemaining() + " " + getString(R.string.left));
         timeLeft.setText(discount.getTimeRemaining(getContext()));
         discountDescription.setText(discount.getDescription());
     }

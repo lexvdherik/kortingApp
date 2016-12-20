@@ -38,8 +38,8 @@
     <string name="no_company_data">No company data available</string>
     <string name="hour">uur</string>
     <string name="hour_plural">uur</string>
-    <string name="minutes">min</string>
-    <string name="minutes_plural">min</string>
+    <string name="minutes">m</string>
+    <string name="minutes_plural">m</string>
     <string name="expired_time">EXPIRED</string>
     <string name="left">Te gaan</string>
     <string name="list_hierarchy_indicator">Lijst indicator</string>

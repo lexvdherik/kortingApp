@@ -2,6 +2,8 @@ package hva.flashdiscount.model;
 
 import android.content.Context;
 
+import java.util.Objects;
+
 import hva.flashdiscount.R;
 
 public class Discount {
@@ -97,5 +99,13 @@ public class Discount {
                 + ", userLimit=" + userLimit
                 + ", picture='" + picture + '\''
                 + '}';
+    }
+
+    public String getAmountRemaining() {
+        return String.valueOf((amountLimit - amount) > 0 ? (amountLimit - amount) : 0);
+    }
+
+    public boolean isValid(Context context) {
+        return !(Objects.equals(getAmountRemaining(), "0") || Objects.equals(getTimeRemaining(context), context.getResources().getString(R.string.expired_time)));
     }
 }

@@ -58,7 +58,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private static final String TAG = MapViewFragment.class.getSimpleName();
     MapView mMapView;
     AlertDialog dialog;
-    CheckBox buses, trains;
+    CheckBox buses;
     private GoogleMap googleMap;
     private Context context;
     private Location location;
@@ -66,17 +66,10 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private BottomSheetBehavior mBottomSheetBehavior1;
     private ListView listView;
     private ListView categoryListView;
-    private TextView bottomSheettitle;
-    private TextView bottomSheetdescription;
-    // private ArrayList<Category> categories;
-    private BottomDiscountAdapter adapter;
+    private View bottomSheet;
     private Establishment establishment;
     private CategoryAdapter categoryAdapter;
-    private List<Marker> cafeList = new ArrayList<>();
-    private List<Marker> barList = new ArrayList<>();
-    private List<Marker> allMarkers = new ArrayList<>();
     private ArrayList<Category> categories = new ArrayList<>();
-    private List<List<Marker>> dataList = new ArrayList<List<Marker>>();
     private HashMap<Integer, List<Marker>> markerHashMap = new HashMap<>();
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {
@@ -85,18 +78,14 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             return;
         }
 
-        int nrOfDiscounts = listAdapter.getCount();
-        if (nrOfDiscounts > 2) {
-            nrOfDiscounts = 2;
-        }
-        int totalHeight = 0;
-        for (int i = 0; i < nrOfDiscounts; i++) {
+        int nrOfDiscounts = listAdapter.getCount(), totalHeight = 0;
+        for (int i = 0; i < ((nrOfDiscounts > 2) ? 2 : nrOfDiscounts); i++) {
             View listItem = listAdapter.getView(i, null, listView);
             listItem.measure(0, 0);
             totalHeight += listItem.getMeasuredHeight();
         }
         if (nrOfDiscounts == 1) {
-            totalHeight += 30;
+            totalHeight += 160;
         }
 
 
@@ -196,13 +185,17 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             public boolean onMarkerClick(Marker marker) {
 
                 establishment = (Establishment) marker.getTag();
-                adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
+                BottomDiscountAdapter adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
                 mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 CardView detailLayout = (CardView) rootView.findViewById(R.id.card_view_discount);
 
 
                 if (establishment.getDiscounts().size() == 1) {
                     detailLayout.setVisibility(View.VISIBLE);
+                    TextView claimsText = (TextView) detailLayout.findViewById(R.id.claims_left);
+                    claimsText.setText(establishment.getDiscounts().get(0).getAmountRemaining());
+                    TextView timeText = (TextView) detailLayout.findViewById(R.id.time_left);
+                    timeText.setText(establishment.getDiscounts().get(0).getTimeRemaining(getContext()));
                 } else {
                     detailLayout.setVisibility(View.GONE);
                 }
@@ -213,7 +206,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                     listView.setAdapter(adapter);
                 }
 
-
                 listView = setListViewListeners(listView);
 
                 setListViewHeightBasedOnChildren(listView);
@@ -223,8 +215,10 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                     return true;
                 }
                 mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
-                bottomSheettitle.setText(establishment.getCompany().getName());
-                bottomSheetdescription.setText(String.valueOf(establishment.getStreet() + " " + establishment.getStreetnumber() + ", " + establishment.getCity()));
+                TextView bottomSheetTitle = (TextView) bottomSheet.findViewById(R.id.title_bottom_sheet);
+                bottomSheetTitle.setText(establishment.getCompany().getName());
+                TextView bottomSheetDescription = (TextView) bottomSheet.findViewById(R.id.description);
+                bottomSheetDescription.setText(String.valueOf(establishment.getStreet() + " " + establishment.getStreetnumber() + ", " + establishment.getCity()));
                 return true;
             }
         };
@@ -255,7 +249,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             builder = new AlertDialog.Builder(getActivity());
             LayoutInflater inflater = getActivity().getLayoutInflater();
             View checkBoxView = inflater.inflate(R.layout.marker_selection, null);
-            // View list = inflater.inflate(R.layout.category_list, null);
 
             categoryAdapter = new CategoryAdapter(context, R.layout.category_list_child, categories, this);
 
@@ -351,9 +344,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     private void initAttributes(View rootView) {
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
-        View bottomSheet = rootView.findViewById(R.id.bottom_sheet);
-        bottomSheettitle = (TextView) rootView.findViewById(R.id.title_bottom_sheet);
-        bottomSheetdescription = (TextView) rootView.findViewById(R.id.description);
+        bottomSheet = rootView.findViewById(R.id.bottom_sheet);
         mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
         listView = (ListView) rootView.findViewById(R.id.discount_list_view);
         categoryListView = (ListView) rootView.findViewById(R.id.listview_categories);

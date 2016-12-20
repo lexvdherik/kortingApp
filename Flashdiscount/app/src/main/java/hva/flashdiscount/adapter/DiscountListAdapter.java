@@ -91,27 +91,22 @@ public class DiscountListAdapter extends BaseExpandableListAdapter implements Fi
     @Override
     public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = inf.inflate(R.layout.list_child, parent, false);
+            convertView = inf.inflate(R.layout.list_discount_info, parent, false);
         }
 
 
         Discount discount = getChild(groupPosition, childPosition);
-        ((TextView) convertView.findViewById(R.id.description)).setText(discount.getDescription());
+        ((TextView) convertView.findViewById(R.id.discount_description)).setText(discount.getDescription());
         ((TextView) convertView.findViewById(R.id.time_remaining)).setText(discount.getTimeRemaining(convertView.getContext()));
-        ((ImageView) convertView.findViewById(R.id.list_icon)).setImageResource(discount.getCategoryImage(getGroup(groupPosition).getCompany().getCategoryId()));
-        ((TextView) convertView.findViewById(R.id.claims_remaining)).setText(
-                String.valueOf(discount.getAmountLimit() - discount.getAmount())
-                        + " "
-                        + convertView.getResources().getString(R.string.left));
+        ((TextView) convertView.findViewById(R.id.claims_remaining)).setText(discount.getAmountRemaining() + " " + convertView.getResources().getString(R.string.left));
 
+        convertView.setEnabled(!discount.isValid(convertView.getContext()));
 
         return convertView;
     }
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-
-
         if (convertView == null) {
             convertView = inf.inflate(R.layout.list_parent, parent, false);
         }
@@ -119,11 +114,12 @@ public class DiscountListAdapter extends BaseExpandableListAdapter implements Fi
         ImageView img = ((ImageView) convertView.findViewById(R.id.list_arrow_image));
         if (cCount > 0) {
             if (isExpanded) {
-                img.setImageResource(R.drawable.ic_arrow_drop_up_black_24px);
-            } else {
                 img.setImageResource(R.drawable.ic_arrow_drop_down_black_24px);
+            } else {
+                img.setImageResource(R.drawable.ic_arrow_drop_up_black_24px);
             }
         }
+        img.setVisibility(View.VISIBLE);
 
         ImageView lineColorCode = (ImageView) convertView.findViewById(R.id.list_icon);
         int color;
@@ -142,10 +138,8 @@ public class DiscountListAdapter extends BaseExpandableListAdapter implements Fi
             ((TextView) convertView.findViewById(R.id.company_name)).setText(establishment.getCompany().getName());
             ((TextView) convertView.findViewById(R.id.company_street)).setText(establishment.getStreet() + " " + establishment.getStreetnumber());
             ((TextView) convertView.findViewById(R.id.time_remaining)).setText(establishment.getDiscounts().get(0).getTimeRemaining(convertView.getContext()));
-            ((TextView) convertView.findViewById(R.id.claims_remaining)).setText(String.valueOf(
-                    establishment.getDiscounts().get(0).getAmountLimit() - establishment.getDiscounts().get(0).getAmount())
-                    + " "
-                    + convertView.getResources().getString(R.string.left));
+            ((TextView) convertView.findViewById(R.id.claims_remaining)).setText(establishment.getDiscounts().get(0).getAmountRemaining() + " " + convertView.getResources().getString(R.string.left));
+            convertView.setEnabled(establishment.getDiscounts().get(0).isValid(convertView.getContext()));
         } else {
             ((TextView) convertView.findViewById(R.id.flextitel)).setText(String.valueOf(cCount + " " + convertView.getResources().getString(R.string.discount_plural)));
             ((TextView) convertView.findViewById(R.id.company_name)).setText(establishment.getCompany().getName());

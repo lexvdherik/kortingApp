@@ -71,28 +71,6 @@
                     />
 
 
-                <TextView
-                    android:id="@+id/time_remaining"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="12 min"
-                    android:textColor="@color/colorWhite"/>
-
-                <TextView
-                    android:id="@+id/claims_remaining"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/time_remaining"
-                    android:maxLines="1"
-                    android:text="21/100"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/colorWhite"/>
-
             </RelativeLayout>
 
         </android.support.v7.widget.CardView>
