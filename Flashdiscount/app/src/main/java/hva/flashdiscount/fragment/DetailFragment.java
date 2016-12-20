@@ -8,6 +8,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +34,7 @@ import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.model.User;
 import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.utils.LoginSingleton;
+import hva.flashdiscount.utils.TransactionHandler;
 import hva.flashdiscount.utils.VolleySingleton;
 
 
@@ -51,6 +54,8 @@ public class DetailFragment extends Fragment {
     private int discountPosition;
     private boolean dialog;
     private LoginSingleton loginSingleton;
+    private TransactionHandler.FragmentTransactionHandler mFragHandler;
+    private View.OnClickListener mToolbarListener;
 
 
     public static DetailFragment newInstance() {
@@ -89,6 +94,10 @@ public class DetailFragment extends Fragment {
             dialogFragment.show(fm, "");
         }
 
+        if(loginSingleton.loggedIn()) {
+            getFavorite(String.valueOf(establishment.getEstablishmentId()));
+        }
+        setUp();
     }
 
 
@@ -115,6 +124,8 @@ public class DetailFragment extends Fragment {
             setCompanyText();
             setDiscountText();
         }
+
+
 
         ImageButton favoriteButton = (ImageButton) mRootView.findViewById(R.id.favorite_button);
         favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24px);
@@ -164,12 +175,28 @@ public class DetailFragment extends Fragment {
         return mRootView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (loginSingleton.loggedIn()) {
-            setFavorite(String.valueOf(establishment.getEstablishmentId()));
-        }
+    private void setUp() {
+        // Cache the Activity as the frag handler, if necessary
+        if(mFragHandler == null)
+            mFragHandler = (TransactionHandler.FragmentTransactionHandler) getActivity();
+        // Create the Toolbar home/close listener, if necessary
+        if(mToolbarListener == null)
+            mToolbarListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().onBackPressed();
+                }
+            };
+
+        // Tell the Activity to let fragments handle the menu events
+        mFragHandler.fragmentHandlingMenus(true, mToolbarListener);
+
+        // Get a reference to the ActionBar only once
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+
+        // Set up the toolbar
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeAsUpIndicator(android.R.drawable.ic_btn_speak_now);
     }
 
     private void goToScannerIfGranted() {
@@ -196,6 +223,14 @@ public class DetailFragment extends Fragment {
                         MainActivity.REQUEST_CAMERA_PERMISSION);
             }
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // Clean up the UI
+        mFragHandler.fragmentHandlingMenus(false, null);
     }
 
     public void initViews() {

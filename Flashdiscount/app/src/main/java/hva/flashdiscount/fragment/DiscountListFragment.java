@@ -67,6 +67,7 @@ public class DiscountListFragment extends Fragment {
 
     private void goToDetailView(Establishment establishment, int discountPostion) {
 
+
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));
         arguments.putInt("discountPosition", discountPostion);

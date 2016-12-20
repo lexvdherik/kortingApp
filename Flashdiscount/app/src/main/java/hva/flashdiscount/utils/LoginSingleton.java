@@ -147,8 +147,15 @@ public class LoginSingleton {
         OptionalPendingResult<GoogleSignInResult> pendingResult =
                 Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
 
-        acct = pendingResult.get().getSignInAccount();
+        if (pendingResult.isDone()) {
+            acct = pendingResult.get().getSignInAccount();
 
-        return new User(acct);
+            return new User(acct);
+        } else {
+            return null;
+        }
+
+
+
     }
 }

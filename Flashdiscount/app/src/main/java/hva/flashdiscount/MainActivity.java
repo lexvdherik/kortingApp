@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -76,7 +75,6 @@ public class MainActivity extends AppCompatActivity
         ft.add(R.id.fragment_container, tabFragment);
         ft.commit();
 
-
     }
 
     @Override
@@ -113,14 +111,12 @@ public class MainActivity extends AppCompatActivity
                         super.onBackPressed();
                     }
 
-
                 }
                 //toggle.syncState();
             } catch (NullPointerException e) {
 //                super.onBackPressed();
             }
         }
-
 
     }
 
@@ -246,16 +242,14 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
-        public void changeFragment (TransactionHandler.RequestType requestType,
-        boolean addToBackstack){
+        public void changeFragment(TransactionHandler.RequestType requestType, boolean addToBackstack){
             // Simply call on changeFragment with option 0
             changeFragment(requestType, addToBackstack, 0);
         }
 
         // TODO: Delete above and below methods, or make them actually useful
         @Override
-        public void changeFragment (TransactionHandler.RequestType requestType,
-        boolean addToBackstack, int option){
+        public void changeFragment(TransactionHandler.RequestType requestType, boolean addToBackstack, int option){
             if (requestType == TransactionHandler.RequestType.MAIN_DRAWER) {
                 // Simply do a force main content change [don't really care yet for backstack here yet]
                 forceChangeItemSelected(option);
@@ -276,8 +270,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
-        public void fragmentHandlingMenus ( boolean isFragmentHandlingMenus,
-        View.OnClickListener newHomeButtonListener){
+        public void fragmentHandlingMenus ( boolean isFragmentHandlingMenus, View.OnClickListener newHomeButtonListener){
             // Simply store the setting
             mIsFragmentHandlingMenus = isFragmentHandlingMenus;
 
