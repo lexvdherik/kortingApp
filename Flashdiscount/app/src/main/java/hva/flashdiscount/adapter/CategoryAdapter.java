@@ -58,7 +58,7 @@ public class CategoryAdapter extends BaseAdapter implements View.OnClickListener
 
             category = categoryArrayList.get(position);
             LayoutInflater vi = (LayoutInflater) thisContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = vi.inflate(R.layout.category_list_child, parent);
+            convertView = vi.inflate(R.layout.category_list_child, null);
 
             holder = new ViewHolder();
             holder.code = (TextView) convertView.findViewById(R.id.category_name);
