@@ -342,27 +342,41 @@ public class NavigationDrawerFragment extends Fragment {
             View row = null;
             ViewHolder holder;
 
-            if (convertView == null) {
-                // Then gotta set up this row for the first time
+            if (position == 0) {
                 LayoutInflater inflater =
                         (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                row = inflater.inflate(R.layout.list_nav_item, parent, false);
+                row = inflater.inflate(R.layout.nav_header, parent, false);
+                TextView tx = (TextView) row.findViewById(R.id.naam);
+                tx.setText("tony is gay");
+                //holder = new ViewHolder();
+                // holder.text = (TextView) row.findViewById(R.id.naam);
 
-                // Create a ViewHolder to save all the different parts of the row
-                holder = new ViewHolder();
-                holder.text = (TextView) row.findViewById(R.id.text);
+                return row;
+            } else {
 
-                // Make the row reuse the ViewHolder
-                row.setTag(holder);
-            } else { // Otherwise, use the recycled view
-                row = convertView;
-                holder = (ViewHolder) row.getTag();
+
+                if (convertView == null) {
+                    // Then gotta set up this row for the first time
+                    LayoutInflater inflater =
+                            (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    row = inflater.inflate(R.layout.list_nav_item, parent, false);
+
+                    // Create a ViewHolder to save all the different parts of the row
+                    holder = new ViewHolder();
+                    holder.text = (TextView) row.findViewById(R.id.text);
+
+                    // Make the row reuse the ViewHolder
+                    row.setTag(holder);
+                } else { // Otherwise, use the recycled view
+                    row = convertView;
+                    holder = (ViewHolder) row.getTag();
+                }
+
+                // Set this view's content
+                holder.text.setText(titles[position]);
+
+                return row;
             }
-
-            // Set this view's content
-            holder.text.setText(titles[position]);
-
-            return row;
         }
 
         class ViewHolder {

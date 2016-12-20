@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -81,14 +82,41 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            try {
+                DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag("detailfrag");
 
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-        } else if (mDrawerPosition > 0) { // Else, if not on the home page, go back to the home page
-            forceChangeItemSelected(0);
-        } else { // Otherwise, let the system handle this back press
-            super.onBackPressed();
+                if (df.isVisible()) {
+                    getSupportFragmentManager().popBackStack();
+                    TabFragment tb = new TabFragment();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, tb).commit();
+                    toggle.syncState();
+
+                } else {
+//                    super.onBackPressed();
+                }
+            } catch (NullPointerException e) {
+//                super.onBackPressed();
+            }
         }
+
+//        if(getFragmentManager().getBackStackEntryCount() > 0)
+//            getFragmentManager().popBackStack();
+//
+//            // Else, if not on the home page, go back to the home page
+//        else if(mDrawerPosition > 0) {
+//            forceChangeItemSelected(0);
+//        }
+//
+//        // Otherwise, let the system handle this back press
+//        else {
+//            super.onBackPressed();
+//        }
+
+
     }
 
     @Override
