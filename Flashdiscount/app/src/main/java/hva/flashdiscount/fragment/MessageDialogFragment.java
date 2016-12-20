@@ -11,7 +11,7 @@ import hva.flashdiscount.R;
 
 public class MessageDialogFragment extends DialogFragment {
 
-private String message;
+    private String message;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,19 +23,26 @@ private String message;
     private String errorCodeToMessage(String errorCode) {
         String msg;
         switch (errorCode) {
-            case "NETWORK 400": msg = getString(R.string.couldnt_claim_discount);
+            case "NETWORK 400":
+                msg = getString(R.string.couldnt_claim_discount);
                 break;
-            case "NETWORK 401": msg = getString(R.string.not_logged_in);
+            case "NETWORK 401":
+                msg = getString(R.string.not_logged_in);
                 break;
-            case "NETWORK 404": msg = getString(R.string.discount_not_found);
+            case "NETWORK 404":
+                msg = getString(R.string.discount_not_found);
                 break;
-            case "NETWORK 409": msg = getString(R.string.to_many_claims);
+            case "NETWORK 409":
+                msg = getString(R.string.to_many_claims);
                 break;
-            case "NETWORK 500": msg = getString(R.string.server_internal_error);
+            case "NETWORK 500":
+                msg = getString(R.string.server_internal_error);
                 break;
-            case "WRONG QR":  msg = getString(R.string.wrong_qr_code);
+            case "WRONG QR":
+                msg = getString(R.string.wrong_qr_code);
                 break;
-            default: msg = getString(R.string.unknown_error);
+            default:
+                msg = getString(R.string.unknown_error);
                 break;
         }
         return msg;
@@ -50,9 +57,7 @@ private String message;
         rootView.findViewById(R.id.dismiss_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 getDialog().dismiss();
-
             }
         });
 

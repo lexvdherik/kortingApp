@@ -18,9 +18,6 @@ import com.android.volley.VolleyError;
 import com.google.gson.Gson;
 import com.google.zxing.Result;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import hva.flashdiscount.R;
 import hva.flashdiscount.model.Discount;
 import hva.flashdiscount.model.Establishment;
@@ -33,12 +30,10 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     private Establishment establishment;
     private int dicountPosition;
     private Discount discount;
-    private boolean wrongQr;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mScannerView = new ZXingScannerView(getActivity());
-        wrongQr = false;
         if (getArguments() != null) {
             String gson = getArguments().getString("establishment");
             dicountPosition = getArguments().getInt("discountPosition");
@@ -65,13 +60,12 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
 
     @Override
     public void handleResult(Result rawResult) {
-
         String establishmentId = rawResult.toString().substring(rawResult.toString().lastIndexOf("/") + 1);
         try {
             Integer.parseInt(establishmentId);
         } catch (NumberFormatException e) {
-            wrongQr = true;
             goToDetailView(establishment, dicountPosition, true, "WRONG QR");
+            return;
         }
 
         Handler handler = new Handler();
@@ -83,10 +77,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         }, 2000);
 
         Log.i(TAG, establishmentId);
-
-        if (!wrongQr) {
-            claimDiscount(establishmentId, String.valueOf(discount.getDiscountId()));
-        }
+        claimDiscount(establishmentId, String.valueOf(discount.getDiscountId()));
     }
 
     @Override
@@ -95,11 +86,11 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         mScannerView.stopCamera();
     }
 
-    private void goToDetailView(Establishment establishment, int discountPostion, boolean success, String message) {
+    private void goToDetailView(Establishment establishment, int discountPosition, boolean success, String message) {
 
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));
-        arguments.putInt("discountPostion", discountPostion);
+        arguments.putInt("discountPosition", discountPosition);
         arguments.putBoolean("dialog", true);
         arguments.putBoolean("success", success);
         arguments.putString("message", message);
@@ -128,15 +119,8 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e(TAG + " content", " joil" + error.networkResponse.headers);
-            JSONObject jsonHeaders = new JSONObject(error.networkResponse.headers);
-
-            try {
-                String errorCode = jsonHeaders.get("X-Android-Response-Source").toString();
-                goToDetailView(establishment, dicountPosition, false, errorCode);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            Log.e(TAG + " content", " joil" + String.valueOf(error.networkResponse.statusCode));
+            goToDetailView(establishment, dicountPosition, false, String.valueOf(error.networkResponse.statusCode));
 
             if (error instanceof NoConnectionError) {
                 Log.e(TAG, "No connection!");

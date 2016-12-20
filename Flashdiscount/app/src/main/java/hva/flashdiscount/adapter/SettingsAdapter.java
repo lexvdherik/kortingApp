@@ -66,7 +66,7 @@ public class SettingsAdapter extends BaseAdapter {
 
         Holder holder = new Holder();
         View rowView;
-        rowView = inflater.inflate(R.layout.settings_row, null);
+        rowView = inflater.inflate(R.layout.settings_row, parent);
         holder.tv = (Switch) rowView.findViewById(R.id.setting_company_name);
         Boolean checked = false;
         if (companySettings[position].getNotification() == 1) {

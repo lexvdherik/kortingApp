@@ -69,9 +69,8 @@ public class DiscountListFragment extends Fragment {
 
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));
-        arguments.putInt("discountPostion", discountPostion);
+        arguments.putInt("discountPosition", discountPostion);
         arguments.putBoolean("dialog", false);
-        arguments.putBoolean("succes", false);
         DetailFragment detailFragment = new DetailFragment();
 
         detailFragment.setArguments(arguments);

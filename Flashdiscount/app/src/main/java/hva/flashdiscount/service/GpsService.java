@@ -32,15 +32,11 @@ import static android.os.Binder.getCallingUid;
 public class GpsService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
     private static final String TAG = GpsService.class.getSimpleName();
-
+    private static final long TIME_BW_UPDATES = 1000 * 30; // 0,5 minute
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60; // 1 minute
     private final FragmentActivity activity;
     private GoogleApiClient googleApiClient;
     private Location location;
-
-
-    private static final long TIME_BW_UPDATES = 1000 * 30; // 0,5 minute
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60; // 1 minute
-
     private FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
     private LocationRequest mLocationRequest;
 
@@ -53,8 +49,6 @@ public class GpsService implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     public GpsService(FragmentActivity fragmentActivity) {
         this.activity = fragmentActivity;
     }
-
-
 
 
     @Override

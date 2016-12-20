@@ -1,12 +1,14 @@
 package hva.flashdiscount.fragment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,11 +50,9 @@ public class DetailFragment extends Fragment {
     private TextView claimsLeft;
     private TextView timeLeft;
     private TextView discountDescription;
-    private int discountPostion;
+    private int discountPosition;
     private boolean dialog;
-    private boolean success;
     private LoginSingleton loginSingleton;
-    private boolean isFavorite;
 
 
     public static DetailFragment newInstance() {
@@ -79,16 +79,16 @@ public class DetailFragment extends Fragment {
         FragmentManager fm = getFragmentManager();
 
         loginSingleton = LoginSingleton.getInstance(getContext());
-        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
         }
         if (getArguments() != null) {
             String gson = getArguments().getString("establishment");
-            discountPostion = getArguments().getInt("discountPosition");
+            discountPosition = getArguments().getInt("discountPosition");
             establishment = new Gson().fromJson(gson, Establishment.class);
-            discount = establishment.getDiscounts().get(getArguments().getInt("discountPosition"));
-            success = getArguments().getBoolean("success");
+            discount = establishment.getDiscounts().get(discountPosition);
             dialog = getArguments().getBoolean("dialog");
         }
         if (dialog) {
@@ -126,28 +126,29 @@ public class DetailFragment extends Fragment {
         ImageButton favoriteButton = (ImageButton) mRootView.findViewById(R.id.favorite_button);
         favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24px);
 
-        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24px);
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24px);
         }
 
         favoriteButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
+                    setFavorite(String.valueOf(establishment.getEstablishmentId()));
+                    return;
+                }
                 if (loginSingleton.loggedIn() && loginSingleton.loginExpired()) {
                     User user = loginSingleton.silentLogin();
                     if (user != null) {
                         setFavorite(String.valueOf(establishment.getEstablishmentId()));
-                    } else {
-                        loginSingleton.showLoginDialog();
+                        return;
                     }
-                } else if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
-                    setFavorite(String.valueOf(establishment.getEstablishmentId()));
-                } else {
-                    loginSingleton.showLoginDialog();
                 }
+                loginSingleton.showLoginDialog();
             }
         });
 
@@ -157,19 +158,18 @@ public class DetailFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
+                    goToScannerIfGranted();
+                    return;
+                }
                 if (loginSingleton.loggedIn() && loginSingleton.loginExpired()) {
                     User user = loginSingleton.silentLogin();
                     if (user != null) {
                         goToScannerIfGranted();
-                    } else {
-                        loginSingleton.showLoginDialog();
+                        return;
                     }
-                } else if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
-                    goToScannerIfGranted();
-                } else {
-                    loginSingleton.showLoginDialog();
                 }
-
+                loginSingleton.showLoginDialog();
             }
         });
 
@@ -190,7 +190,7 @@ public class DetailFragment extends Fragment {
         int cameraPermission = ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.CAMERA);
         if (cameraPermission == PackageManager.PERMISSION_GRANTED) {
-            goToScanner(establishment, discountPostion);
+            goToScanner(establishment, discountPosition);
         } else {
             requestCameraPermissions();
         }
@@ -228,6 +228,7 @@ public class DetailFragment extends Fragment {
         companyDescription.setText(establishment.getCompany().getDescription());
     }
 
+    @SuppressLint("SetTextI18n")
     public void setDiscountText() {
         Log.i(TAG, discount.toString());
         claimsLeft.setText(Integer.toString(discount.getAmountLimit() - discount.getAmount()));
@@ -240,7 +241,7 @@ public class DetailFragment extends Fragment {
 
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));
-        arguments.putInt("discountPostion", discountPostion);
+        arguments.putInt("discountPosition", discountPostion);
 
         ScannerFragment scannerFragment = new ScannerFragment();
 

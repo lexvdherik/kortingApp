@@ -43,4 +43,7 @@
     <string name="minutes">min</string>
     <string name="minutes_plural">min</string>
     <string name="expired_time">EXPIRED</string>
+    <string name="favorite_button">Favorite button</string>
+    <string name="category_indicator">Category indicator</string>
+    <string name="list_hierarchy_indicator">List hierarchy indicator</string>
 </resources>

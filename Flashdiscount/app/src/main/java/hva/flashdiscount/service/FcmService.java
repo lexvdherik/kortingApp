@@ -8,13 +8,14 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-//import android.app.Service;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.R;
+
+//import android.app.Service;
 
 /**
  * TODO: Write description.
@@ -36,9 +37,9 @@ public class FcmService extends FirebaseMessagingService {
     }
 
     private void createNotification(String messageBody) {
-        Intent intent = new Intent(this , MainActivity. class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent resultIntent = PendingIntent.getActivity(this , 0, intent,
+        PendingIntent resultIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
         Uri notificationSoundURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

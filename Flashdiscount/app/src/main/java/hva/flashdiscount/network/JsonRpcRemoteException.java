@@ -21,18 +21,6 @@ final class JsonRpcRemoteException extends JsonRpcException {
         this.data = data;
     }
 
-    public Integer getCode() {
-        return code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public String getData() {
-        return data;
-    }
-
     private static String format(Integer code, String message, String data) {
         StringBuilder str = new StringBuilder();
         str.append("jsonrpc error");
@@ -47,6 +35,18 @@ final class JsonRpcRemoteException extends JsonRpcException {
             str.append("\n").append("Caused by ").append(data);
         }
         return str.toString();
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public String getData() {
+        return data;
     }
 
 }

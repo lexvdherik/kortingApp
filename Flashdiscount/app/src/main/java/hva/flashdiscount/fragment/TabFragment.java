@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -20,7 +19,7 @@ public class TabFragment extends Fragment {
     private static final String TAG = TabFragment.class.getSimpleName();
     private int tabPosition;
     private SharedPreferences sharedPref;
-    private SharedPreferences.Editor editor;
+
     public TabFragment() {
 
     }
@@ -30,8 +29,6 @@ public class TabFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        editor = sharedPref.edit();
-
         tabPosition = sharedPref.getInt("tab_position", 0);
 
     }
@@ -56,7 +53,7 @@ public class TabFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-
+                SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putInt("tab_position", tab.getPosition());
                 editor.apply();
             }

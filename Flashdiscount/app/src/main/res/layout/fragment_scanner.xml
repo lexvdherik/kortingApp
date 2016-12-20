@@ -6,18 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <fragment android:name="hva.flashdiscount.fragment.ScannerFragment"
+    <fragment
         android:id="@+id/scanner_fragment"
-        android:layout_weight="1"
+        android:name="hva.flashdiscount.fragment.ScannerFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_gravity="top"
-        android:minHeight="?attr/actionBarSize"
-        android:background="@color/cardview_dark_background"
-        app:theme="@style/AlertDialog.AppCompat"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="@color/cardview_dark_background"
+        android:minHeight="?attr/actionBarSize"
+        app:theme="@style/AlertDialog.AppCompat"/>
 </FrameLayout>

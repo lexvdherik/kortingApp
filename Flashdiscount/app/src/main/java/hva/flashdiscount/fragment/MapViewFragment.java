@@ -132,58 +132,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 }
 
                 zoomToLocation(null);
-                googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-
-                    @Override
-                    public boolean onMarkerClick(Marker marker) {
-
-                        establishment = (Establishment) marker.getTag();
-                        adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
-                        mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        CardView detailLayout = (CardView) rootView.findViewById(R.id.card_view_discount);
-
-
-                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                goToDetailView(establishment, i);
-                            }
-                        });
-
-                        listView.setOnTouchListener(new View.OnTouchListener() {
-                            @Override
-                            public boolean onTouch(View view, MotionEvent motionEvent) {
-                                view.getParent().requestDisallowInterceptTouchEvent(true);
-                                return false;
-                            }
-                        });
-
-                        if (establishment.getDiscounts().size() > 1) {
-                            detailLayout.setVisibility(View.GONE);
-                            listView.setNestedScrollingEnabled(true);
-                            listView.setAdapter(adapter);
-                        } else if (establishment.getDiscounts().size() == 1) {
-                            detailLayout.setVisibility(View.VISIBLE);
-                            listView.setAdapter(adapter);
-                        } else {
-                            detailLayout.setVisibility(View.GONE);
-                            adapter.clear();
-                            listView.setAdapter(adapter);
-                        }
-
-                        setListViewHeightBasedOnChildren(listView);
-
-                        if (mBottomSheetBehavior1.getState() != BottomSheetBehavior.STATE_EXPANDED) {
-                            mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
-                            bottomSheettitle.setText(establishment.getCompany().getName());
-                            bottomSheetdescription.setText(String.valueOf(establishment.getStreet() + " " + establishment.getStreetnumber() + ", " + establishment.getCity()));
-                        } else {
-                            mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                        }
-
-                        return true;
-                    }
-                });
+                googleMap.setOnMarkerClickListener(getMarkerListener(rootView));
 
 
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -198,6 +147,66 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         });
 
         return rootView;
+    }
+
+    private GoogleMap.OnMarkerClickListener getMarkerListener(final View rootView) {
+        return new GoogleMap.OnMarkerClickListener() {
+
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                establishment = (Establishment) marker.getTag();
+                adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
+                mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                CardView detailLayout = (CardView) rootView.findViewById(R.id.card_view_discount);
+
+
+                if (establishment.getDiscounts().size() == 1) {
+                    detailLayout.setVisibility(View.VISIBLE);
+                } else {
+                    detailLayout.setVisibility(View.GONE);
+                }
+
+                if (establishment.getDiscounts().size() == 0) {
+                    adapter.clear();
+                } else {
+                    listView.setAdapter(adapter);
+                }
+
+
+                listView = setListViewListeners(listView);
+
+                setListViewHeightBasedOnChildren(listView);
+
+                if (mBottomSheetBehavior1.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    return true;
+                }
+                mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_EXPANDED);
+                bottomSheettitle.setText(establishment.getCompany().getName());
+                bottomSheetdescription.setText(String.valueOf(establishment.getStreet() + " " + establishment.getStreetnumber() + ", " + establishment.getCity()));
+                return true;
+            }
+        };
+    }
+
+    private ListView setListViewListeners(ListView listView) {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                goToDetailView(establishment, i);
+            }
+        });
+
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                view.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
+        return listView;
     }
 
     private void initAttributes(View rootView) {

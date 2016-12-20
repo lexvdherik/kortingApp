@@ -12,6 +12,7 @@ import hva.flashdiscount.network.APIRequest;
 
 /**
  * TODO: Description.
+ *
  * @author Dr.Chruc
  * @since 1-12-2016
  */

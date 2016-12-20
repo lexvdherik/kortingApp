@@ -50,6 +50,7 @@ public class BottomDiscountAdapter extends ArrayAdapter<Discount> {
     }
 
     @Override
+    @NonNull
     public View getView(int i, View view, @NonNull ViewGroup viewGroup) {
 
 
@@ -65,30 +66,5 @@ public class BottomDiscountAdapter extends ArrayAdapter<Discount> {
 
         return view;
     }
-//
-//    @Override
-//    public void onClick(View view) {
-//
-//        int position = (int) view.getTag();
-//        Discount discount = getItem(position);
-//
-//
-//
-//    }
-
-//    private void goToDetailView(Discount discount) {
-//
-//        Bundle arguments = new Bundle();
-//        arguments.putString("discount", new Gson().toJson(discount));
-//
-//        DetailFragment detailFragment = new DetailFragment();
-//
-//        detailFragment.setArguments(arguments);
-//
-//        FragmentManager manager = ((Activity) context).getFragmentManager().beginTransaction()
-//                .replace(R.id.fragment_container, detailFragment)
-//                .addToBackStack(null)
-//                .commit();
-//    }
 
 }

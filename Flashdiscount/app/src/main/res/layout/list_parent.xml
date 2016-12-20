@@ -25,7 +25,7 @@
                 android:adjustViewBounds="true"
                 android:maxWidth="40dp"
                 android:layout_gravity="start|center_vertical"
-                android:layout_marginRight="@dimen/activity_vertical_margin"
+                android:layout_marginEnd="@dimen/activity_vertical_margin"
                 android:src="@drawable/ic_coffee"/>
 
             <LinearLayout
@@ -95,6 +95,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/list_hierarchy_indicator"
                     android:id="@+id/list_arrow_image" />
 
                 <TextView
