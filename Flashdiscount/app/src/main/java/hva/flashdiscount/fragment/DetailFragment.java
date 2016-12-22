@@ -7,8 +7,11 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
+
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,9 +57,8 @@ public class DetailFragment extends Fragment {
     private int discountPosition;
     private boolean dialog;
     private LoginSingleton loginSingleton;
-    private TransactionHandler.FragmentTransactionHandler mFragHandler;
-    private View.OnClickListener mToolbarListener;
-
+    private boolean isFavorite;
+    private ActionBarDrawerToggle mDrawerToggle;
 
     public static DetailFragment newInstance() {
         DetailFragment fragment = new DetailFragment();
@@ -128,6 +130,13 @@ public class DetailFragment extends Fragment {
 
         ImageButton favoriteButton = (ImageButton) mRootView.findViewById(R.id.favorite_button);
         favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24px);
+
+        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
 
         favoriteButton.setOnClickListener(new View.OnClickListener() {
 

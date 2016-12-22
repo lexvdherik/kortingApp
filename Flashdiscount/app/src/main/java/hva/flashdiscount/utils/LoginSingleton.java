@@ -141,21 +141,16 @@ public class LoginSingleton {
     }
 
     public User silentLogin() {
+        if(loggedIn()) {
+            GoogleApiClient mGoogleApiClient = GoogleApiFactory.getClient(mContext);
 
-        GoogleApiClient mGoogleApiClient = GoogleApiFactory.getClient(mContext);
+            OptionalPendingResult<GoogleSignInResult> pendingResult =
+                    Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
 
-        OptionalPendingResult<GoogleSignInResult> pendingResult =
-                Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-
-        if (pendingResult.isDone()) {
             acct = pendingResult.get().getSignInAccount();
-
+            
             return new User(acct);
-        } else {
-            return null;
         }
-
-
-
+        return null;
     }
 }

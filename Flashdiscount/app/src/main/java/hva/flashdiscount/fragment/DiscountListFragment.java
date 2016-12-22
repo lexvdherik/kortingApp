@@ -77,7 +77,7 @@ public class DiscountListFragment extends Fragment {
         detailFragment.setArguments(arguments);
 
         getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.slide_in_frombottom, R.anim.slide_in_frombottom)
+                .setCustomAnimations(R.anim.slide_in_frombottom, 0)
                 .replace(R.id.fragment_container, detailFragment, "detailfrag")
                 .addToBackStack(null)
                 .commit();

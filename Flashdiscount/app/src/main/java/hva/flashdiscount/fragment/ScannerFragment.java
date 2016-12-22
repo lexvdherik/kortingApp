@@ -38,20 +38,17 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mScannerView = new ZXingScannerView(getActivity());
+        wrongQr = false;
         if (getArguments() != null) {
             String gson = getArguments().getString("establishment");
             dicountPosition = getArguments().getInt("discountPosition");
             establishment = new Gson().fromJson(gson, Establishment.class);
             discount = establishment.getDiscounts().get(getArguments().getInt("discountPosition"));
         }
+
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         Log.i(TAG, sharedPref.getString("expire_date", ""));
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
-        }
+
         return mScannerView;
     }
 

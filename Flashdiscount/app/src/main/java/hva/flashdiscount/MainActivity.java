@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
                     TabFragment tb = new TabFragment();
                     getSupportFragmentManager()
                             .beginTransaction()
-                            .setCustomAnimations(R.anim.slide_in_frombottom, R.anim.slide_in_frombottom)
+                            .setCustomAnimations(R.anim.slide_in_frombottom, 0)
                             .replace(R.id.fragment_container, tb)
                             .commit();
 
