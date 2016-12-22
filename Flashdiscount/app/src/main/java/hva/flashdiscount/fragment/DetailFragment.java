@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,8 +54,8 @@ public class DetailFragment extends Fragment {
     private int discountPosition;
     private boolean dialog;
     private LoginSingleton loginSingleton;
-    private boolean isFavorite;
-    private ActionBarDrawerToggle mDrawerToggle;
+    private TransactionHandler.FragmentTransactionHandler mFragHandler;
+    private View.OnClickListener mToolbarListener;
 
     public static DetailFragment newInstance() {
         DetailFragment fragment = new DetailFragment();
@@ -203,7 +202,7 @@ public class DetailFragment extends Fragment {
 
         // Set up the toolbar
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(android.R.drawable.ic_btn_speak_now);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24px);
     }
 
     private void goToScannerIfGranted() {

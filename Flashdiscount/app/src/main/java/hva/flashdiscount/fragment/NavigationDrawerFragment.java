@@ -24,9 +24,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.android.volley.toolbox.ImageLoader;
-
 import hva.flashdiscount.R;
 import hva.flashdiscount.layout.RoundNetworkImageView;
 import hva.flashdiscount.model.User;
