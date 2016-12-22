@@ -67,6 +67,7 @@ public class DiscountListFragment extends Fragment {
 
     private void goToDetailView(Establishment establishment, int discountPostion) {
 
+
         Bundle arguments = new Bundle();
         arguments.putString("establishment", new Gson().toJson(establishment));
         arguments.putInt("discountPosition", discountPostion);
@@ -76,6 +77,7 @@ public class DiscountListFragment extends Fragment {
         detailFragment.setArguments(arguments);
 
         getFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_frombottom, R.anim.slide_in_frombottom)
                 .replace(R.id.fragment_container, detailFragment, "detailfrag")
                 .addToBackStack(null)
                 .commit();

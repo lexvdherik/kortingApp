@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
@@ -21,7 +20,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import hva.flashdiscount.MainActivity;
 import hva.flashdiscount.R;
-import hva.flashdiscount.layout.RoundNetworkImageView;
 import hva.flashdiscount.model.Token;
 import hva.flashdiscount.model.User;
 import hva.flashdiscount.network.APIRequest;
@@ -110,13 +108,13 @@ public class LoginDialogFragment extends DialogFragment {
             }
 
             ImageLoader mImageLoader = VolleySingleton.getInstance(getActivity()).getImageLoader();
-            RoundNetworkImageView image = (RoundNetworkImageView) layout.findViewById(R.id.profile_picture);
-            if (image != null) {
-                image.setImageUrl(user.getPicture().toString(), mImageLoader);
-            }
-
-            ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
-            ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
+//            RoundNetworkImageView image = (RoundNetworkImageView) layout.findViewById(R.id.profile_picture);
+//            if (image != null) {
+//                image.setImageUrl(user.getPicture().toString(), mImageLoader);
+//            }
+//
+//            ((TextView) layout.findViewById(R.id.naam)).setText(user.getName());
+//            ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
 
             getDialog().dismiss();
         }
