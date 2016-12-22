@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/map_view_fragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/map_view_fragment">
-
-    <Button
-        android:id="@+id/filterButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|top"
-        android:text="Filter"
-        android:padding="10dp"
-        android:layout_marginTop="20dp"
-        android:paddingRight="10dp"/>
+    android:layout_height="match_parent">
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"

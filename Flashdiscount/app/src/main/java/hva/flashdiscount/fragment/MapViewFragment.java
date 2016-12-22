@@ -1,6 +1,5 @@
 package hva.flashdiscount.fragment;
 
-import android.content.Context;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,9 +9,13 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +55,7 @@ import hva.flashdiscount.model.Establishment;
 import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.service.GpsService;
 
+
 public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerClickListener {
 
@@ -60,7 +64,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     AlertDialog dialog;
     CheckBox buses;
     private GoogleMap googleMap;
-    private Context context;
     private Location location;
     private GpsService mGpsService;
     private BottomSheetBehavior mBottomSheetBehavior1;
@@ -71,6 +74,8 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private CategoryAdapter categoryAdapter;
     private ArrayList<Category> categories = new ArrayList<>();
     private HashMap<Integer, List<Marker>> markerHashMap = new HashMap<>();
+    private View.OnClickListener mToolbarListener;
+    private Menu menu;
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
@@ -102,9 +107,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         super.onCreate(savedInstanceState);
 
         mGpsService = new GpsService(getActivity());
-        context = getActivity();
-
-        mGpsService = new GpsService(getActivity());
 
         location = new Location("");
         location.setLatitude(52.375368);
@@ -130,19 +132,23 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             e.printStackTrace();
         }
 
-        Button filterButton = (Button) rootView.findViewById(R.id.filterButton);
-        filterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                //view = new View(context);
+        final AppCompatActivity act = (AppCompatActivity) getActivity();
+        Toolbar toolbar = null;
+        if (act.getSupportActionBar() != null) {
+            toolbar = (Toolbar) act.getSupportActionBar().getCustomView();
+        }
+        if (toolbar != null) {
+            MenuItem menuItem = toolbar.getMenu().getItem(0);
+            menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    filterMarkers();
+                    return true;
+                }
+            });
 
-
-                filterMarkers();
-
-                //ListView categoryListView = (ListView) rootView.findViewById(R.id.cate);
-            }
-        });
+        }
 
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
@@ -169,6 +175,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 });
                 getCategoriesFromAPI();
                 getEstablishmentsFromAPI();
+
                 filterMarkers();
 
 
@@ -185,7 +192,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             public boolean onMarkerClick(Marker marker) {
 
                 establishment = (Establishment) marker.getTag();
-                BottomDiscountAdapter adapter = new BottomDiscountAdapter(establishment.getDiscounts(), context);
+                BottomDiscountAdapter adapter = new BottomDiscountAdapter(establishment.getDiscounts(), getContext());
                 mBottomSheetBehavior1.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 CardView detailLayout = (CardView) rootView.findViewById(R.id.card_view_discount);
 
@@ -250,7 +257,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             LayoutInflater inflater = getActivity().getLayoutInflater();
             View checkBoxView = inflater.inflate(R.layout.marker_selection, null);
 
-            categoryAdapter = new CategoryAdapter(context, R.layout.category_list_child, categories, this);
+            categoryAdapter = new CategoryAdapter(getContext(), R.layout.category_list_child, categories, this);
 
             categoryListView = (ListView) checkBoxView.findViewById(R.id.listview_categories);
             categoryListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);

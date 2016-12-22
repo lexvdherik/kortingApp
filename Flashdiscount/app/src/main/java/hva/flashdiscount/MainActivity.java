@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public User user;
-    Toolbar mToolbar;
+    public Toolbar mToolbar;
     private LoginSingleton loginSingleton;
     private boolean hasShownLogin = false;
     private int mDrawerPosition = -1;
@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
         }
