@@ -138,7 +138,6 @@ public class MainActivity extends AppCompatActivity
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     DetailFragment fragment = (DetailFragment) getSupportFragmentManager().findFragmentByTag("detailfrag");
                     FloatingActionButton button = (FloatingActionButton) fragment.getView().findViewById(R.id.claim_button);
-                    button.callOnClick();
                     return;
                 }
 
