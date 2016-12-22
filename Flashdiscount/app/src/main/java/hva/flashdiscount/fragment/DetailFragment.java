@@ -24,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -103,6 +104,8 @@ public class DetailFragment extends Fragment {
     private void setFavorite(String establishmentId) {
         DetailFragment.SetFavoriteResponseListener listener = new DetailFragment.SetFavoriteResponseListener();
         APIRequest.getInstance(getActivity()).setFavorite(listener, listener, establishmentId);
+        FirebaseMessaging.getInstance().subscribeToTopic(establishmentId);
+
     }
 
     private void getFavorite(String establishmentId) {
@@ -285,8 +288,12 @@ public class DetailFragment extends Fragment {
 
         if (response) {
             favoriteButton.setImageResource(R.drawable.ic_favorite_red_24px);
+            FirebaseMessaging.getInstance().subscribeToTopic(String.valueOf(establishment.getEstablishmentId()));
+
         } else {
             favoriteButton.setImageResource(R.drawable.ic_favorite_border_black_24px);
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(String.valueOf(establishment.getEstablishmentId()));
+
         }
 
     }
@@ -323,6 +330,7 @@ public class DetailFragment extends Fragment {
             if (response instanceof NetworkResponse) {
                 NetworkResponse networkResponse = (NetworkResponse) response;
                 isFavorite((networkResponse.statusCode == 200));
+
             } else {
                 JsonObject object = (JsonObject) response;
                 isFavorite(((object.get("status").getAsInt() == 200)));

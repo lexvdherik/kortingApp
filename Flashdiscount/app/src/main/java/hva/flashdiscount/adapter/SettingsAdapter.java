@@ -12,6 +12,7 @@ import android.widget.Switch;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import hva.flashdiscount.R;
 import hva.flashdiscount.fragment.SettingsFragment;
@@ -83,6 +84,9 @@ public class SettingsAdapter extends BaseAdapter {
                 int check = 0;
                 if (isChecked) {
                     check = 1;
+                    FirebaseMessaging.getInstance().subscribeToTopic(String.valueOf(companySettings[position].getEstablishmentId()));
+                } else {
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic(String.valueOf(companySettings[position].getEstablishmentId()));
                 }
                 SettingsFragment.companySettings[position].setNotification(check);
                 companySettings[position].setNotification(check);
