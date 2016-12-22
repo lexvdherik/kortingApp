@@ -141,7 +141,7 @@ public class LoginSingleton {
     }
 
     public User silentLogin() {
-        if(loggedIn()) {
+        if (loggedIn()) {
             GoogleApiClient mGoogleApiClient = GoogleApiFactory.getClient(mContext);
 
             OptionalPendingResult<GoogleSignInResult> pendingResult =
