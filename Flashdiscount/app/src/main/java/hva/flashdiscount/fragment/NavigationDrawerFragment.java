@@ -212,7 +212,7 @@ public class NavigationDrawerFragment extends Fragment {
                 getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
         };
-        
+
         // Defer code dependent on restoration of previous instance state.
         mDrawerLayout.post(new Runnable() {
                                @Override

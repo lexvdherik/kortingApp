@@ -148,7 +148,7 @@ public class LoginSingleton {
                     Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
 
             acct = pendingResult.get().getSignInAccount();
-            
+
             return new User(acct);
         }
         return null;
