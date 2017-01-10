@@ -11,11 +11,12 @@
         android:id="@+id/card_view_discount_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardElevation="6dp">
+        app:cardElevation="6dp"
+        >
 
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                      android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="horizontal"
                       android:padding="16dp">
@@ -29,6 +30,7 @@
                 android:layout_weight="1"
                 android:maxLines="5"
                 android:minWidth="200dp"
+                android:textColor="@color/textColorPrimary"
                 android:textAppearance="?android:attr/textAppearance"/>
 
             <include layout="@layout/list_discount_remaining"/>
