@@ -45,4 +45,5 @@
     <string name="list_hierarchy_indicator">Lijst indicator</string>
     <string name="favorite_button">Favoriet knop</string>
     <string name="category_indicator">Categorie indicator</string>
+    <string name="succes_claim">Je hebt succesvol een korting geclaimd.</string>
 </resources>

@@ -46,6 +46,7 @@
     <string name="favorite_button">Favorite button</string>
     <string name="category_indicator">Category indicator</string>
     <string name="list_hierarchy_indicator">List hierarchy indicator</string>
+    <string name="succes_claim">You successfuly claimed a discount.</string>
 
 
     <!-- Drawer strings -->

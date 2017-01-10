@@ -43,6 +43,9 @@ public class MessageDialogFragment extends DialogFragment {
             case "WRONG QR":
                 msg = getString(R.string.wrong_qr_code);
                 break;
+            case "SUCCESS":
+                msg = getString(R.string.succes_claim);
+                break;
             default:
                 msg = getString(R.string.unknown_error);
                 break;
