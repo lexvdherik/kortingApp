@@ -2,6 +2,7 @@ package hva.flashdiscount.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,20 +23,21 @@ public class MessageDialogFragment extends DialogFragment {
 
     private String errorCodeToMessage(String errorCode) {
         String msg;
+        Log.e("errorcode", errorCode);
         switch (errorCode) {
-            case "NETWORK 400":
+            case "400":
                 msg = getString(R.string.couldnt_claim_discount);
                 break;
-            case "NETWORK 401":
+            case "401":
                 msg = getString(R.string.not_logged_in);
                 break;
-            case "NETWORK 404":
+            case "404":
                 msg = getString(R.string.discount_not_found);
                 break;
-            case "NETWORK 409":
+            case "409":
                 msg = getString(R.string.to_many_claims);
                 break;
-            case "NETWORK 500":
+            case "500":
                 msg = getString(R.string.server_internal_error);
                 break;
             case "WRONG QR":
