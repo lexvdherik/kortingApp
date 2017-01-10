@@ -24,7 +24,9 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.android.volley.toolbox.ImageLoader;
+
 import hva.flashdiscount.R;
 import hva.flashdiscount.layout.RoundNetworkImageView;
 import hva.flashdiscount.model.User;
@@ -206,7 +208,6 @@ public class NavigationDrawerFragment extends Fragment {
                 mSelectedPosChanged = false;
 
 
-
                 getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
         };
@@ -313,6 +314,12 @@ public class NavigationDrawerFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.toolbar_filter_button) {
+            ((TabFragment) getFragmentManager().findFragmentByTag("tab_fragment")).showFilter();
+            return true;
+        }
+
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }

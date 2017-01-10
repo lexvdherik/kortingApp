@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
-    android:id="@+id/toolbar_menu"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toolbar_menu"
     tools:context=".MainActivity">
 
     <item
         android:id="@+id/toolbar_filter_button"
+        android:icon="@drawable/ic_filter_list_black_48px"
+        android:orderInCategory="100"
         android:title="Filter"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_beer"
         app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="ifRoom"/>
-
 </menu>

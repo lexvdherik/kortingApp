@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         TabFragment tabFragment = new TabFragment();
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.fragment_container, tabFragment);
+        ft.add(R.id.fragment_container, tabFragment, "tab_fragment");
         ft.commit();
 
     }

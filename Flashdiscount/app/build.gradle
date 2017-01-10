@@ -27,7 +27,7 @@ android {
     buildToolsVersion supportversion
     defaultConfig {
         applicationId "hva.flashdiscount"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
         multiDexEnabled true
@@ -43,6 +43,7 @@ android {
 
     productFlavors {
         dev {
+            versionNameSuffix "-dev"
             minSdkVersion 21
         }
         prod {

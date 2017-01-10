@@ -19,6 +19,8 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     private static final String TAG = TabPagerAdapter.class.getSimpleName();
 
     private int mNumOfTabs;
+    private MapViewFragment mapViewFragment = new MapViewFragment();
+    private DiscountListFragment discountListFragment = new DiscountListFragment();
 
     public TabPagerAdapter(FragmentManager fm, int numOfTabs) {
         super(fm);
@@ -30,9 +32,9 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                return new MapViewFragment();
+                return mapViewFragment;
             case 1:
-                return new DiscountListFragment();
+                return discountListFragment;
             default:
                 return null;
         }

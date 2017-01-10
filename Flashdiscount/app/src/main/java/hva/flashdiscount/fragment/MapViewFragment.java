@@ -9,20 +9,17 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,7 +41,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import hva.flashdiscount.R;
@@ -60,22 +56,18 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = MapViewFragment.class.getSimpleName();
+    public CategoryAdapter categoryAdapter;
+    public ArrayList<Category> categories = new ArrayList<>();
     MapView mMapView;
     AlertDialog dialog;
-    CheckBox buses;
     private GoogleMap googleMap;
     private Location location;
     private GpsService mGpsService;
     private BottomSheetBehavior mBottomSheetBehavior1;
     private ListView listView;
-    private ListView categoryListView;
     private View bottomSheet;
     private Establishment establishment;
-    private CategoryAdapter categoryAdapter;
-    private ArrayList<Category> categories = new ArrayList<>();
-    private HashMap<Integer, List<Marker>> markerHashMap = new HashMap<>();
-    private View.OnClickListener mToolbarListener;
-    private Menu menu;
+    private SparseArray<List<Marker>> markerHashMap = new SparseArray<>();
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
@@ -105,6 +97,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         mGpsService = new GpsService(getActivity());
 
@@ -121,6 +114,28 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Do something that differs the Activity's menu here
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.toolbar_filter_button:
+                filterMarkers();
+                Log.e(TAG, "onOptionsItemSelected: FILTER MARKERS!!!");
+                return false;
+            default:
+                Log.e(TAG, "onOptionsItemSelected: HELLLLLP WRONG OPTION");
+                break;
+        }
+
+        return false;
+    }
+
+    @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_map_view, container, false);
 
@@ -130,24 +145,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-
-        final AppCompatActivity act = (AppCompatActivity) getActivity();
-        Toolbar toolbar = null;
-        if (act.getSupportActionBar() != null) {
-            toolbar = (Toolbar) act.getSupportActionBar().getCustomView();
-        }
-        if (toolbar != null) {
-            MenuItem menuItem = toolbar.getMenu().getItem(0);
-            menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    filterMarkers();
-                    return true;
-                }
-            });
-
         }
 
         mMapView.onCreate(savedInstanceState);
@@ -175,15 +172,12 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
                 });
                 getCategoriesFromAPI();
                 getEstablishmentsFromAPI();
-
-                filterMarkers();
-
-
             }
         });
 
         return rootView;
     }
+
 
     private GoogleMap.OnMarkerClickListener getMarkerListener(final View rootView) {
         return new GoogleMap.OnMarkerClickListener() {
@@ -251,41 +245,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     }
 
     public void filterMarkers() {
-        if (dialog == null) {
-            AlertDialog.Builder builder;
-            builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            View checkBoxView = inflater.inflate(R.layout.marker_selection, null);
-
-            categoryAdapter = new CategoryAdapter(getContext(), R.layout.category_list_child, categories, this);
-
-            categoryListView = (ListView) checkBoxView.findViewById(R.id.listview_categories);
-            categoryListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-            categoryListView.setAdapter(categoryAdapter);
-
-
-            builder.setView(checkBoxView);
-
-
-            buses = (CheckBox) checkBoxView.findViewById(R.id.checkBox1);
-            //trains = (CheckBox) list.findViewById(R.id.checkBox2);
-            Button okButton = (Button) checkBoxView.findViewById(R.id.okButton);
-            okButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    displaySelectedMarkers();
-                }
-            });
-//            Button cancelButton = (Button) checkBoxView.findViewById(R.id.cancelButton);
-//            cancelButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    dialog.dismiss();
-//                }
-//            });
-            dialog = builder.create();
-        }
-        dialog.show();
+        Log.e(TAG, "filterMarkers: " + "Filterstart");
     }
 
     public void displaySelectedMarkers() {
@@ -354,7 +314,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         bottomSheet = rootView.findViewById(R.id.bottom_sheet);
         mBottomSheetBehavior1 = BottomSheetBehavior.from(bottomSheet);
         listView = (ListView) rootView.findViewById(R.id.discount_list_view);
-        categoryListView = (ListView) rootView.findViewById(R.id.listview_categories);
     }
 
     @Override
@@ -397,15 +356,11 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         Marker marker = googleMap.addMarker(est);
         marker.setTag(establishment);
 
-        if (!markerHashMap.containsKey(establishment.getCompany().getCategoryId())) {
-
+        if (!(markerHashMap.indexOfKey(establishment.getCompany().getCategoryId()) > 0)) {
             markerHashMap.put(establishment.getCompany().getCategoryId(), new ArrayList<Marker>());
             markerHashMap.get(establishment.getCompany().getCategoryId()).add(marker);
-
         } else {
-
             markerHashMap.get(establishment.getCompany().getCategoryId()).add(marker);
-
         }
 
     }
