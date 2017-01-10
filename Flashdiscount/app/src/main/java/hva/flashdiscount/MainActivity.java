@@ -188,7 +188,6 @@ public class MainActivity extends AppCompatActivity
 
         //-> Choosing which fragment to show logic
 
-        Log.e(TAG, "blah - " + String.valueOf(newPos));
         switch (newPos) {
             case 0:
                 if (!loginSingleton.loggedIn()) {
