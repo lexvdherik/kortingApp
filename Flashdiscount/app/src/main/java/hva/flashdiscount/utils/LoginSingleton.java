@@ -112,7 +112,7 @@ public class LoginSingleton {
         }
 
         if (Objects.equals(idToken, "")) {
-            silentLogin();
+            //silentLogin();
             return authorizedRequestParameters();
         }
 
@@ -141,16 +141,14 @@ public class LoginSingleton {
     }
 
     public User silentLogin() {
-        if (loggedIn()) {
-            GoogleApiClient mGoogleApiClient = GoogleApiFactory.getClient(mContext);
+        GoogleApiClient mGoogleApiClient = GoogleApiFactory.getClient(mContext);
 
-            OptionalPendingResult<GoogleSignInResult> pendingResult =
-                    Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+        OptionalPendingResult<GoogleSignInResult> pendingResult =
+                Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
 
-            acct = pendingResult.get().getSignInAccount();
+        acct = pendingResult.get().getSignInAccount();
 
-            return new User(acct);
-        }
-        return null;
+        return new User(acct);
+
     }
 }

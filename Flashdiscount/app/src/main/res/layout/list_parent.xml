@@ -47,6 +47,7 @@
                     android:ellipsize="end"
                     android:gravity="start|top"
                     android:text="Company Name"
+                    android:textColor="@color/textColorPrimary"
                     android:textAppearance="?android:attr/textAppearance"
                     />
 
