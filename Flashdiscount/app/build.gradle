@@ -87,6 +87,6 @@ dependencies {
 
 apply plugin: 'com.google.gms.google-services'
 
-android.applicationVariants.all { variant ->
-    variant.preBuild.dependsOn "checkstyle"
-}
+//android.applicationVariants.all { variant ->
+//    variant.preBuild.dependsOn "checkstyle"
+//}

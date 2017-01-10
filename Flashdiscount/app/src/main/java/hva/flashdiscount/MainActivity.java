@@ -47,8 +47,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         loginSingleton = LoginSingleton.getInstance(this);
-        loginSingleton.silentLogin();
+        if (!loginSingleton.loggedIn()) {
+            if(!loginSingleton.loginExpired()) {
+                loginSingleton.silentLogin();
+            }
+        }
+//        loginSingleton.silentLogin();
 
         Fabric.with(this, new Crashlytics());
 
