@@ -26,6 +26,7 @@ import hva.flashdiscount.utils.LoginSingleton;
 public class APIRequest {
     private static final String TAG = APIRequest.class.getSimpleName();
 
+    public static final String BASE_URL = "https://amazon.seanmolenaar.eu/";
     private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
 //    private static final String HOST = "http://145.28.196.77/api/";
 

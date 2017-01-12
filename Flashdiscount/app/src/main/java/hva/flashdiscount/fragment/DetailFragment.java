@@ -58,13 +58,6 @@ public class DetailFragment extends Fragment {
     private TransactionHandler.FragmentTransactionHandler mFragHandler;
     private View.OnClickListener mToolbarListener;
 
-    public static DetailFragment newInstance() {
-        DetailFragment fragment = new DetailFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public static MessageDialogFragment newInstance(String message) {
         MessageDialogFragment f = new MessageDialogFragment();
 
@@ -252,7 +245,7 @@ public class DetailFragment extends Fragment {
     }
 
     public void setCompanyText() {
-        companyImage.setImageUrl(establishment.getCompany().getLogo(), mImageLoader);
+        companyImage.setImageUrl(APIRequest.BASE_URL + establishment.getCompany().getLogo(), mImageLoader);
 
         companyName.setText(establishment.getCompany().getName());
         companyDescription.setText(establishment.getCompany().getDescription());
