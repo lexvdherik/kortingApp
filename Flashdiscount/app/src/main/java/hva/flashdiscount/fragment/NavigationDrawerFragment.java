@@ -376,7 +376,7 @@ public class NavigationDrawerFragment extends Fragment {
                         (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 row = inflater.inflate(R.layout.nav_header, parent, false);
                 TextView tx = (TextView) row.findViewById(R.id.naam);
-                tx.setText("tony is gay");
+                tx.setText("Not Logged in");
                 //holder = new ViewHolder();
                 // holder.text = (TextView) row.findViewById(R.id.naam);
 
