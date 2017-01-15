@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
 
         loginSingleton = LoginSingleton.getInstance(this);
         if (!loginSingleton.loggedIn()) {
-            if(!loginSingleton.loginExpired()) {
+            if (!loginSingleton.loginExpired()) {
                 loginSingleton.silentLogin();
             }
         }
