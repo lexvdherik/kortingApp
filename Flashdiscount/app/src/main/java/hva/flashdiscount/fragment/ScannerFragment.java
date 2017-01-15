@@ -47,7 +47,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
         }
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        Log.i(TAG, sharedPref.getString("expire_date", ""));
+        Log.i(TAG, "Shared expire_date:" + sharedPref.getString("expire_date", ""));
 
         return mScannerView;
     }
@@ -119,7 +119,7 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
             }
         }, 2000);
 
-        Log.i(TAG, establishmentId);
+        Log.i(TAG, "Establishment ID:" + establishmentId);
         claimDiscount(establishmentId, String.valueOf(discount.getDiscountId()));
     }
 
@@ -162,12 +162,13 @@ public class ScannerFragment extends Fragment implements ZXingScannerView.Result
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e(TAG + " content", " joil" + String.valueOf(error.networkResponse.statusCode));
-            goToDetailView(establishment, dicountPosition, false, String.valueOf(error.networkResponse.statusCode));
-
             if (error instanceof NoConnectionError) {
-                Log.e(TAG, "No connection!");
+                Log.w(TAG, "No connection!");
+                return;
             }
+
+            Log.d(TAG, "Claim response=" + String.valueOf(error.networkResponse.statusCode));
+            goToDetailView(establishment, dicountPosition, false, String.valueOf(error.networkResponse.statusCode));
         }
 
     }

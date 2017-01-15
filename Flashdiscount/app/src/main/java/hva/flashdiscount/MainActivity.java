@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity
 
         // If position was -1, state that there was an error then fix the issue
         if (newPos == -1) {
-            Log.e(TAG, "changeItemSelected(pos) was given -1. Fixing issue for now");
+            Log.d(TAG, "changeItemSelected(pos) was given -1. Fixing issue for now");
             newPos = 0;
         }
 

@@ -1,7 +1,6 @@
 package hva.flashdiscount.fragment;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -251,9 +250,7 @@ public class DetailFragment extends Fragment {
         companyDescription.setText(establishment.getCompany().getDescription());
     }
 
-    @SuppressLint("SetTextI18n")
     public void setDiscountText() {
-        Log.i(TAG, discount.toString());
         claimsLeft.setText(discount.getAmountRemaining() + " " + getString(R.string.left));
         timeLeft.setText(discount.getTimeRemaining(getContext()));
         discountDescription.setText(discount.getDescription());

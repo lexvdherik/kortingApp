@@ -98,7 +98,7 @@ public class GpsService implements GoogleApiClient.ConnectionCallbacks, GoogleAp
     @Nullable
     public Location getLocation() {
         if (!checkPermission()) {
-            Log.e(TAG, "No location permission when requesting location");
+            Log.w(TAG, "No location permission when requesting location");
             return null;
         }
         createLocationRequest();

@@ -12,6 +12,7 @@ import hva.flashdiscount.R;
 
 public class MessageDialogFragment extends DialogFragment {
 
+    private static String TAG = MessageDialogFragment.class.getSimpleName();
     private String message;
 
     @Override
@@ -23,7 +24,7 @@ public class MessageDialogFragment extends DialogFragment {
 
     private String errorCodeToMessage(String errorCode) {
         String msg;
-        Log.e("errorcode", errorCode);
+        Log.w(TAG, "Scanner errorcode:" + errorCode);
         switch (errorCode) {
             case "400":
                 msg = getString(R.string.couldnt_claim_discount);
@@ -47,6 +48,7 @@ public class MessageDialogFragment extends DialogFragment {
                 msg = getString(R.string.succes_claim);
                 break;
             default:
+                Log.e(TAG, "Scanner errorcode not found:" + errorCode);
                 msg = getString(R.string.unknown_error);
                 break;
         }

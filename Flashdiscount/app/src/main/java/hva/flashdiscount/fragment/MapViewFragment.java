@@ -125,10 +125,8 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
             case R.id.toolbar_filter_button:
                 filterMarkers();
-                Log.e(TAG, "onOptionsItemSelected: FILTER MARKERS!!!");
                 return false;
             default:
-                Log.e(TAG, "onOptionsItemSelected: HELLLLLP WRONG OPTION");
                 break;
         }
 
@@ -245,7 +243,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     }
 
     public void filterMarkers() {
-        Log.e(TAG, "filterMarkers: " + "Filterstart");
+        Log.d(TAG, "filterMarkers: " + "Filter start");
     }
 
     public void displaySelectedMarkers() {
@@ -306,7 +304,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 //            buss.setVisible(buses.isChecked());
 //        }
 
-        Log.i("HASHMAP", markerHashMap.toString());
+        Log.i(TAG, "Hashmap = " + markerHashMap.toString());
     }
 
     private void initAttributes(View rootView) {
@@ -383,7 +381,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        Log.i(TAG, "OnMarkerClick");
+        Log.d(TAG, "OnMarkerClick");
         return false;
     }
 
@@ -446,7 +444,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         @Override
         public void onResponse(Establishment[] establishments) {
             for (Establishment establishment : establishments) {
-                Log.i("MARKER", (Integer.toString(establishment.getCompany().getCategoryId())));
+                Log.i(TAG, "Received Establishment category: " + (Integer.toString(establishment.getCompany().getCategoryId())));
                 createMarker(establishment);
             }
         }
@@ -473,7 +471,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         @Override
         public void onResponse(Category[] categories) {
             for (Category category : categories) {
-                Log.i(TAG, category.toString());
+                Log.i(TAG, "Response with: "+ category.toString());
                 createCategory(category);
             }
         }

@@ -42,7 +42,7 @@ public class TabFragment extends Fragment {
     }
 
     public void showFilter() {
-        Log.e(TAG, "showFilter: " + "SHOWING FILTER");
+        Log.d(TAG, "showFilter: SHOWING FILTER");
         if (dialog == null) {
             View tabView = getActivity().findViewById(R.id.tab_relative_layout);
             TabLayout tabLayout = (TabLayout) tabView.findViewById(R.id.tab_layout);
