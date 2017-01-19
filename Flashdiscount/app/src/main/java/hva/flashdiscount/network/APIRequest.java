@@ -24,9 +24,8 @@ import hva.flashdiscount.model.Token;
 import hva.flashdiscount.utils.LoginSingleton;
 
 public class APIRequest {
-    private static final String TAG = APIRequest.class.getSimpleName();
-
     public static final String BASE_URL = "https://amazon.seanmolenaar.eu/";
+    private static final String TAG = APIRequest.class.getSimpleName();
     private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
 //    private static final String HOST = "http://145.28.196.77/api/";
 
@@ -94,6 +93,9 @@ public class APIRequest {
 
     public boolean postDeviceToken(Response.Listener<String> responseListener, Response.ErrorListener errorListener, String deviceToken) {
         Map<String, Object> params = loginSingleton.authorizedRequestParameters();
+        if (params == null) {
+            return false;
+        }
         params.put("deviceToken", deviceToken);
 
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_POST_FIID, params,
@@ -104,6 +106,9 @@ public class APIRequest {
 
     public boolean setFavorite(Response.Listener responseListener, Response.ErrorListener errorListener, String establishmentId) {
         Map<String, Object> params = loginSingleton.authorizedRequestParameters();
+        if (params == null) {
+            return false;
+        }
         params.put("establishmentId", establishmentId);
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_SET_FAVORITE, params,
                 responseListener, errorListener, null).setTag(METHOD_SET_FAVORITE));
@@ -113,6 +118,9 @@ public class APIRequest {
 
     public boolean getFavoriteById(Response.Listener responseListener, Response.ErrorListener errorListener, String establishmentId) {
         Map<String, Object> params = loginSingleton.authorizedRequestParameters();
+        if (params == null) {
+            return false;
+        }
         params.put("establishmentId", establishmentId);
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_FAVORITE_BY_ID, params,
                 responseListener, errorListener, null).setTag(METHOD_GET_FAVORITE_BY_ID));
@@ -122,7 +130,9 @@ public class APIRequest {
 
     public boolean getFavorites(Response.Listener<Favorite[]> responseListener, Response.ErrorListener errorListener) {
         Map<String, Object> params = loginSingleton.authorizedRequestParameters();
-
+        if (params == null) {
+            return false;
+        }
         mQueue.add(new CustomRequest(Request.Method.POST, HOST + METHOD_GET_FAVORITES, params,
                 responseListener, errorListener, Favorite[].class).setTag(METHOD_GET_FAVORITES).setShouldCache(true));
 

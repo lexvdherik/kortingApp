@@ -112,8 +112,7 @@ public class LoginSingleton {
         }
 
         if (Objects.equals(idToken, "")) {
-            //silentLogin();
-            return authorizedRequestParameters();
+            return null;
         }
 
         Map<String, Object> params = new HashMap<>();
