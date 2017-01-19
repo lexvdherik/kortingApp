@@ -22,7 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/title"
         android:layout_centerHorizontal="true"
-        android:text="@string/common_signin_button_text_long"/>
+        android:text="@string/common_signin_button_text_long"
+        android:textColor="@color/textColorSecondary"/>
 
     <Button
         android:id="@+id/fb_sign_in_button"
@@ -33,7 +34,8 @@
         android:layout_centerInParent="true"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:text="FB Sign In"/>
+        android:text="FB Sign In"
+        android:textColor="@color/textColorSecondary"/>
 
     <Button
         android:id="@+id/twitter_sign_in_button"
@@ -44,7 +46,8 @@
         android:layout_centerInParent="true"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:text="Twitter Sign In"/>
+        android:text="Twitter Sign In"
+        android:textColor="@color/textColorSecondary"/>
 
     <Button
         android:id="@+id/sign_in_button"
@@ -55,6 +58,7 @@
         android:layout_centerInParent="true"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:text="Email Sign In"/>
+        android:text="Email Sign In"
+        android:textColor="@color/textColorSecondary"/>
 
 </RelativeLayout>
