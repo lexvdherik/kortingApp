@@ -52,13 +52,13 @@ import hva.flashdiscount.network.APIRequest;
 import hva.flashdiscount.service.GpsService;
 
 
-
 public class MapViewFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = MapViewFragment.class.getSimpleName();
     public CategoryAdapter categoryAdapter;
     public ArrayList<Category> categories = new ArrayList<>();
+    public SparseArray<List<Marker>> markerHashMap = new SparseArray<>();
     MapView mMapView;
     AlertDialog dialog;
     private TabFragment tabFragment;
@@ -69,7 +69,6 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
     private ListView listView;
     private View bottomSheet;
     private Establishment establishment;
-    public SparseArray<List<Marker>> markerHashMap = new SparseArray<>();
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
@@ -96,7 +95,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
     }
 
-    public SparseArray getMarkerHashMap(){
+    public SparseArray getMarkerHashMap() {
         return markerHashMap;
     }
 
@@ -146,14 +145,14 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
         initAttributes(rootView);
         mMapView.onCreate(savedInstanceState);
-      //  categoryAdapter = new CategoryAdapter(getContext(), R.layout.category_list_child, categories, this);
+        //  categoryAdapter = new CategoryAdapter(getContext(), R.layout.category_list_child, categories, this);
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
-       // getEstablishmentsFromAPI();
+        // getEstablishmentsFromAPI();
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
         mMapView.getMapAsync(new OnMapReadyCallback() {
@@ -255,48 +254,15 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         Log.d(TAG, "filterMarkers: " + "Filter start");
     }
 
-
-    public void hideSelectedMarkers(Category category){
-
-        if(markerHashMap.get(category.getCategoryId()) != null){
-
-            for(Marker mark: markerHashMap.get(category.getCategoryId())){
-            Log.i("MARKERCHECK",markerHashMap.get(category.getCategoryId()).toString());
-            mark.setVisible(false);
-        }
-        }
-    }
-
-    public void displaySelectedMarkers(Category category) {
+    public void toggleSelectedMarkers(Category category, boolean checked) {
 //        dialog.dismiss();
-        Log.i("CAT +_+_+_+_!!@", markerHashMap.toString());
-
         //Get List from
-        if(markerHashMap.get(category.getCategoryId()) != null){
-            for(Marker mark: markerHashMap.get(category.getCategoryId())){
-                Log.i("MARKERCHECK",markerHashMap.get(category.getCategoryId()).toString());
-                // Log.i("CHECKBOX", Integer.toString(position));
-                mark.setVisible(true);
+        if (markerHashMap.get(category.getCategoryId()) != null) {
+            for (Marker mark : markerHashMap.get(category.getCategoryId())) {
+                Log.i("MARKERCHECK", mark.getTag().toString());
+                mark.setVisible(checked);
             }
         }
-
-
-
-//        for (int i = 0; i < categoryAdapter.getCount() ; i++) {
-//
-//            if (categoryAdapter.getItemChecked(i)) {
-//
-//                for (Marker mark : markerHashMap.get(i + 1)) {
-//                    mark.setVisible(true);
-//                }
-//            } else {
-//                for (Marker mark : markerHashMap.get(i + 1)) {
-//                    mark.setVisible(false);
-//                }
-//            }
-//
-//
-//        }
 
         Log.i(TAG, "Hashmap = " + markerHashMap.toString());
     }
@@ -349,7 +315,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         marker.setTag(establishment);
         Log.i("TESTSEAN", establishment.getCompany().getName() + establishment.getCompany().getCategoryId());
 
-        if (!(markerHashMap.indexOfKey(establishment.getCompany().getCategoryId()) > 0)) {
+        if (markerHashMap.indexOfKey(establishment.getCompany().getCategoryId()) < 0) {
             markerHashMap.put(establishment.getCompany().getCategoryId(), new ArrayList<Marker>());
             markerHashMap.get(establishment.getCompany().getCategoryId()).add(marker);
         } else {

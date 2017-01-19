@@ -75,22 +75,9 @@ public class CategoryAdapter extends BaseAdapter implements View.OnClickListener
             holder.name.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     CheckBox checkBox = (CheckBox) v;
-
                     category = (Category) checkBox.getTag();
-
                     category.setSelected(checkBox.isChecked());
-
-                    if (checkBox.isChecked()) {
-                        Log.i("CHECKBOX", Integer.toString(position));
-                        mapViewFragment.displaySelectedMarkers(category);
-                        //MapViewFragment
-                      //  tabFragment.displaySelectedMarkers();
-
-                    } else {
-                        Log.i("CHECKBOX", Integer.toString(position));
-                        mapViewFragment.hideSelectedMarkers(category);
-                      //  tabFragment.displaySelectedMarkers();
-                    }
+                    mapViewFragment.toggleSelectedMarkers(category, checkBox.isChecked());
                 }
             });
         } else {

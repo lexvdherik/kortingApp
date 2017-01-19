@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +19,8 @@ import android.widget.ListView;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.CategoryAdapter;
@@ -35,19 +32,18 @@ import hva.flashdiscount.network.APIRequest;
 public class TabFragment extends Fragment {
 
     private static final String TAG = TabFragment.class.getSimpleName();
-    private int tabPosition;
-    private SharedPreferences sharedPref;
-    private AlertDialog dialog;
     public ArrayList<Category> categories = new ArrayList<>();
     //private SparseArray<List<Marker>> markerHashMap = new SparseArray<>();
     public CategoryAdapter categoryAdapter;
+    private int tabPosition;
+    private SharedPreferences sharedPref;
+    private AlertDialog dialog;
     private MapViewFragment mapViewFragment;
 
 
     public TabFragment() {
 
     }
-
 
 
     @Override
@@ -60,7 +56,7 @@ public class TabFragment extends Fragment {
 
     }
 
-//    public void displaySelectedMarkers() {
+//    public void toggleSelectedMarkers() {
 ////        dialog.dismiss();
 //
 //
@@ -84,7 +80,7 @@ public class TabFragment extends Fragment {
 //        Log.i("HASHMAP", mapViewFragment.markerHashMap.toString());
 //    }
 
-    public void showFilterDialog(){
+    public void showFilterDialog() {
         if (dialog == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -118,8 +114,7 @@ public class TabFragment extends Fragment {
             View checkBoxView = inflater.inflate(R.layout.marker_selection, null);
 
 
-
-        //    mapViewFragment.categoryAdapter = new CategoryAdapter(getContext(), R.layout.category_list_child, categories, this);
+            //    mapViewFragment.categoryAdapter = new CategoryAdapter(getContext(), R.layout.category_list_child, categories, this);
 
             ListView categoryListView = (ListView) checkBoxView.findViewById(R.id.listview_categories);
             categoryListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
@@ -132,8 +127,8 @@ public class TabFragment extends Fragment {
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-           //         TabFragment.this.displaySelectedMarkers();
-                    //this.displaySelectedMarkers();
+                    //         TabFragment.this.toggleSelectedMarkers();
+                    //this.toggleSelectedMarkers();
                 }
             });
 //            Button cancelButton = (Button) checkBoxView.findViewById(R.id.cancelButton);
