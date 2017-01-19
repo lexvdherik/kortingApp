@@ -471,7 +471,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         @Override
         public void onResponse(Category[] categories) {
             for (Category category : categories) {
-                Log.i(TAG, "Response with: "+ category.toString());
+                Log.i(TAG, "Response with: " + category.toString());
                 createCategory(category);
             }
         }

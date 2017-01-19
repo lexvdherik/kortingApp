@@ -12,7 +12,7 @@ import java.util.Date;
 import hva.flashdiscount.R;
 
 class DateTime {
-    private static String TAG = DateTime.class.getSimpleName();
+    private static final String TAG = DateTime.class.getSimpleName();
     private Calendar targetTime;
 
     DateTime(String endTimeString) {

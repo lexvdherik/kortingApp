@@ -12,7 +12,7 @@ import hva.flashdiscount.R;
 
 public class MessageDialogFragment extends DialogFragment {
 
-    private static String TAG = MessageDialogFragment.class.getSimpleName();
+    private static final String TAG = MessageDialogFragment.class.getSimpleName();
     private String message;
 
     @Override

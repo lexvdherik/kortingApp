@@ -21,7 +21,7 @@ import hva.flashdiscount.model.Category;
 
 public class CategoryAdapter extends BaseAdapter implements View.OnClickListener {
 
-    private static String TAG = CategoryAdapter.class.getSimpleName();
+    private static final String TAG = CategoryAdapter.class.getSimpleName();
 
     private ArrayList<Category> categoryArrayList;
     private Context thisContext;
