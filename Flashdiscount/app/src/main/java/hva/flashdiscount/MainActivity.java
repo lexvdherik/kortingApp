@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity
         if (newPos != 0) {
             getSupportFragmentManager().beginTransaction().
                     setCustomAnimations(R.anim.slide_in_fromleft, R.anim.slide_out_toright)
-                    .replace(R.id.fragment_container, newFrag)
+                    .replace(R.id.fragment_container, newFrag, name)
                     .addToBackStack(null)
                     .commit();
         }
