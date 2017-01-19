@@ -77,11 +77,13 @@ public class MainActivity extends AppCompatActivity
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        TabFragment tabFragment = new TabFragment();
+        if (getSupportFragmentManager().findFragmentByTag("tab_fragment") == null) {
+            TabFragment tabFragment = new TabFragment();
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.fragment_container, tabFragment, "tab_fragment");
-        ft.commit();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.fragment_container, tabFragment, "tab_fragment");
+            ft.commit();
+        }
 
     }
 
