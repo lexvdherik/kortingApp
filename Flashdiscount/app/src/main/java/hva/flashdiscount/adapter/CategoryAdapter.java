@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import hva.flashdiscount.R;
 import hva.flashdiscount.fragment.MapViewFragment;
+import hva.flashdiscount.fragment.TabFragment;
 import hva.flashdiscount.model.Category;
 
 /**
@@ -27,10 +28,12 @@ public class CategoryAdapter extends BaseAdapter implements View.OnClickListener
     private Context thisContext;
     private MapViewFragment mapViewFragment;
     private Category category;
+    private TabFragment tabFragment;
 
     public CategoryAdapter(Context context, int resource, ArrayList<Category> categoryArrayList, MapViewFragment mapViewFragment) {
         //super(context, resource, categoryArrayList);
         super();
+       // this.tabFragment = tabFragment;
         this.mapViewFragment = mapViewFragment;
         thisContext = context;
         this.categoryArrayList = new ArrayList<>();
@@ -52,7 +55,7 @@ public class CategoryAdapter extends BaseAdapter implements View.OnClickListener
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         ViewHolder holder;
 
@@ -72,16 +75,9 @@ public class CategoryAdapter extends BaseAdapter implements View.OnClickListener
             holder.name.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     CheckBox checkBox = (CheckBox) v;
-
                     category = (Category) checkBox.getTag();
-
                     category.setSelected(checkBox.isChecked());
-                    if (checkBox.isChecked()) {
-                        mapViewFragment.displaySelectedMarkers();
-
-                    } else {
-                        mapViewFragment.displaySelectedMarkers();
-                    }
+                    mapViewFragment.toggleSelectedMarkers(category, checkBox.isChecked());
                 }
             });
         } else {

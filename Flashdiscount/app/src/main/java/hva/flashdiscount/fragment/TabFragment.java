@@ -16,21 +16,35 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 
+import com.android.volley.NoConnectionError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import java.util.ArrayList;
+
 import hva.flashdiscount.R;
 import hva.flashdiscount.adapter.CategoryAdapter;
 import hva.flashdiscount.adapter.TabPagerAdapter;
+import hva.flashdiscount.model.Category;
+import hva.flashdiscount.network.APIRequest;
 
 
 public class TabFragment extends Fragment {
 
     private static final String TAG = TabFragment.class.getSimpleName();
+    public ArrayList<Category> categories = new ArrayList<>();
+    //private SparseArray<List<Marker>> markerHashMap = new SparseArray<>();
+    public CategoryAdapter categoryAdapter;
     private int tabPosition;
     private SharedPreferences sharedPref;
     private AlertDialog dialog;
+    private MapViewFragment mapViewFragment;
+
 
     public TabFragment() {
 
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +53,50 @@ public class TabFragment extends Fragment {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         tabPosition = sharedPref.getInt("tab_position", 0);
 
+
+    }
+
+//    public void toggleSelectedMarkers() {
+////        dialog.dismiss();
+//
+//
+//        //Get List from
+//        for (int i = 0; i < categoryAdapter.getCount(); i++) {
+//
+//            if (categoryAdapter.getItemChecked(i)) {
+//
+//                for (Marker mark : mapViewFragment.markerHashMap.get(i + 1)) {
+//                    mark.setVisible(true);
+//                }
+//            } else {
+//                for (Marker mark : mapViewFragment.markerHashMap.get(i + 1)) {
+//                    mark.setVisible(false);
+//                }
+//            }
+//
+//
+//        }
+//
+//        Log.i("HASHMAP", mapViewFragment.markerHashMap.toString());
+//    }
+
+    public void showFilterDialog() {
+        if (dialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            View checkBoxView = inflater.inflate(R.layout.marker_selection, null);
+            categoryAdapter = new CategoryAdapter(getContext(), R.layout.category_list_child, categories, mapViewFragment);
+
+            ListView categoryListView = (ListView) checkBoxView.findViewById(R.id.listview_categories);
+            categoryListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+            categoryListView.setAdapter(categoryAdapter);
+            Button okButton = (Button) checkBoxView.findViewById(R.id.okButton);
+
+            builder.setView(checkBoxView);
+
+            dialog = builder.create();
+        }
+        dialog.show();
     }
 
     public void showFilter() {
@@ -49,12 +107,14 @@ public class TabFragment extends Fragment {
             final TabPagerAdapter adapter = new TabPagerAdapter(getFragmentManager(), tabLayout.getTabCount());
             final MapViewFragment mapViewFragment = (MapViewFragment) adapter.getItem(0);
 
+            mapViewFragment.getCategoriesFromAPI();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             LayoutInflater inflater = getActivity().getLayoutInflater();
             View checkBoxView = inflater.inflate(R.layout.marker_selection, null);
 
-            mapViewFragment.categoryAdapter = new CategoryAdapter(getContext(), R.layout.category_list_child, mapViewFragment.categories, mapViewFragment);
+
+            //    mapViewFragment.categoryAdapter = new CategoryAdapter(getContext(), R.layout.category_list_child, categories, this);
 
             ListView categoryListView = (ListView) checkBoxView.findViewById(R.id.listview_categories);
             categoryListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
@@ -67,7 +127,8 @@ public class TabFragment extends Fragment {
             okButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mapViewFragment.displaySelectedMarkers();
+                    //         TabFragment.this.toggleSelectedMarkers();
+                    //this.toggleSelectedMarkers();
                 }
             });
 //            Button cancelButton = (Button) checkBoxView.findViewById(R.id.cancelButton);
@@ -82,18 +143,35 @@ public class TabFragment extends Fragment {
         dialog.show();
     }
 
+    protected void createCategory(Category category) {
+
+        categories.add(category);
+    }
+
+    public void getCategoriesFromAPI() {
+        System.gc();
+        TabFragment.GetCategoryResponseListener listener = new TabFragment.GetCategoryResponseListener();
+        APIRequest.getInstance(getContext()).getCategories(listener, listener);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View tabView = inflater.inflate(R.layout.fragment_tab, container, false);
 
+        getCategoriesFromAPI();
+
         TabLayout tabLayout = (TabLayout) tabView.findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Map"));
         tabLayout.addTab(tabLayout.newTab().setText("List"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+//        TabPagerAdapter adapter2 = new TabPagerAdapter(getFragmentManager(), tabLayout.getTabCount());
+//        MapViewFragment mapViewFragment = (MapViewFragment) adapter2.getItem(0);
+//        mapViewFragment.getCategoriesFromAPI();
 
         final ViewPager viewPager = (ViewPager) tabView.findViewById(R.id.pager);
         final TabPagerAdapter adapter = new TabPagerAdapter(getFragmentManager(), tabLayout.getTabCount());
+        mapViewFragment = (MapViewFragment) adapter.getItem(0);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.clearOnTabSelectedListeners();
@@ -119,6 +197,24 @@ public class TabFragment extends Fragment {
         });
 
         return tabView;
+    }
+
+    public class GetCategoryResponseListener implements Response.Listener<Category[]>, Response.ErrorListener {
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            if (error instanceof NoConnectionError) {
+                Log.w(TAG, "No connection!");
+            }
+        }
+
+        @Override
+        public void onResponse(Category[] categories) {
+            for (Category category : categories) {
+                Log.i(TAG, category.toString());
+                createCategory(category);
+            }
+        }
     }
 
 }
