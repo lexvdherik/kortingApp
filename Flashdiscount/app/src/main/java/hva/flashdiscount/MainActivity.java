@@ -202,6 +202,10 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case 1:
+                // Tab frag
+                newFrag = new TabFragment();
+                break;
+            case 2:
                 // Settings frag
                 newFrag = new SettingsFragment();
                 break;
@@ -209,28 +213,14 @@ public class MainActivity extends AppCompatActivity
             default:
                 // OTHERWISE, there was a big mistake
                 Log.e(TAG, "changeItemSelected(pos: " + newPos + "): Invalid position");
-                return;
-        }
-
-        //-> Choosing which animations to use logic
-        int transitionIn, transitionOut;
-
-        if (mDrawerPosition == -1) {
-            // If this is the first fragment being added - one way or another - use no transitions
-            transitionIn = transitionOut = R.anim.slide_in_frombottom;
-        } else if (mDrawerPosition < newPos) {
-            // The new item is entering from below, and the old is moving out to above
-            transitionIn = R.anim.slide_in_frombottom;
-            transitionOut = R.anim.slide_in_frombottom;
-        } else {
-            // Otherwise, new item is entering from above and old is moving out to below
-            transitionIn = R.anim.slide_in_frombottom;
-            transitionOut = R.anim.slide_in_frombottom;
+                newFrag = new TabFragment();
+                break;
+//                return;
         }
 
         if (newPos != 0) {
             getSupportFragmentManager().beginTransaction().
-                    setCustomAnimations(transitionIn, transitionOut)
+                    setCustomAnimations(R.anim.slide_in_fromleft, R.anim.slide_out_toright)
                     .replace(R.id.fragment_container, newFrag)
                     .addToBackStack(null)
                     .commit();

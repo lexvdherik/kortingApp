@@ -426,7 +426,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         detailFragment.setArguments(arguments);
 
         getFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.slide_in_frombottom, 0)
+                .setCustomAnimations(R.anim.slide_in_fromleft, R.anim.slide_out_toright)
                 .replace(R.id.fragment_container, detailFragment, "detailfrag")
                 .addToBackStack(null)
                 .commit();
