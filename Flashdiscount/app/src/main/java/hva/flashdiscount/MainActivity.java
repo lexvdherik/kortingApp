@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity
         } else {
             try {
                 DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag("detailfrag");
-
                 if (df.isVisible()) {
                     getSupportFragmentManager().popBackStack();
                     TabFragment tb = new TabFragment();
@@ -103,25 +102,39 @@ public class MainActivity extends AppCompatActivity
                             .setCustomAnimations(R.anim.slide_in_frombottom, 0)
                             .replace(R.id.fragment_container, tb)
                             .commit();
-
-
                 } else {
-//
-                    if (getFragmentManager().getBackStackEntryCount() > 0) {
-                        getFragmentManager().popBackStack();
-                    } else if (mDrawerPosition > 0) { // Else, if not on the home page, go back to the home page
-                        forceChangeItemSelected(0);
-                    } else { // Otherwise, let the system handle this back press
-                        super.onBackPressed();
-                    }
-
+                    back();
                 }
-                //toggle.syncState();
+
             } catch (NullPointerException e) {
-//                super.onBackPressed();
+
+            }
+            try {
+                SettingsFragment sf = (SettingsFragment) getSupportFragmentManager().findFragmentByTag("settingsfrag");
+                if (sf.isVisible()) {
+                    getSupportFragmentManager().popBackStack();
+                    TabFragment tb = new TabFragment();
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .setCustomAnimations(R.anim.slide_in_frombottom, 0)
+                            .replace(R.id.fragment_container, tb)
+                            .commit();
+                } else {
+                    back();
+                }
+            } catch (NullPointerException e) {
             }
         }
 
+    }
+    public void back() {
+        if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else if (mDrawerPosition > 0) { // Else, if not on the home page, go back to the home page
+            forceChangeItemSelected(0);
+        } else { // Otherwise, let the system handle this back press
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -191,9 +204,11 @@ public class MainActivity extends AppCompatActivity
 
         // First, update the main content by replacing fragments
         Fragment newFrag = null;
+        String name = null;
 
         //-> Choosing which fragment to show logic
 
+        Log.e(TAG, "blah - " + String.valueOf(newPos));
         switch (newPos) {
             case 0:
                 if (!loginSingleton.loggedIn()) {
@@ -208,6 +223,7 @@ public class MainActivity extends AppCompatActivity
             case 2:
                 // Settings frag
                 newFrag = new SettingsFragment();
+                name = "settingsfrag";
                 break;
 
             default:
