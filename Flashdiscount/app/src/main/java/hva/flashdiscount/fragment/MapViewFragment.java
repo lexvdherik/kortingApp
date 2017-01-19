@@ -153,7 +153,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
         } catch (Exception e) {
             e.printStackTrace();
         }
-        getEstablishmentsFromAPI();
+       // getEstablishmentsFromAPI();
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();
         mMapView.getMapAsync(new OnMapReadyCallback() {
@@ -347,6 +347,7 @@ public class MapViewFragment extends Fragment implements GoogleApiClient.Connect
 
         Marker marker = googleMap.addMarker(est);
         marker.setTag(establishment);
+        Log.i("TESTSEAN", establishment.getCompany().getName() + establishment.getCompany().getCategoryId());
 
         if (!(markerHashMap.indexOfKey(establishment.getCompany().getCategoryId()) > 0)) {
             markerHashMap.put(establishment.getCompany().getCategoryId(), new ArrayList<Marker>());
