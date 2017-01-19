@@ -259,19 +259,6 @@ public class MainActivity extends AppCompatActivity
             // Simply do a force main content change [don't really care yet for backstack here yet]
             forceChangeItemSelected(option);
         }
-//                else if(requestType == TransactionHandler.RequestType.GOAL_ADDER) {
-//                    Toast.makeText(this, "Want the Goal Adder? Too bad", Toast.LENGTH_SHORT).show();
-//
-//                    android.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-//                    Fragment fragment = new GoalAdderFragment();
-//
-//                    // Lower level fragment should transition horizontally
-//                    fragmentTransaction.setCustomAnimations(R.animator.slide_in_fromright,
-//                            R.animator.slide_out_toleft);
-//                    fragmentTransaction.replace(R.id.container, fragment);
-//                    fragmentTransaction.addToBackStack(null);
-//                    fragmentTransaction.commit();
-//                }
     }
 
     @Override

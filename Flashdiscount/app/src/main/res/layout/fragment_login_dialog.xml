@@ -2,8 +2,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_horizontal_margin">
+                android:background="@color/colorWhite"
+    >
+
+    <LinearLayout
+        android:id="@+id/title_layout"
+        android:orientation="vertical"
+        android:background="@color/colorPrimaryDark"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/title_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/activity_horizontal_margin"
+            android:paddingStart="@dimen/activity_horizontal_margin"
+            android:text="Flashdiscount login"
+            android:gravity="center_horizontal"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/colorWhite"
+            android:textSize="32sp"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/title"
@@ -11,50 +33,21 @@
         android:layout_height="wrap_content"
         android:paddingEnd="@dimen/activity_horizontal_margin"
         android:paddingStart="@dimen/activity_horizontal_margin"
-        android:text="@string/login_popup_title"
+        android:paddingTop="10dp"
+        android:layout_below="@+id/title_layout"
+        android:lines="3"
+        android:text="To claim, favorite and receive pushnotifications signing in is necessary"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/textColorSecondary"/>
 
-    <Button
-        android:id="@+id/google_sign_in_button"
-        style="?attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:layout_centerHorizontal="true"
-        android:text="@string/common_signin_button_text_long"/>
-
-    <Button
-        android:id="@+id/fb_sign_in_button"
-        style="?attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/google_sign_in_button"
-        android:layout_centerInParent="true"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:text="FB Sign In"/>
-
-    <Button
-        android:id="@+id/twitter_sign_in_button"
-        style="?attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/fb_sign_in_button"
-        android:layout_centerInParent="true"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:text="Twitter Sign In"/>
-
-    <Button
+    <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"
-        style="?attr/borderlessButtonStyle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/twitter_sign_in_button"
-        android:layout_centerInParent="true"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:text="Email Sign In"/>
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:paddingBottom="10dp"/>
+
 
 </RelativeLayout>
