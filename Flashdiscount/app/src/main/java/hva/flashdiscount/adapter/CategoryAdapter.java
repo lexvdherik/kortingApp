@@ -21,6 +21,8 @@ import hva.flashdiscount.model.Category;
 
 public class CategoryAdapter extends BaseAdapter implements View.OnClickListener {
 
+    private static final String TAG = CategoryAdapter.class.getSimpleName();
+
     private ArrayList<Category> categoryArrayList;
     private Context thisContext;
     private MapViewFragment mapViewFragment;
@@ -44,7 +46,7 @@ public class CategoryAdapter extends BaseAdapter implements View.OnClickListener
         for (int i = 0; i < categoryList.size(); i++) {
             category = categoryList.get(i);
             if (category.isSelected()) {
-                Log.i("CAT", category.getName());
+                Log.i(TAG, category.getName() + " Is selected");
             }
         }
     }

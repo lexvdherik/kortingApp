@@ -26,6 +26,7 @@ import hva.flashdiscount.utils.LoginSingleton;
 public class APIRequest {
     private static final String TAG = APIRequest.class.getSimpleName();
 
+    public static final String BASE_URL = "https://amazon.seanmolenaar.eu/";
     private static final String HOST = "https://amazon.seanmolenaar.eu/api/";
 //    private static final String HOST = "http://145.28.196.77/api/";
 
@@ -133,7 +134,7 @@ public class APIRequest {
 
         Gson gson = new GsonBuilder().create();
         JsonArray favoritesJson = gson.toJsonTree(test).getAsJsonArray();
-        Log.i(TAG, favoritesJson.toString());
+        Log.d(TAG, "set settings: " + favoritesJson.toString());
 
         Map<String, Object> params = loginSingleton.authorizedRequestParameters();
         params.put("favorites", favoritesJson.toString());

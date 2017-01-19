@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
 
         loginSingleton = LoginSingleton.getInstance(this);
         if (!loginSingleton.loggedIn()) {
-            if(!loginSingleton.loginExpired()) {
+            if (!loginSingleton.loginExpired()) {
                 loginSingleton.silentLogin();
             }
         }
@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity
 
         // If position was -1, state that there was an error then fix the issue
         if (newPos == -1) {
-            Log.e(TAG, "changeItemSelected(pos) was given -1. Fixing issue for now");
+            Log.d(TAG, "changeItemSelected(pos) was given -1. Fixing issue for now");
             newPos = 0;
         }
 

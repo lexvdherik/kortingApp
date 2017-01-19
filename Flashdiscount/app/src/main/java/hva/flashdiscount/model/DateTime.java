@@ -12,26 +12,27 @@ import java.util.Date;
 import hva.flashdiscount.R;
 
 class DateTime {
-    private Calendar endTime;
+    private static final String TAG = DateTime.class.getSimpleName();
+    private Calendar targetTime;
 
     DateTime(String endTimeString) {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        this.endTime = Calendar.getInstance();
+        this.targetTime = Calendar.getInstance();
 
         Date endDate;
 
         try {
             endDate = df.parse(endTimeString);
 
-            this.endTime.setTime(endDate);
+            this.targetTime.setTime(endDate);
 
         } catch (ParseException e) {
-            Log.e("DateTime ParseError", e.toString());
+            Log.e(TAG, "DateTime ParseError:" + e.toString());
         }
     }
 
-    public int getEndTime() {
-        return endTime.get(Calendar.DATE);
+    public int getTargetTime() {
+        return targetTime.get(Calendar.DATE);
     }
 
     public int getCurrentTime() {
@@ -40,7 +41,7 @@ class DateTime {
 
     String minutesBetween(Context context) {
         Long end = Calendar.getInstance().getTimeInMillis();
-        Long start = endTime.getTimeInMillis();
+        Long start = targetTime.getTimeInMillis();
         Long minutesBetween = (start - end) / 60000;
         Long hours, minutes;
 

@@ -1,14 +1,11 @@
 package hva.flashdiscount;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.IBinder;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ServiceTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v4.app.FragmentActivity;
-import android.test.mock.MockContext;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -20,11 +17,7 @@ import java.util.concurrent.TimeoutException;
 import hva.flashdiscount.service.GpsService;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.core.IsInstanceOf.any;
-import static org.junit.Assert.assertThat;
 
 
 /**
@@ -42,7 +35,7 @@ public class GPSServiceIntegrationTest {
     private FragmentActivity test = new FragmentActivity();
 
     @Before
-    public void createGpsService(){
+    public void createGpsService() {
         mGpsService = new GpsService(test);
     }
 

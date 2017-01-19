@@ -166,12 +166,12 @@ public class NavigationDrawerFragment extends Fragment {
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                Log.e(TAG, "ondraweropennn");
+                Log.d(TAG, "On drawer open");
                 super.onDrawerOpened(drawerView);
                 if (!isAdded()) {
                     return;
                 }
-                Log.e(TAG, "dfsdfds = " + String.valueOf(loginSingleton.loggedIn()));
+                Log.d(TAG, "OnDrawerOpen LoggedIn = " + String.valueOf(loginSingleton.loggedIn()));
                 if (loginSingleton.loggedIn() && loginSingleton.loginExpired()) {
                     Log.w(TAG, "login expired");
                     User user = loginSingleton.silentLogin();
@@ -188,7 +188,7 @@ public class NavigationDrawerFragment extends Fragment {
                         ((TextView) layout.findViewById(R.id.email)).setText(user.getEmail());
                     }
                 } else if (loginSingleton.loggedIn() && !loginSingleton.loginExpired()) {
-                    Log.w(TAG, "load everything from sharedpref");
+                    Log.d(TAG, "Login and not expired, load everything from sharedpref");
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     LinearLayout layout = (LinearLayout) getActivity().findViewById(R.id.nav_header);
 
@@ -376,7 +376,7 @@ public class NavigationDrawerFragment extends Fragment {
                         (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 row = inflater.inflate(R.layout.nav_header, parent, false);
                 TextView tx = (TextView) row.findViewById(R.id.naam);
-                tx.setText("tony is gay");
+                tx.setText("Not Logged in");
                 //holder = new ViewHolder();
                 // holder.text = (TextView) row.findViewById(R.id.naam);
 

@@ -63,13 +63,13 @@ public class LoginSingleton {
 
         String date = sharedPref.getString("expire_date", null);
         if (date == null) {
-            Log.i(TAG, "No Expiry date known");
+            Log.d(TAG, "No Expiry date known");
             return true;
         }
         try {
             expireDate.setTime(sdf.parse(date));
         } catch (ParseException e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, "login expire_date failed to parse: " + e.getMessage());
             return true;
         }
 

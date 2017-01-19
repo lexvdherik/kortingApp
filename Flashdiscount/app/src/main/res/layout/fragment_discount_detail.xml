@@ -31,6 +31,7 @@
                     app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"/>
 
                 <LinearLayout
+                    android:layout_below="@+id/company_detail_image"
                     android:id="@+id/card_view_discount_parent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -38,7 +39,8 @@
                     android:background="@color/colorPrimary"
                     android:elevation="5dp"
                     android:orientation="horizontal"
-                    android:padding="@dimen/nav_header_vertical_spacing">
+                    android:padding="@dimen/nav_header_vertical_spacing"
+                    android:weightSum="1">
 
                     <TextView
                         android:id="@+id/discount_description"
@@ -46,10 +48,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|start"
                         android:ellipsize="end"
-                        android:maxLines="1"
+                        android:maxLines="2"
                         android:textAlignment="viewStart"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="@color/colorWhite"/>
+                        android:textColor="@color/colorWhite"
+                        android:layout_weight="0.92"/>
 
                 </LinearLayout>
 
@@ -57,12 +60,11 @@
                     android:id="@+id/claim_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/company_detail_image"
-                    android:layout_alignParentEnd="true"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="38dp"
                     android:src="@drawable/ic_menu_send"
-                    app:fabSize="normal"/>
+                    app:fabSize="normal"
+                    android:layout_above="@+id/card_view_discount_parent"
+                    android:layout_alignParentEnd="true"/>
             </RelativeLayout>
 
             <include layout="@layout/claim_info_cardview"/>
@@ -96,6 +98,7 @@
                         android:layout_height="wrap_content"
                         android:maxLines="1"
                         android:padding="@dimen/activity_horizontal_margin"
+                        android:textColor="@color/textColorSecondary"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textStyle="bold"/>
 

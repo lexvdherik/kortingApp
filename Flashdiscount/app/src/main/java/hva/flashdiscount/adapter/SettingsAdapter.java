@@ -117,13 +117,13 @@ public class SettingsAdapter extends BaseAdapter {
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error instanceof NoConnectionError) {
-                Log.e(TAG, "No connection!");
+                Log.w(TAG, "No connection!");
             }
         }
 
         @Override
         public void onResponse(Object response) {
-            Log.i(TAG, "Response of Settings!");
+            Log.i(TAG, "Settings call responded");
         }
     }
 

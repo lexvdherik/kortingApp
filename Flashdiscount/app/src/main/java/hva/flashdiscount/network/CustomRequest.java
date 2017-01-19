@@ -108,8 +108,8 @@ class CustomRequest<T> extends Request<T> {
         JsonObject resp;
 
         try {
-            Log.i(TAG, responseData);
             resp = (JsonObject) parser.parse(new StringReader(responseData));
+            Log.d(TAG, "Data to get JSON response of: " + responseData);
         } catch (JsonIOException | JsonSyntaxException e) {
             e.printStackTrace();
             return null;

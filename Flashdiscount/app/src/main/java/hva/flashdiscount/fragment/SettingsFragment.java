@@ -48,7 +48,7 @@ public class SettingsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         loginSingleton = LoginSingleton.getInstance(getContext());
         if (getArguments() != null) {
-            Log.i(TAG, getArguments().toString());
+            Log.i(TAG, "Arguments=" + getArguments().toString());
         }
 
 
@@ -150,10 +150,11 @@ public class SettingsFragment extends Fragment {
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e(TAG + " content", " joil" + error.getMessage());
             if (error instanceof NoConnectionError) {
-                Log.e(TAG, "No connection!");
+                Log.w(TAG, "No connection!");
+                return;
             }
+            Log.e(TAG, " FavoritesResponseError=" + error.getMessage());
         }
 
     }
@@ -162,13 +163,13 @@ public class SettingsFragment extends Fragment {
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error instanceof NoConnectionError) {
-                Log.e(TAG, "No connection!");
+                Log.w(TAG, "No connection!");
             }
         }
 
         @Override
         public void onResponse(Object response) {
-            Log.i(TAG, "Response of Settings!");
+            Log.d(TAG, "Response of Settings!");
         }
     }
 }

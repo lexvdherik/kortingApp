@@ -37,14 +37,13 @@ public class FirebaseIIDService extends FirebaseInstanceIdService {
 
         @Override
         public void onResponse(String token) {
-
-            Log.i(TAG, token);
+            Log.d(TAG, "FCM token success: " + token);
         }
 
         @Override
         public void onErrorResponse(VolleyError error) {
             if (error instanceof NoConnectionError) {
-                Log.e(TAG, "No connection!");
+                Log.w(TAG, "No connection!");
             }
         }
 

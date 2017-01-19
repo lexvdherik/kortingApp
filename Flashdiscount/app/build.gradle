@@ -30,7 +30,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
-        multiDexEnabled false
+        multiDexEnabled true
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -87,6 +87,6 @@ dependencies {
 
 apply plugin: 'com.google.gms.google-services'
 
-//android.applicationVariants.all { variant ->
-//    variant.preBuild.dependsOn "checkstyle"
-//}
+android.applicationVariants.all { variant ->
+    variant.preBuild.dependsOn "checkstyle"
+}
