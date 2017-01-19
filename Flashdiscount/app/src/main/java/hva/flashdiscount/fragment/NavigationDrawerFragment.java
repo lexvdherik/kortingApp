@@ -316,7 +316,9 @@ public class NavigationDrawerFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.toolbar_filter_button) {
-            ((TabFragment) getFragmentManager().findFragmentByTag("tab_fragment")).showFilter();
+
+            ((TabFragment) getFragmentManager().findFragmentByTag("tab_fragment")).showFilterDialog();
+            //
             return true;
         }
 

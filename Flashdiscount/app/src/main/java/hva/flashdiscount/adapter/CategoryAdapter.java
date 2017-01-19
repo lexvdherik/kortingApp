@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import hva.flashdiscount.R;
 import hva.flashdiscount.fragment.MapViewFragment;
+import hva.flashdiscount.fragment.TabFragment;
 import hva.flashdiscount.model.Category;
 
 /**
@@ -27,10 +28,12 @@ public class CategoryAdapter extends BaseAdapter implements View.OnClickListener
     private Context thisContext;
     private MapViewFragment mapViewFragment;
     private Category category;
+    private TabFragment tabFragment;
 
     public CategoryAdapter(Context context, int resource, ArrayList<Category> categoryArrayList, MapViewFragment mapViewFragment) {
         //super(context, resource, categoryArrayList);
         super();
+       // this.tabFragment = tabFragment;
         this.mapViewFragment = mapViewFragment;
         thisContext = context;
         this.categoryArrayList = new ArrayList<>();
@@ -52,7 +55,7 @@ public class CategoryAdapter extends BaseAdapter implements View.OnClickListener
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         ViewHolder holder;
 
@@ -76,11 +79,17 @@ public class CategoryAdapter extends BaseAdapter implements View.OnClickListener
                     category = (Category) checkBox.getTag();
 
                     category.setSelected(checkBox.isChecked());
+
                     if (checkBox.isChecked()) {
-                        mapViewFragment.displaySelectedMarkers();
+                        Log.i("CHECKBOX", Integer.toString(position));
+                        mapViewFragment.displaySelectedMarkers(category);
+                        //MapViewFragment
+                      //  tabFragment.displaySelectedMarkers();
 
                     } else {
-                        mapViewFragment.displaySelectedMarkers();
+                        Log.i("CHECKBOX", Integer.toString(position));
+                        mapViewFragment.hideSelectedMarkers(category);
+                      //  tabFragment.displaySelectedMarkers();
                     }
                 }
             });
